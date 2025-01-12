@@ -80,3 +80,9 @@ p {
     justify-content: center;
     align-items: center;
 }
+
+@media only screen and (max-width: 480px) {
+    .particles-js-canvas-el {
+        display: none;
+    }
+ }
