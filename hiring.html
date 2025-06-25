@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Careers - Urbanfolks Mobility</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand-color: #bb86fc;
+      --background-color: #121212;
+      --text-color: #e0e0e0;
+      --secondary-text-color: #888;
+      --card-bg: #1f1f1f;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1, h2, h3 {
+      color: var(--brand-color);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: var(--brand-color);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .job-card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    .highlights {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    
+
+    .highlight-tag {
+      background-color: var(--brand-color);
+      color: #000;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .highlight-tag-2 {
+      padding: 5px 10px;
+      border-style: solid;
+      border-radius: 20px;
+      border-color: #9c69ff;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .apply-button {
+      display: inline-block;
+      background-color: var(--brand-color);
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      margin-top: 15px;
+      transition: background-color 0.3s;
+    }
+
+    .apply-button:hover {
+      background-color: #9c69ff;
+    }
+
+   
+    .read-more-button {
+      background: none;
+      color: var(--brand-color);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: var(--secondary-text-color);
+    }
+
+    /* @media (max-width: 600px) {
+      .highlights {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    } */
+
+    .read-more-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.read-more-content.open {
+  max-height: 1000px; /* high enough to accommodate content */
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Join Our Team</h1>
+    <p>We are looking for passionate individuals to help us transform urban mobility. At Urbanfolks Mobility, you’ll work with a dynamic team committed to public transportation innovation, sustainability, and cutting-edge technology.</p>
+
+    <hr>
+
+    <div class="section">
+      <h2>Open Positions</h2>
+
+      <div class="job-card">
+        <h3>Flutter Intern</h3>
+         <span class="highlight-tag">Remote</span>
+        <span class="highlight-tag">Stipend Available</span>
+
+        <div class="highlights">
+         
+          <span class="highlight-tag-2">Flutter</span>
+          <span class="highlight-tag-2">Dart</span>
+          <span class="highlight-tag-2">GitHub</span>
+          <span class="highlight-tag-2">APIs</span>
+        </div>
+       
+
+        <button class="read-more-button" onclick="toggleReadMore(this)">Read More</button>
+        <div class="read-more-content">
+             <p>We are hiring Flutter Interns to join our development team.</p>
+          <p><strong>Who We're Looking For:</strong><br>
+          Candidates who have:<br>
+          - A good grasp of Flutter, APIs, and GitHub<br>
+          - Completed at least one project (academic or personal)<br>
+          - A genuine interest in building real-world applications</p>
+
+          <p><strong>Perks of Joining Us:</strong><br>
+          - Stipend to support your learning<br>
+          - Internship certificate to boost your resume<br>
+          - A potential full-time role based on your performance</p>
+
+          <p><strong>How to Apply:</strong><br>
+          Send your resume and project links to: <a href="mailto:hr@urbanfolksmobility.in">hr@urbanfolksmobility.in</a><br>
+          or DM us on <a href="https://www.linkedin.com" target="_blank">LinkedIn</a></p>
+
+          <a class="apply-button" href="https://forms.gle/your-form-link" target="_blank">Apply Now</a>
+
+          
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <p>If you don’t see a role that fits you, feel free to email us at <a href="mailto:hr@urbanfolksmobility.in">hr@urbanfolksmobility.in</a> with your resume and a short note about how you’d like to contribute.</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Urbanfolks Mobility Private Limited. All rights reserved.
+  </footer>
+
+  <script>
+  function toggleReadMore(button) {
+    const content = button.nextElementSibling;
+    const isOpen = content.classList.contains('open');
+    content.classList.toggle('open');
+    button.textContent = isOpen ? 'Read More' : 'Read Less';
+  }
+
+  </script>
+</body>
+</html>
