@@ -1,178 +1,271 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Policy - Urbanfolks Mobility</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
     <style>
-        :root {
-            --brand-color: #bb86fc;
-            --background-color: #121212;
-            --text-color: #e0e0e0;
-            --secondary-text-color: #888;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1, h2, h3 {
-            color: var(--brand-color);
-        }
-
-        h1 {
+        .policy-header {
+            padding: 6rem 0 3rem;
             text-align: center;
-            margin-bottom: 20px;
+            background: var(--gradient-dark);
+            position: relative;
         }
 
-        a {
-            color: var(--brand-color);
-            text-decoration: none;
+        .policy-header h1 {
+            font-size: 3.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .policy-content {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(106, 17, 203, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            margin-bottom: 2rem;
         }
 
-        ul {
-            padding-left: 20px;
+        .policy-section {
+            margin-bottom: 3rem;
         }
 
-        li {
-            margin-bottom: 10px;
+        .policy-section h2 {
+            font-family: 'Krona One', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary-purple-light);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(106, 17, 203, 0.3);
+            padding-bottom: 0.5rem;
         }
 
-        .section {
-            margin-bottom: 40px;
+        .policy-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: var(--secondary-text-color);
+        .policy-section ul {
+            list-style-type: none;
+            padding-left: 1rem;
         }
 
-        hr {
-            border: 0;
-            border-top: 1px solid var(--secondary-text-color);
-            margin: 20px 0;
+        .policy-section ul li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .policy-section ul li::before {
+            content: '•';
+            color: var(--primary-purple);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Employee Policy</h1>
-        <p><strong>Urbanfolks Mobility Private Limited</strong></p>
-
-        <p>At Urbanfolks Mobility Private Limited, we are committed to creating a work environment that fosters innovation, collaboration, and professionalism while ensuring the well-being and growth of our employees. This policy outlines the key principles, guidelines, and expectations for all employees.</p>
-
-        <hr>
-
-        <div class="section">
-            <h2>1. Code of Conduct</h2>
-            <ul>
-                <li>Employees are expected to maintain professionalism, integrity, and respect for colleagues, clients, and stakeholders at all times.</li>
-                <li>Harassment, discrimination, or any form of misconduct is strictly prohibited and will result in disciplinary action.</li>
-                <li>Confidentiality must be upheld to protect company data, customer information, and intellectual property.</li>
-            </ul>
+    <!-- Navbar -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><img src="logo with wordmark.svg" alt="urbanfolks logo"
+                    style="height: 50px;"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="culture.html">Culture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="hiring.html">Hiring</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <div class="section">
-            <h2>2. Work Environment</h2>
-            <ul>
-                <li><strong>Working Hours:</strong> The standard working hours are 9:00 AM to 6:00 PM, Monday to Friday. Flexible working arrangements may be discussed with supervisors.</li>
-                <li><strong>Remote Work:</strong> Employees may work remotely based on project requirements, provided they maintain productivity and adhere to deadlines.</li>
-                <li><strong>Office Facilities:</strong> Employees must use office resources responsibly and report any issues to the administration.</li>
-            </ul>
+    <!-- Header -->
+    <div class="policy-header">
+        <div class="container">
+            <h1>Employee Policy</h1>
+            <p class="lead" style="color: var(--text-secondary);">Guidelines for a healthy and productive workplace.</p>
         </div>
-
-        <div class="section">
-            <h2>3. Employment Terms</h2>
-            <ul>
-                <li><strong>Probation Period:</strong> New employees will undergo a probation period of six months, after which their performance will be reviewed.</li>
-                <li><strong>Leaves:</strong>
-                    <ul>
-                        <li><strong>Annual Leave:</strong> 18 days per year.</li>
-                        <li><strong>Sick Leave:</strong> 12 days per year with medical proof if requested.</li>
-                        <li><strong>Parental Leave:</strong> As per government regulations.</li>
-                    </ul>
-                </li>
-                <li><strong>Performance Reviews:</strong> Conducted biannually to assess contributions and identify growth opportunities.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>4. Public Transport Initiatives</h2>
-            <p>Urbanfolks Mobility encourages employees to use public transport and contribute to our mission of promoting sustainable travel. Benefits include:</p>
-            <ul>
-                <li>Subsidized public transport passes.</li>
-                <li>Recognition programs for employees who actively promote public transport.</li>
-                <li>Opportunities to volunteer in community outreach programs related to urban mobility.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>5. Technology and Data Security</h2>
-            <ul>
-                <li>Employees must follow cybersecurity protocols to protect company systems and data.</li>
-                <li>Personal devices used for work must comply with IT guidelines and security standards.</li>
-                <li>Reporting data breaches or suspicious activities is mandatory.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>6. Employee Development</h2>
-            <ul>
-                <li>Employees are encouraged to pursue relevant certifications and training programs. Reimbursement policies are applicable for approved courses.</li>
-                <li>Regular workshops and knowledge-sharing sessions will be organized to enhance skills and industry knowledge.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>7. Health and Safety</h2>
-            <ul>
-                <li>The company ensures a safe and healthy work environment.</li>
-                <li>Emergency evacuation plans and safety protocols will be communicated to all employees.</li>
-                <li>Access to wellness programs and mental health support is available.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>8. Grievance Redressal</h2>
-            <ul>
-                <li>Employees can report grievances or workplace concerns to the HR department.</li>
-                <li>All issues will be addressed promptly and confidentially.</li>
-            </ul>
-        </div>
-
-        <div class="section">
-            <h2>9. Termination and Resignation</h2>
-            <ul>
-                <li>Employees must provide a minimum of 30 days' notice before resigning.</li>
-                <li>The company reserves the right to terminate employment with notice for valid reasons such as underperformance or policy violations.</li>
-            </ul>
-        </div>
-
-        <hr>
-
-        <p>Thank you for being part of Urbanfolks Mobility Private Limited. Together, we aim to revolutionize public transport and create a sustainable future. For further questions or details, contact <a href="mailto:hr@urbanfolksmobility.in">hr@urbanfolksmobility.in</a></p>
     </div>
 
-    <footer>
-        &copy; 2025 Urbanfolks Mobility Private Limited. All rights reserved.
+    <!-- Policy Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="policy-content">
+                <div class="policy-section">
+                    <h2>1. Code of Conduct</h2>
+                    <p>At Urbanfolks Mobility, we are committed to maintaining a respectful, inclusive, and professional
+                        work environment. We expect all employees to:</p>
+                    <ul>
+                        <li>Treat colleagues, clients, and partners with dignity and respect.</li>
+                        <li>Foster an inclusive atmosphere that values diversity.</li>
+                        <li>Maintain professional integrity and ethics in all business dealings.</li>
+                        <li>Avoid conflicts of interest and protect company assets.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2>2. Work Schedule & Remote Work</h2>
+                    <p>We believe in flexibility and work-life balance. Our standard working hours are 9:00 AM to 6:00
+                        PM, Monday to Friday.</p>
+                    <ul>
+                        <li>Employees may opt for flexible timing with manager approval.</li>
+                        <li>Remote work options are available for eligible roles.</li>
+                        <li>Core collaboration hours (11:00 AM - 3:00 PM) should be respected for meetings.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2>3. Leave Policy</h2>
+                    <p>We encourage employees to take time off to recharge. Our leave policy includes:</p>
+                    <ul>
+                        <li><strong>Annual Leave:</strong> 20 days per year.</li>
+                        <li><strong>Sick Leave:</strong> 10 days per year.</li>
+                        <li><strong>Public Holidays:</strong> As per the company holiday calendar.</li>
+                        <li><strong>Parental Leave:</strong> Generous paid leave for new parents.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2>4. Health & Safety</h2>
+                    <p>The safety and well-being of our employees are paramount.</p>
+                    <ul>
+                        <li>All employees must adhere to safety guidelines within the office premises.</li>
+                        <li>Report any hazards or incidents immediately to the HR department.</li>
+                        <li>We provide comprehensive health insurance coverage for all full-time employees.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h2>5. Confidentiality & Data Privacy</h2>
+                    <p>Protecting sensitive information is crucial to our business.</p>
+                    <ul>
+                        <li>Employees must sign a Non-Disclosure Agreement (NDA) upon joining.</li>
+                        <li>Company data, client information, and intellectual property must be kept confidential.</li>
+                        <li>Adhere to all data protection laws and internal security protocols.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>URBANFOLKS</h3>
+                    <p>Revolutionizing urban mobility with technology, sustainability, and a human-first approach.</p>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="culture.html">Culture</a></li>
+                        <li><a href="hiring.html">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="employee-policy.html">Employee Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Connect</h4>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/company/urbanfolks-mobility" class="social-icon"
+                            aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                        <a href="https://twitter.com/urbanfolks" class="social-icon" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/urbanfolks" class="social-icon" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Urbanfolks Mobility Private Limited. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Navbar Scroll Effect -->
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
+
 </html>

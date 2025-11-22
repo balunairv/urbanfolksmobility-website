@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urbanfolks Mobility</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -14,13 +15,293 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Mission & Vision Container */
+        .mv-section {
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mv-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Vertical Divider */
+        .mv-grid::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            bottom: 10%;
+            left: 50%;
+            width: 1px;
+            background: linear-gradient(180deg, transparent, var(--primary-purple), transparent);
+            transform: translateX(-50%);
+        }
+
+        /* Content Style */
+        .mv-item {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: transform var(--transition-normal);
+        }
+
+        .mv-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .mv-header {
+            font-family: 'Krona One', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.9;
+            letter-spacing: -1px;
+        }
+
+        .vision-header {
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mv-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Decorative Icons/Elements */
+        .mv-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 992px) {
+            .mv-grid {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+            }
+
+            .mv-grid::after {
+                display: none;
+            }
+
+            .mv-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Services Layout */
+        .services-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .services-header {
+            position: sticky;
+            top: 100px;
+        }
+
+        .services-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .services-description {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .services-nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-arrow {
+            width: 48px;
+            height: 48px;
+            border: 2px solid rgba(106, 17, 203, 0.3);
+            background: rgba(26, 26, 26, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            color: var(--text-secondary);
+        }
+
+        .nav-arrow:hover {
+            border-color: var(--primary-purple);
+            background: rgba(106, 17, 203, 0.2);
+            color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .services-cards-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .services-cards-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .services-cards {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+
+        .service-card {
+            min-width: 320px;
+            max-width: 320px;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            border: 2px solid rgba(106, 17, 203, 0.3);
+            box-shadow: 0 8px 32px rgba(106, 17, 203, 0.2);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(106, 17, 203, 0.6);
+            box-shadow: 0 12px 40px rgba(106, 17, 203, 0.4);
+        }
+
+        .service-card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-purple-light);
+            margin-bottom: 1rem;
+        }
+
+        .service-card-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        /* Animation Classes */
+        .fade-up-hidden {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-up-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Typewriter Effect */
+        .typewriter-cursor::after {
+            content: '|';
+            display: inline-block;
+            margin-left: 2px;
+            animation: blink-cursor 0.7s infinite;
+            color: var(--primary-purple);
+            font-weight: bold;
+        }
+
+        @keyframes blink-cursor {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .services-layout {
+                grid-template-columns: 350px 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .services-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .services-header {
+                position: static;
+            }
+
+            .service-card {
+                min-width: 280px;
+                max-width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .services-title {
+                font-size: 2rem;
+            }
+
+            .service-card {
+                min-width: 260px;
+                max-width: 260px;
+                padding: 2rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <!-- Navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="logo with wordmark.svg" alt="urbanfolks logo" style="height: 70px;"></span></a>
+            <a class="navbar-brand" href="index.html"><img src="logo with wordmark.svg" alt="urbanfolks logo"
+                    style="height: 50px;"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -28,13 +309,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="https://allrides.in">Allrides</a>
+                        <a class="nav-link active" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://urbanfolksmobility.in/hiring">Hiring</a>
+                        <a class="nav-link" href="about.html">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://urbanfolksmobility.in/contact">Contact</a>
+                        <a class="nav-link" href="culture.html">Culture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="hiring.html">Hiring</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
                     </li>
                 </ul>
             </div>
@@ -42,117 +329,337 @@
     </nav>
 
     <!-- Hero Section -->
-
     <header id="particles-js" class="gradient-bg text-center">
-
-
-
         <span class="center-text">
             <h1>Welcome to <span style="font-family: Krona One;color: #6a11cb;">URBANFOLKS MOBILITY</span></h1>
             <p class="lead ">Driving innovation and redifining mobility.</p>
         </span>
-
-
     </header>
-
-
-
 
     <!-- About Section -->
     <section id="about" class="py-5">
-        <div class="container ">
-            <h2 class="section-heading">Why Urbanfolks Mobility?</h2>
-            <p>Urbanfolks Mobility is committed to creating innovative solutions for modern transportation challenges.
-                We focus on professionalism, technology, and sustainability to improve urban connectivity and enhance
-                lives.</p>
-        </div>
-    </section>
-
-    <!-- Mission Section -->
-    <section id="mission" class="py-5 gradient-bg">
         <div class="container">
-            <div class="row align-items-center">
-
-                <div class="col-md-6" style="display: flex;align-items: center;justify-content: center; border-left: 6px solid #6a11cb;">
-                    <h3 class="section-heading">MISSION</h3>
-                    <!-- <img src="https://via.placeholder.com/500x300" alt="Mission Image" class="img-fluid rounded"> -->
-                </div>
-                <div class="col-md-6">
-                    <div class="mission">
-
-                        <p>To simplify and elevate urban mobility by leveraging cutting-edge technology and sustainable practices. 
-                            We strive to make public transportation systems more inclusive, intuitive, and user-friendly—empowering commuters and shaping smarter cities.</p>
-                    </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <p class="lead mb-4 fade-up-hidden" style="line-height: 1.8; color: var(--text-secondary);">
+                        Since the moment humans discovered the wheel, mobility has defined our progress. From rolling
+                        stones to roaring engines, from crossing rivers to conquering skies-our desire to move faster,
+                        smarter, and farther has been woven into our evolution.
+                    </p>
+                    <p class="lead mb-4 fade-up-hidden" style="line-height: 1.8; color: var(--text-secondary);">
+                        Every era has brought a new breakthrough in how we travel. And the next wave is already here.
+                    </p>
+                    <p class="lead mb-5 fade-up-hidden" style="line-height: 1.8; color: var(--text-secondary);">
+                        At Urbanfolks Mobility, we are committed to being at the forefront of this modern mobility
+                        revolution.
+                        We are building an ecosystem that transforms how people move within cities-smarter public
+                        transport, connected systems, and a future where every journey becomes seamless.
+                    </p>
+                    <h3 class="fw-bold mt-5" id="typewriter-text"
+                        style="color: var(--primary-purple-light); font-family: 'Krona One', sans-serif; line-height: 1.6; min-height: 3.2em;">
+                        <!-- Text will be typed here -->
+                    </h3>
                 </div>
             </div>
         </div>
     </section>
 
-  
-    <!-- Vision Section -->
-    <section id="mission" class="py-5 gradient-bg">
+    <!-- Mission & Vision Section -->
+    <section class="mv-section gradient-bg">
         <div class="container">
-            <div class="row align-items-center">
-
-                <div class="col-md-6" style="display: flex;align-items: center;justify-content: center; border-left: 6px solid #6a11cb;">
-                    <h3 class="section-heading">VISION</h3>
-                    <!-- <img src="https://via.placeholder.com/500x300" alt="Mission Image" class="img-fluid rounded"> -->
+            <div class="mv-grid">
+                <div class="mv-item">
+                    <h2 class="mv-header">MISSION</h2>
+                    <p class="mv-text">
+                        To simplify and elevate urban mobility by leveraging cutting-edge technology and sustainable
+                        practices.
+                        We strive to make public transportation systems more inclusive, intuitive, and
+                        user-friendly—empowering
+                        commuters and shaping smarter cities.
+                    </p>
                 </div>
-                <div class="col-md-6">
-                    <div class="mission">
 
-                        <p>A world where public transport is not just a necessity but a seamless experience—accessible, sustainable, and driven by innovation. We envision cities
-                            where people can move effortlessly, without the stress of poor connectivity or outdated systems.</p>
-                    </div>
+                <div class="mv-item">
+                    <h2 class="mv-header vision-header">VISION</h2>
+                    <p class="mv-text">
+                        A world where public transport is not just a necessity but a seamless experience—accessible,
+                        sustainable, and driven by innovation. We envision cities where people can move effortlessly,
+                        without the stress of poor connectivity or outdated systems.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Origin Story CTA Section -->
+    <section class="py-5 position-relative"
+        style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('origin_bg.png') no-repeat center center/cover; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="display-5 fw-bold mb-4"
+                        style="font-family: 'Krona One', sans-serif; color: #fff; text-shadow: 0 0 20px rgba(106, 17, 203, 0.5);">
+                        The Spark That Started It All</h2>
+                    <p class="lead mb-5" style="color: rgba(255,255,255,0.9); line-height: 1.8; font-size: 1.25rem;">
+                        It began with a simple question: <em>Why is moving through our cities so hard?</em><br>
+                        What started as a conversation about lost time has evolved into a movement to reclaim it. We are
+                        not just building transport; we are engineering the future of urban life.
+                    </p>
+                    <a href="about.html"
+                        class="btn btn-lg px-5 py-3 rounded-pill position-relative overflow-hidden group"
+                        style="background: var(--primary-purple); color: white; border: none; font-weight: 600; transition: all 0.3s ease; box-shadow: 0 0 20px rgba(106, 17, 203, 0.4);">
+                        <span class="position-relative z-1">Discover Our Origin Story</span>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-5 ">
-        <div class="container ">
-            <h2 class="section-heading">Our Services</h2>
-            <p>We offer end-to-end solutions to modernize public transportation.
-Our key services include:
+    <section id="services" class="py-5">
+        <div class="container-fluid">
+            <div class="services-layout">
+                <div class="services-header">
+                    <h2 class="services-title">Our Services</h2>
+                    <p class="services-description">
+                        Innovative solutions to modernize public transportation. Explore our key services and strategic
+                        insights as we continue delivering value to our stakeholders.
+                    </p>
+                    <div class="services-nav">
+                        <button class="nav-arrow prev" onclick="scrollServices('left')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="nav-arrow next" onclick="scrollServices('right')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
 
-Transit Data Analytics to uncover inefficiencies and inform better planning
+                <div class="services-cards-container" id="servicesContainer">
+                    <div class="services-cards">
+                        <div class="service-card">
+                            <h3 class="service-card-title">Fleet Management</h3>
+                            <p class="service-card-text">
+                                Comprehensive fleet tracking, maintenance scheduling, and real-time vehicle monitoring
+                                for optimal operational efficiency.
+                            </p>
+                        </div>
 
-User-Centric Platforms that prioritize commuter needs and simplify navigation
+                        <div class="service-card">
+                            <h3 class="service-card-title">Finance Management</h3>
+                            <p class="service-card-text">
+                                Streamlined financial operations, automated billing, revenue tracking, and comprehensive
+                                reporting systems.
+                            </p>
+                        </div>
 
-System Integrations that connect different operators for a unified travel experience
+                        <div class="service-card">
+                            <h3 class="service-card-title">Smart Advertising</h3>
+                            <p class="service-card-text">
+                                Data-driven advertising solutions with targeted campaigns and real-time analytics for
+                                maximum engagement.
+                            </p>
+                        </div>
 
-Whether for governments, private operators, or city planners, we provide tools to make public transport smarter and more people-friendly.</p>
+                        <div class="service-card">
+                            <h3 class="service-card-title">Unified Mobility Ecosystem</h3>
+                            <p class="service-card-text">
+                                Integrated platform connecting multiple transport modes for seamless, end-to-end journey
+                                planning.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Who We Are Section -->
-    <section id="who-we-are" class="py-5">
-        <div class="container">
-            <h2 class="section-heading ">Who We Are</h2>
-          It began in college—with a daily struggle many commuters face. Long distances, multiple transfers, and limited information made every journey a challenge. Owning a vehicle wasn’t an option, and public transport, though widespread, felt disjointed and outdated.
-
-What started as casual conversations and shared frustrations soon became a deeper investigation. We began collecting data, mapping routes, and studying global transport systems. It became clear: the core infrastructure existed, but technology was missing. There was no bridge between commuters and the services meant to serve them.
-
-That’s when Urbanfolks Mobility was born—with a vision to bridge this gap using smart technology and data-driven solutions. Our goal has remained simple:
-Make public transport easy, efficient, and empowering—for everyone.
+    <!-- Culture CTA Section -->
+    <section class="py-5"
+        style="background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(42, 42, 42, 0.98) 100%); border-top: 1px solid rgba(106, 17, 203, 0.15);">
+        <div class="container py-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h3 class="mb-2" style="font-size: 1.8rem; font-weight: 700; color: var(--text-primary);">Curious
+                        about life at UFM?</h3>
+                    <p class="mb-0" style="font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7;">
+                        We're a small team building something big. Discover our values, philosophy, and what makes
+                        working here different.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <a href="culture.html" class="btn btn-lg px-4 py-2 rounded-pill"
+                        style="background: transparent; color: var(--primary-purple-light); border: 2px solid var(--primary-purple); font-weight: 600; transition: all 0.3s ease; text-decoration: none;">
+                        Explore Our Culture →
+                    </a>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Urbanfolks mobility private limited. All rights reserved. </p>
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>URBANFOLKS</h3>
+                    <p>Revolutionizing urban mobility with technology, sustainability, and a human-first approach.</p>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="culture.html">Culture</a></li>
+                        <li><a href="hiring.html">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="employee-policy.html">Employee Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Connect</h4>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/company/urbanfolks-mobility" class="social-icon"
+                            aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                        <a href="https://twitter.com/urbanfolks" class="social-icon" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/urbanfolks" class="social-icon" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Urbanfolks Mobility Private Limited. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- particle js  -->
     <script src="particles.js"></script>
-
     <script src="app.js"></script>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        function scrollServices(direction) {
+            const container = document.getElementById('servicesContainer');
+            const scrollAmount = 340;
+
+            if (direction === 'left') {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
+        }
+
+        // Animation for About Section
+        document.addEventListener('DOMContentLoaded', function () {
+            const aboutSection = document.getElementById('about');
+            if (!aboutSection) return;
+
+            const fadeElements = aboutSection.querySelectorAll('.fade-up-hidden');
+            const typewriterElement = document.getElementById('typewriter-text');
+
+            // Text to type
+            const textToType = "Mobility shaped the past.<br>Urbanfolks is shaping what comes next.";
+
+            // Intersection Observer for Fade In
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        // Animate fade elements with staggered delay
+                        fadeElements.forEach((el, index) => {
+                            setTimeout(() => {
+                                el.classList.add('fade-up-visible');
+                            }, index * 200);
+                        });
+
+                        // Start typing after fade animation
+                        setTimeout(() => {
+                            typewriterElement.classList.add('typewriter-cursor');
+                            typeText(typewriterElement, textToType);
+                        }, fadeElements.length * 200 + 500);
+
+                        fadeObserver.disconnect();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            fadeObserver.observe(aboutSection);
+
+            function typeText(el, htmlContent) {
+                let i = 0;
+                const speed = 40; // ms per char
+
+                function type() {
+                    if (i < htmlContent.length) {
+                        if (htmlContent[i] === '<') {
+                            // Skip tags (print them instantly)
+                            const tagEnd = htmlContent.indexOf('>', i);
+                            if (tagEnd !== -1) {
+                                el.innerHTML += htmlContent.substring(i, tagEnd + 1);
+                                i = tagEnd + 1;
+                            } else {
+                                el.innerHTML += htmlContent[i];
+                                i++;
+                            }
+                        } else {
+                            el.innerHTML += htmlContent[i];
+                            i++;
+                        }
+                        setTimeout(type, speed);
+                    }
+                    // Cursor stays blinking forever because we don't remove the class
+                }
+                type();
+            }
+        });
+    </script>
 </body>
 
 </html>

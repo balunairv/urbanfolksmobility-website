@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Culture - Urbanfolks Mobility</title>
+    <meta name="description"
+        content="Discover the culture that drives Urbanfolks Mobility - a close-knit team building the future of urban transportation">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .culture-hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .culture-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(106, 17, 203, 0.15) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        /* Values Section */
+        .values-section {
+            padding: 6rem 0;
+        }
+
+        .value-item {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            transition: transform var(--transition-normal);
+        }
+
+        .value-item:hover {
+            transform: translateX(10px);
+        }
+
+        .value-number {
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            line-height: 1;
+            margin-bottom: -1rem;
+            position: relative;
+            z-index: 0;
+            font-family: 'Krona One', sans-serif;
+        }
+
+        .value-content {
+            position: relative;
+            z-index: 1;
+            padding-left: 1rem;
+            border-left: 2px solid var(--primary-purple);
+        }
+
+        .value-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .value-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        /* Team Section */
+        .team-section {
+            padding: 6rem 0;
+            background: var(--bg-dark);
+        }
+
+        .team-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .team-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .team-text {
+            font-size: 1.3rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .team-highlight {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 2rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            background: var(--gradient-primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all var(--transition-normal);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(106, 17, 203, 0.5);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .team-title {
+                font-size: 2rem;
+            }
+
+            .team-text {
+                font-size: 1.1rem;
+            }
+
+            .value-number {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><img src="logo with wordmark.svg" alt="urbanfolks logo"
+                    style="height: 50px;"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="culture.html">Culture</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="hiring.html">Hiring</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="culture-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Fun Team, Serious Product</h1>
+            <p class="hero-subtitle">
+                At <strong>UFM</strong>, we believe work should be enjoyable, but our mission is critical.
+                We foster a fun, vibrant culture while maintaining an unwavering commitment to building
+                world-class products that redefine urban mobility.
+            </p>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="value-item">
+                        <div class="value-number">01</div>
+                        <div class="value-content">
+                            <h3 class="value-title">Intimate, Not Isolated</h3>
+                            <p class="value-description">
+                                We keep our team intentionally compact. This isn't about limiting growth—it's about
+                                fostering deep collaboration. When everyone knows each other, trust flourishes,
+                                communication flows naturally, and great ideas emerge from genuine conversations.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="value-item">
+                        <div class="value-number">02</div>
+                        <div class="value-content">
+                            <h3 class="value-title">Quality Over Quantity</h3>
+                            <p class="value-description">
+                                We'd rather have ten exceptional people who are deeply invested than a hundred who are
+                                just passing through. Every team member at UFM brings unique expertise, passion, and a
+                                shared
+                                commitment to transforming urban mobility.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="value-item">
+                        <div class="value-number">03</div>
+                        <div class="value-content">
+                            <h3 class="value-title">Ownership & Impact</h3>
+                            <p class="value-description">
+                                In a close-knit environment, your work directly shapes our direction. No bureaucracy,
+                                no endless approvals. Just smart people solving real problems, seeing their impact
+                                immediately, and growing together.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="value-item">
+                        <div class="value-number">04</div>
+                        <div class="value-content">
+                            <h3 class="value-title">Human-First Approach</h3>
+                            <p class="value-description">
+                                We're not just colleagues—we're a community. We celebrate wins together, support each
+                                other through challenges, and build lasting relationships. Because the best work happens
+                                when people genuinely care about each other's success.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Philosophy Section -->
+    <section class="team-section">
+        <div class="container">
+            <div class="team-content">
+                <h2 class="team-title">Small Team, Big Dreams</h2>
+                <p class="team-text">
+                    We're building the future of urban transportation with a philosophy that values depth over breadth.
+                    Our compact team structure means faster decisions, stronger bonds, and the agility to innovate
+                    without the weight of corporate complexity.
+                </p>
+                <p class="team-text">
+                    Every person at UFM has a seat at the table. Your ideas don't get lost in layers of management.
+                    Your contributions are visible, valued, and vital to our mission.
+                </p>
+                <p class="team-highlight">
+                    "We grow thoughtfully, not recklessly. We connect deeply, not superficially."
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Instagram CTA Section -->
+    <section class="py-5"
+        style="background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%); border-top: 1px solid rgba(106, 17, 203, 0.2); border-bottom: 1px solid rgba(106, 17, 203, 0.2); position: relative; overflow: hidden;">
+        <div class="container py-5 position-relative" style="z-index: 2;">
+            <div class="row align-items-center">
+                <div class="col-lg-7 mb-4 mb-lg-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="me-3" style="stroke: var(--primary-purple-light);">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-width="2"></rect>
+                            <circle cx="12" cy="12" r="4" stroke-width="2"></circle>
+                            <circle cx="18" cy="6" r="1.5" fill="var(--primary-purple-light)"></circle>
+                        </svg>
+                        <h2 class="mb-0"
+                            style="font-family: 'Krona One', sans-serif; font-size: 2rem; color: var(--text-primary);">
+                            @inside.ufm</h2>
+                    </div>
+                    <h3 class="mb-3" style="font-size: 1.6rem; font-weight: 700; color: var(--text-primary);">See Life
+                        at Urbanfolks</h3>
+                    <p class="mb-4" style="font-size: 1.1rem; line-height: 1.8; color: var(--text-secondary);">
+                        Follow us on Instagram for behind-the-scenes moments, team celebrations, and the real stories of
+                        what makes UFM special.
+                    </p>
+                    <div style="font-size: 1rem; color: var(--text-secondary); line-height: 1.9;">
+                        <div class="mb-2">Daily life at UFM</div>
+                        <div class="mb-2">Team events & celebrations</div>
+                        <div class="mb-2">Innovation in action</div>
+                        <div>Our journey together</div>
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center">
+                    <a href="https://www.instagram.com/inside.ufm/" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-lg px-5 py-3 rounded-pill"
+                        style="background: var(--gradient-primary); color: white; font-weight: 700; font-size: 1.1rem; border: none; box-shadow: 0 8px 24px rgba(106, 17, 203, 0.3); transition: all 0.3s ease; text-decoration: none; display: inline-block;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            style="vertical-align: middle; margin-right: 8px; stroke: white;">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-width="2"></rect>
+                            <circle cx="12" cy="12" r="4" stroke-width="2"></circle>
+                            <circle cx="18" cy="6" r="1.5" fill="white"></circle>
+                        </svg>
+                        Follow @inside.ufm
+                    </a>
+                    <p class="mt-3" style="font-size: 0.9rem; color: var(--text-secondary);">Join our community</p>
+                </div>
+            </div>
+        </div>
+        <!-- Subtle decorative glow -->
+        <div
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(106, 17, 203, 0.1) 0%, transparent 70%); z-index: 1; pointer-events: none;">
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Join UFM?</h2>
+            <p style="font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                If you're looking for a place where your work matters, where relationships run deep,
+                and where you can truly make an impact—let's talk.
+            </p>
+            <a href="hiring.html" class="cta-button">Explore Opportunities</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>URBANFOLKS</h3>
+                    <p>Revolutionizing urban mobility with technology, sustainability, and a human-first approach.</p>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="culture.html">Culture</a></li>
+                        <li><a href="hiring.html">Careers</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="employee-policy.html">Employee Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-heading">Connect</h4>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/company/urbanfolks-mobility" class="social-icon"
+                            aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                </path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                        </a>
+                        <a href="https://twitter.com/urbanfolks" class="social-icon" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                                </path>
+                            </svg>
+                        </a>
+                        <a href="https://instagram.com/urbanfolks" class="social-icon" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Urbanfolks Mobility Private Limited. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Navbar Scroll Effect -->
+    <script>
+        window.addEventListener('scroll', function () {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+
+</html>
