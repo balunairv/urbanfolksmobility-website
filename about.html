@@ -153,12 +153,12 @@
         /* The Route Line */
         .route-line {
             position: absolute;
-            top: 18px;
-            /* Center of first station (36px height / 2) */
-            bottom: 18px;
+            top: 16px;
+            /* Center of first station (32px height / 2) */
+            bottom: 16px;
             /* Center of last station */
-            left: 52px;
-            /* Center of station (36px left + 18px half-width - 2px half-line) */
+            left: 51px;
+            /* Center of station (36px left + 16px half-width - 2px half-line) */
             width: 4px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
@@ -167,8 +167,8 @@
 
         .route-progress {
             position: absolute;
-            top: 18px;
-            left: 52px;
+            top: 16px;
+            left: 51px;
             width: 4px;
             background: var(--gradient-primary);
             border-radius: 2px;
@@ -189,6 +189,7 @@
             opacity: 0.5;
             transition: all 0.5s ease;
             z-index: 2;
+            transform-origin: 16px 50%;
         }
 
         .station-dot {
@@ -616,7 +617,7 @@
                         // Update progress bar height
                         if (index === 0) progressBar.style.height = '0%';
                         if (index === 1) progressBar.style.height = '50%';
-                        if (index === 2) progressBar.style.height = 'calc(100% - 36px)';
+                        if (index === 2) progressBar.style.height = 'calc(100% - 32px)';
                     }
                 });
             }, observerOptions);

@@ -6,16 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urbanfolks Mobility</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
     <style>
+        body {
+            overflow-x: hidden;
+        }
+
         /* Mission & Vision Container */
         .mv-section {
             padding: 6rem 0;
@@ -32,7 +33,6 @@
             position: relative;
         }
 
-        /* Vertical Divider */
         .mv-grid::after {
             content: '';
             position: absolute;
@@ -44,16 +44,10 @@
             transform: translateX(-50%);
         }
 
-        /* Content Style */
         .mv-item {
             padding: 2rem;
             text-align: center;
             position: relative;
-            transition: transform var(--transition-normal);
-        }
-
-        .mv-item:hover {
-            transform: translateY(-5px);
         }
 
         .mv-header {
@@ -82,14 +76,6 @@
             color: var(--text-secondary);
             position: relative;
             z-index: 1;
-        }
-
-        /* Decorative Icons/Elements */
-        .mv-icon {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 1.5rem;
-            opacity: 0.8;
         }
 
         @media (max-width: 992px) {
@@ -224,41 +210,6 @@
             color: var(--text-secondary);
         }
 
-        /* Animation Classes */
-        .fade-up-hidden {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .fade-up-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Typewriter Effect */
-        .typewriter-cursor::after {
-            content: '|';
-            display: inline-block;
-            margin-left: 2px;
-            animation: blink-cursor 0.7s infinite;
-            color: var(--primary-purple);
-            font-weight: bold;
-        }
-
-        @keyframes blink-cursor {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
-        }
-
-        /* Responsive */
         @media (max-width: 1200px) {
             .services-layout {
                 grid-template-columns: 350px 1fr;
@@ -283,103 +234,135 @@
         }
 
         @media (max-width: 768px) {
+            .services-layout {
+                padding: 0 1rem;
+            }
+
             .services-title {
                 font-size: 2rem;
             }
 
             .service-card {
-                min-width: 260px;
-                max-width: 260px;
-                padding: 2rem;
+                min-width: 85vw;
+                max-width: 85vw;
+                padding: 1.5rem;
+            }
+        }
+
+        /* About Section */
+        #about {
+            position: relative;
+        }
+
+        #about .sticky-container {
+            position: relative;
+        }
+
+        .typewriter-cursor::after {
+            content: '|';
+            display: inline-block;
+            margin-left: 2px;
+            animation: blink-cursor 0.7s infinite;
+            color: var(--primary-purple);
+            font-weight: bold;
+        }
+
+        @keyframes blink-cursor {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Navbar -->
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="index.html"><img src="logo with wordmark.svg" alt="urbanfolks logo"
                     style="height: 50px;"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="culture.html">Culture</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="hiring.html">Hiring</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="culture.html">Culture</a></li>
+                    <li class="nav-item"><a class="nav-link" href="hiring.html">Hiring</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <header id="particles-js" class="gradient-bg text-center">
         <span class="center-text">
-            <h1>Welcome to <span style="font-family: Krona One;color: #6a11cb;">URBANFOLKS MOBILITY</span></h1>
-            <p class="lead ">Driving innovation and redifining mobility.</p>
+            <p class="lead mb-2" style="font-size: 1.5rem; color: var(--text-secondary);">Welcome to</p>
+            <h1 style="font-family: 'Krona One', sans-serif; color: #6a11cb; margin-bottom: 1rem;">URBANFOLKS MOBILITY
+            </h1>
+            <p class="lead" style="font-size: 1.3rem; color: var(--text-secondary);">Driving innovation and redefining
+                mobility</p>
         </span>
     </header>
 
-    <!-- About Section -->
     <section id="about" class="py-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-10 text-center">
-                    <p class="lead mb-4 fade-up-hidden" style="line-height: 1.8; color: var(--text-secondary);">
-                        Since the moment humans discovered the wheel, mobility has defined our progress. From rolling
-                        stones to roaring engines, from crossing rivers to conquering skies-our desire to move faster,
-                        smarter, and farther has been woven into our evolution.
-                    </p>
-                    <p class="lead mb-4 fade-up-hidden" style="line-height: 1.8; color: var(--text-secondary);">
-                        Every era has brought a new breakthrough in how we travel. And the next wave is already here.
-                    </p>
-                    <p class="lead mb-5 fade-up-hidden" style="line-height: 1.8; color: var(--text-secondary);">
-                        At Urbanfolks Mobility, we are committed to being at the forefront of this modern mobility
-                        revolution.
-                        We are building an ecosystem that transforms how people move within cities-smarter public
-                        transport, connected systems, and a future where every journey becomes seamless.
-                    </p>
-                    <h3 class="fw-bold mt-5" id="typewriter-text"
-                        style="color: var(--primary-purple-light); font-family: 'Krona One', sans-serif; line-height: 1.6; min-height: 3.2em;">
-                        <!-- Text will be typed here -->
-                    </h3>
+        <div class="sticky-container">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-4 mb-lg-0">
+                        <img src="mobility_evolve.png" alt="Evolution of Mobility" class="img-fluid rounded gsap-image"
+                            style="box-shadow: 0 10px 40px rgba(106, 17, 203, 0.3); opacity: 0;">
+                    </div>
+                    <div class="col-lg-7">
+                        <p class="lead mb-4 gsap-text" id="text-1"
+                            style="line-height: 1.8; color: var(--text-secondary); opacity: 0;">
+                            Since the moment humans discovered the wheel, mobility has defined our progress. From
+                            rolling stones to roaring engines, from crossing rivers to conquering skies-our desire to
+                            move faster, smarter, and farther has been woven into our evolution.
+                        </p>
+                        <p class="lead mb-4 gsap-text" id="text-2"
+                            style="line-height: 1.8; color: var(--text-secondary); opacity: 0;">
+                            Every era has brought a new breakthrough in how we travel. And the next wave is already
+                            here.
+                        </p>
+                        <p class="lead mb-4 gsap-text" id="text-3"
+                            style="line-height: 1.8; color: var(--text-secondary); opacity: 0;">
+                            At Urbanfolks Mobility, we are committed to being at the forefront of this modern mobility
+                            revolution. We are building an ecosystem that transforms how people move within
+                            cities-smarter public transport, connected systems, and a future where every journey becomes
+                            seamless.
+                        </p>
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-5">
+                    <div class="col-lg-10 text-center">
+                        <h3 class="fw-bold" id="typewriter-text"
+                            style="color: var(--primary-purple-light); font-family: 'Krona One', sans-serif; line-height: 1.6; min-height: 3.2em;">
+                        </h3>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Mission & Vision Section -->
     <section class="mv-section gradient-bg">
         <div class="container">
             <div class="mv-grid">
-                <div class="mv-item">
+                <div class="mv-item gsap-fade">
                     <h2 class="mv-header">MISSION</h2>
                     <p class="mv-text">
                         To simplify and elevate urban mobility by leveraging cutting-edge technology and sustainable
-                        practices.
-                        We strive to make public transportation systems more inclusive, intuitive, and
-                        user-friendly—empowering
-                        commuters and shaping smarter cities.
+                        practices. We strive to make public transportation systems more inclusive, intuitive, and
+                        user-friendly—empowering commuters and shaping smarter cities.
                     </p>
                 </div>
-
-                <div class="mv-item">
+                <div class="mv-item gsap-fade">
                     <h2 class="mv-header vision-header">VISION</h2>
                     <p class="mv-text">
                         A world where public transport is not just a necessity but a seamless experience—accessible,
@@ -391,8 +374,7 @@
         </div>
     </section>
 
-    <!-- Origin Story CTA Section -->
-    <section class="py-5 position-relative"
+    <section class="py-5 position-relative gsap-fade"
         style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('origin_bg.png') no-repeat center center/cover; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1);">
         <div class="container py-5">
             <div class="row justify-content-center">
@@ -415,11 +397,10 @@
         </div>
     </section>
 
-    <!-- Services Section -->
     <section id="services" class="py-5">
         <div class="container-fluid">
             <div class="services-layout">
-                <div class="services-header">
+                <div class="services-header gsap-fade">
                     <h2 class="services-title">Our Services</h2>
                     <p class="services-description">
                         Innovative solutions to modernize public transportation. Explore our key services and strategic
@@ -440,34 +421,30 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="services-cards-container" id="servicesContainer">
                     <div class="services-cards">
-                        <div class="service-card">
+                        <div class="service-card gsap-card">
                             <h3 class="service-card-title">Fleet Management</h3>
                             <p class="service-card-text">
                                 Comprehensive fleet tracking, maintenance scheduling, and real-time vehicle monitoring
                                 for optimal operational efficiency.
                             </p>
                         </div>
-
-                        <div class="service-card">
+                        <div class="service-card gsap-card">
                             <h3 class="service-card-title">Finance Management</h3>
                             <p class="service-card-text">
                                 Streamlined financial operations, automated billing, revenue tracking, and comprehensive
                                 reporting systems.
                             </p>
                         </div>
-
-                        <div class="service-card">
+                        <div class="service-card gsap-card">
                             <h3 class="service-card-title">Smart Advertising</h3>
                             <p class="service-card-text">
                                 Data-driven advertising solutions with targeted campaigns and real-time analytics for
                                 maximum engagement.
                             </p>
                         </div>
-
-                        <div class="service-card">
+                        <div class="service-card gsap-card">
                             <h3 class="service-card-title">Unified Mobility Ecosystem</h3>
                             <p class="service-card-text">
                                 Integrated platform connecting multiple transport modes for seamless, end-to-end journey
@@ -480,8 +457,7 @@
         </div>
     </section>
 
-    <!-- Culture CTA Section -->
-    <section class="py-5"
+    <section class="py-5 gsap-fade"
         style="background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(42, 42, 42, 0.98) 100%); border-top: 1px solid rgba(106, 17, 203, 0.15);">
         <div class="container py-4">
             <div class="row align-items-center">
@@ -503,7 +479,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -511,7 +486,6 @@
                     <h3>URBANFOLKS</h3>
                     <p>Revolutionizing urban mobility with technology, sustainability, and a human-first approach.</p>
                 </div>
-
                 <div>
                     <h4 class="footer-heading">Company</h4>
                     <ul class="footer-links">
@@ -521,7 +495,6 @@
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h4 class="footer-heading">Legal</h4>
                     <ul class="footer-links">
@@ -530,7 +503,6 @@
                         <li><a href="#">Terms of Service</a></li>
                     </ul>
                 </div>
-
                 <div>
                     <h4 class="footer-heading">Connect</h4>
                     <div class="social-links">
@@ -564,19 +536,22 @@
                     </div>
                 </div>
             </div>
-
             <div class="footer-bottom">
                 <p>&copy; 2025 Urbanfolks Mobility Private Limited. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- GSAP and ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="particles.js"></script>
     <script src="app.js"></script>
 
     <script>
+        gsap.registerPlugin(ScrollTrigger);
+
         window.addEventListener('scroll', function () {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
@@ -589,7 +564,6 @@
         function scrollServices(direction) {
             const container = document.getElementById('servicesContainer');
             const scrollAmount = 340;
-
             if (direction === 'left') {
                 container.scrollLeft -= scrollAmount;
             } else {
@@ -597,68 +571,138 @@
             }
         }
 
-        // Animation for About Section
-        document.addEventListener('DOMContentLoaded', function () {
-            const aboutSection = document.getElementById('about');
-            if (!aboutSection) return;
+        // GSAP ScrollTrigger Animations
+        gsap.fromTo('.gsap-image',
+            { opacity: 0, x: -100 },
+            {
+                opacity: 1,
+                x: 0,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: 'top 80%',
+                    end: 'top 30%',
+                    scrub: 1
+                }
+            }
+        );
 
-            const fadeElements = aboutSection.querySelectorAll('.fade-up-hidden');
-            const typewriterElement = document.getElementById('typewriter-text');
+        // Text reveals with ScrollTrigger
+        gsap.fromTo('#text-1',
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: 'top 60%',
+                    end: 'top 40%',
+                    scrub: 1
+                }
+            }
+        );
 
-            // Text to type
-            const textToType = "Mobility shaped the past.<br>Urbanfolks is shaping what comes next.";
+        gsap.fromTo('#text-2',
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: 'top 40%',
+                    end: 'top 20%',
+                    scrub: 1
+                }
+            }
+        );
 
-            // Intersection Observer for Fade In
-            const fadeObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        // Animate fade elements with staggered delay
-                        fadeElements.forEach((el, index) => {
-                            setTimeout(() => {
-                                el.classList.add('fade-up-visible');
-                            }, index * 200);
-                        });
-
-                        // Start typing after fade animation
+        gsap.fromTo('#text-3',
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: '#about',
+                    start: 'top 20%',
+                    end: 'top 0%',
+                    scrub: 1,
+                    onEnter: () => {
                         setTimeout(() => {
-                            typewriterElement.classList.add('typewriter-cursor');
-                            typeText(typewriterElement, textToType);
-                        }, fadeElements.length * 200 + 500);
-
-                        fadeObserver.disconnect();
+                            document.getElementById('typewriter-text').classList.add('typewriter-cursor');
+                            typeText(document.getElementById('typewriter-text'), "Mobility shaped the past.<br>Urbanfolks is shaping what comes next.");
+                        }, 500);
                     }
-                });
-            }, { threshold: 0.3 });
+                }
+            }
+        );
 
-            fadeObserver.observe(aboutSection);
+        // Fade in animations for other sections
+        gsap.utils.toArray('.gsap-fade').forEach((element) => {
+            gsap.fromTo(element,
+                { opacity: 0, y: 80 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: element,
+                        start: 'top 85%',
+                        end: 'top 60%',
+                        scrub: 1
+                    }
+                }
+            );
+        });
 
-            function typeText(el, htmlContent) {
-                let i = 0;
-                const speed = 40; // ms per char
+        // Service cards stagger animation
+        gsap.utils.toArray('.gsap-card').forEach((card, index) => {
+            gsap.fromTo(card,
+                { opacity: 0, y: 60, scale: 0.9 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.6,
+                    delay: index * 0.1,
+                    scrollTrigger: {
+                        trigger: '#services',
+                        start: 'top 70%',
+                        end: 'top 40%',
+                        scrub: 1
+                    }
+                }
+            );
+        });
 
-                function type() {
-                    if (i < htmlContent.length) {
-                        if (htmlContent[i] === '<') {
-                            // Skip tags (print them instantly)
-                            const tagEnd = htmlContent.indexOf('>', i);
-                            if (tagEnd !== -1) {
-                                el.innerHTML += htmlContent.substring(i, tagEnd + 1);
-                                i = tagEnd + 1;
-                            } else {
-                                el.innerHTML += htmlContent[i];
-                                i++;
-                            }
+        let typeWriterTimeout;
+        function typeText(el, htmlContent) {
+            if (typeWriterTimeout) clearTimeout(typeWriterTimeout);
+            el.innerHTML = '';
+            let i = 0;
+            const speed = 40;
+            function type() {
+                if (i < htmlContent.length) {
+                    if (htmlContent[i] === '<') {
+                        const tagEnd = htmlContent.indexOf('>', i);
+                        if (tagEnd !== -1) {
+                            el.innerHTML += htmlContent.substring(i, tagEnd + 1);
+                            i = tagEnd + 1;
                         } else {
                             el.innerHTML += htmlContent[i];
                             i++;
                         }
-                        setTimeout(type, speed);
+                    } else {
+                        el.innerHTML += htmlContent[i];
+                        i++;
                     }
-                    // Cursor stays blinking forever because we don't remove the class
+                    typeWriterTimeout = setTimeout(type, speed);
                 }
-                type();
             }
-        });
+            type();
+        }
     </script>
 </body>
 
