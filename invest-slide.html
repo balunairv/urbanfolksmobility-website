@@ -1,0 +1,2331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Urbanfolks Mobility | Pitch Deck</title>
+<meta name="description" content="36 million Indians move by public transport every day. We're building the digital layer that connects every bus, metro, auto, and rail into one network." />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Urbanfolks Mobility" />
+<meta property="og:title" content="Urbanfolks Mobility · Connecting how India moves" />
+<meta property="og:description" content="36 million Indians move by public transport every day. We're building the digital layer that connects it all." />
+<meta property="og:url" content="https://urbanfolksmobility.in/invest-slide" />
+<meta property="og:locale" content="en_IN" />
+<meta property="og:image" content="https://urbanfolksmobility.in/og-preview.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Urbanfolks Mobility — the digital layer beneath India's public transport" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Urbanfolks Mobility · Connecting how India moves" />
+<meta name="twitter:description" content="36 million Indians move by public transport every day. We're building the digital layer that connects it all." />
+<meta name="twitter:image" content="https://urbanfolksmobility.in/og-preview.jpg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Reset & Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #0a0a0a;
+    background: #0a0a0a;
+    transition: background 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; border: none; cursor: pointer; background: none; }
+
+  :root {
+    --dark: #0a0a0a;
+    --dark-2: #141414;
+    --light: #fafafa;
+    --muted-dark: #6b6b6b;
+    --muted-light: #b8b8b8;
+    --accent: #6E13EF;
+    --accent-soft: rgba(110, 19, 239, 0.1);
+    --line-dark: rgba(255,255,255,0.08);
+    --line-light: rgba(0,0,0,0.08);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ---------- Deck & Slide System ---------- */
+  .deck {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+  }
+  section.slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    padding: 100px 64px 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    overflow-y: auto;
+    transition: opacity 0.55s var(--ease), visibility 0s 0.55s;
+  }
+  section.slide.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.55s var(--ease), visibility 0s;
+    z-index: 1;
+  }
+  .dark { background: var(--dark); color: var(--light); }
+  .light { background: var(--light); color: var(--dark); }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ---------- Nav (deck chrome) ---------- */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 150;
+    mix-blend-mode: difference;
+    color: #fff;
+    pointer-events: none;
+  }
+  .nav__logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+  .nav__logo em { font-style: italic; font-weight: 400; }
+  .nav__tag {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  /* ---------- Arrow Navigation ---------- */
+  .nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    border: 1px solid rgba(128,128,128,0.35);
+    background: rgba(10,10,10,0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    z-index: 200;
+    mix-blend-mode: difference;
+    cursor: pointer;
+    transition: transform 0.3s var(--ease), background 0.3s var(--ease), border-color 0.3s var(--ease), opacity 0.3s var(--ease);
+  }
+  .nav-arrow svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .nav-arrow:not(:disabled):hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-50%) scale(1.05);
+  }
+  .nav-arrow:disabled {
+    opacity: 0.18;
+    cursor: default;
+  }
+  .nav-arrow--prev { left: 24px; }
+  .nav-arrow--next { right: 24px; }
+
+  /* ---------- Slide Indicator ---------- */
+  .slide-indicator {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    color: #fff;
+    z-index: 200;
+    mix-blend-mode: difference;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+  }
+  .slide-indicator__current { color: var(--accent); font-weight: 500; font-style: italic; }
+  .slide-indicator__separator { opacity: 0.35; }
+  .slide-indicator__total { opacity: 0.55; }
+
+  .slide-hint {
+    position: fixed;
+    bottom: 28px;
+    right: 32px;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #fff;
+    opacity: 0.4;
+    z-index: 200;
+    mix-blend-mode: difference;
+  }
+
+  /* ---------- Typography ---------- */
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .dark .eyebrow { color: var(--accent); }
+
+  .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 6vw, 6rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+  .display em { font-style: italic; font-weight: 400; color: var(--accent); }
+
+  .lede {
+    font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+    font-weight: 300;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    max-width: 900px;
+  }
+
+  .body {
+    font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+    color: var(--muted-dark);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .dark .body { color: var(--muted-light); }
+
+  .reveal-line {
+    display: block;
+    overflow: hidden;
+  }
+  .reveal-line > span {
+    display: block;
+    transform: translateY(110%);
+    opacity: 0;
+    will-change: transform;
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    will-change: transform, opacity;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    overflow: hidden;
+  }
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .hero__content { position: relative; z-index: 2; }
+  .hero .display {
+    font-size: clamp(2.2rem, 5.2vw, 5.2rem);
+    max-width: 1200px;
+    margin-bottom: 40px;
+  }
+  .hero__switch {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-style: italic;
+    color: var(--muted-light);
+    margin-top: 28px;
+  }
+  .hero__switch .mode {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid var(--line-dark);
+    border-radius: 999px;
+    color: var(--light);
+    font-style: normal;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+  }
+  .hero__switch .arrow { color: var(--accent); font-style: normal; }
+  .hero__struggle {
+    margin-top: 48px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+    color: var(--accent);
+  }
+
+  /* ---------- FRAGMENTED TROUBLE ---------- */
+  .fragmented {
+    background:
+      radial-gradient(ellipse 720px 500px at 50% 52%, rgba(110, 19, 239, 0.10) 0%, transparent 60%),
+      #0e0e10;
+    position: relative;
+    overflow: hidden;
+  }
+  .fragmented .container { text-align: center; }
+  .fragmented .eyebrow {
+    display: inline-flex;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+  .fragmented__headline {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 4.5vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 auto 8px;
+    max-width: 780px;
+  }
+  .fragmented__headline em { font-style: italic; color: var(--accent); }
+
+  .network {
+    width: 100%;
+    max-width: 820px;
+    margin: 32px auto 0;
+    padding: 8px 0;
+    position: relative;
+  }
+  .network__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .node circle {
+    fill: none;
+    stroke: rgba(255,255,255,0.22);
+    stroke-width: 1.3;
+    transition: stroke 1s var(--ease), fill 1s var(--ease);
+  }
+  .node text {
+    fill: rgba(255,255,255,0.4);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    font-family: 'Inter', sans-serif;
+    transition: fill 1s var(--ease);
+  }
+  .network.revealed .node circle {
+    stroke: rgba(255,255,255,0.65);
+    fill: rgba(110, 19, 239, 0.05);
+  }
+  .network.revealed .node text { fill: var(--light); }
+  .stub {
+    stroke: var(--accent);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0.55;
+    stroke-dasharray: 220;
+    stroke-dashoffset: 220;
+    transition: stroke-dashoffset 0.9s var(--ease);
+  }
+  .network.revealed .stub { stroke-dashoffset: 0; }
+  .network.revealed .stub:nth-of-type(1)  { transition-delay: 0.10s; }
+  .network.revealed .stub:nth-of-type(2)  { transition-delay: 0.12s; }
+  .network.revealed .stub:nth-of-type(3)  { transition-delay: 0.18s; }
+  .network.revealed .stub:nth-of-type(4)  { transition-delay: 0.20s; }
+  .network.revealed .stub:nth-of-type(5)  { transition-delay: 0.26s; }
+  .network.revealed .stub:nth-of-type(6)  { transition-delay: 0.28s; }
+  .network.revealed .stub:nth-of-type(7)  { transition-delay: 0.34s; }
+  .network.revealed .stub:nth-of-type(8)  { transition-delay: 0.36s; }
+  .network.revealed .stub:nth-of-type(9)  { transition-delay: 0.42s; }
+  .network.revealed .stub:nth-of-type(10) { transition-delay: 0.44s; }
+  .network.revealed .stub:nth-of-type(11) { transition-delay: 0.50s; }
+  .network.revealed .stub:nth-of-type(12) { transition-delay: 0.52s; }
+  .break {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    fill: none;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease) 1.1s;
+  }
+  .break--center { stroke-width: 1.9; }
+  .network.revealed .break { opacity: 0.9; }
+  .network.revealed .break--center {
+    animation: breakPulse 2.6s ease-in-out 1.6s infinite;
+  }
+  @keyframes breakPulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 0.45; }
+  }
+  .fragmented__closing {
+    margin: 36px auto 0;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--light);
+    max-width: 720px;
+  }
+  .fragmented__closing em { font-style: italic; color: var(--accent); }
+
+  /* ---------- PROBLEM ---------- */
+  .problem__headline {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 48px;
+    max-width: 820px;
+  }
+  .problem__headline em { font-style: italic; color: var(--accent); }
+  .problem__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line-light);
+    border: 1px solid var(--line-light);
+  }
+  .insight-card {
+    background: var(--light);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 220px;
+    justify-content: space-between;
+  }
+  .insight-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .insight-card__num {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    color: var(--muted-dark);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+  }
+  .trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+  .trend--down { color: #d13b3b; background: rgba(209, 59, 59, 0.08); }
+  .trend--up { color: var(--accent); background: var(--accent-soft); }
+  .trend__arrow {
+    width: 11px; height: 11px;
+    stroke-width: 1.5;
+    stroke: currentColor;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .insight-card--right { text-align: right; }
+  .insight-card--right .insight-card__head,
+  .insight-card--right .insight-card__foot {
+    flex-direction: row-reverse;
+  }
+  .insight-card__label {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.45rem, 2.4vw, 1.95rem);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .insight-card__label em { font-style: italic; }
+  .insight-card--fall .insight-card__label em { color: #d13b3b; }
+  .insight-card--rise .insight-card__label em,
+  .insight-card--congestion .insight-card__label em,
+  .insight-card--pollution .insight-card__label em { color: var(--accent); }
+  .insight-card__foot {
+    border-top: 1px solid var(--line-light);
+    padding-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .insight-card__meta {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    white-space: nowrap;
+  }
+  .spark {
+    width: 96px; height: 28px; display: block; flex: 0 0 auto; overflow: visible;
+  }
+  .spark rect {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    opacity: 0;
+    transition: transform 0.7s var(--ease), opacity 0.5s var(--ease);
+  }
+  .insight-card--fall .spark rect { fill: #d13b3b; }
+  .insight-card--rise .spark rect { fill: var(--accent); }
+  .insight-card.revealed .spark rect { transform: scaleY(1); opacity: 0.35; }
+  .insight-card--fall.revealed .spark rect:first-of-type { opacity: 0.9; }
+  .insight-card--rise.revealed .spark rect:last-of-type { opacity: 0.9; }
+  .insight-card.revealed .spark rect:nth-of-type(1) { transition-delay: 0.04s; }
+  .insight-card.revealed .spark rect:nth-of-type(2) { transition-delay: 0.09s; }
+  .insight-card.revealed .spark rect:nth-of-type(3) { transition-delay: 0.14s; }
+  .insight-card.revealed .spark rect:nth-of-type(4) { transition-delay: 0.19s; }
+  .insight-card.revealed .spark rect:nth-of-type(5) { transition-delay: 0.24s; }
+  .jam {
+    width: 148px; height: 30px; display: block; flex: 0 0 auto; overflow: visible;
+  }
+  .jam__road {
+    stroke: rgba(0,0,0,0.18);
+    stroke-width: 1;
+    stroke-dasharray: 3 4;
+    fill: none;
+  }
+  .car {
+    fill: rgba(0,0,0,0.28);
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.3) translateX(-8px);
+    opacity: 0;
+    transition: transform 0.55s var(--ease), opacity 0.4s var(--ease);
+  }
+  .car--jam { fill: var(--accent); }
+  .insight-card.revealed .car { transform: scale(1) translateX(0); opacity: 1; }
+  .insight-card.revealed .car:nth-of-type(1) { transition-delay: 0.02s; }
+  .insight-card.revealed .car:nth-of-type(2) { transition-delay: 0.08s; }
+  .insight-card.revealed .car:nth-of-type(3) { transition-delay: 0.14s; }
+  .insight-card.revealed .car:nth-of-type(4) { transition-delay: 0.24s; }
+  .insight-card.revealed .car:nth-of-type(5) { transition-delay: 0.30s; }
+  .insight-card.revealed .car:nth-of-type(6) { transition-delay: 0.36s; }
+  .insight-card.revealed .car:nth-of-type(7) { transition-delay: 0.42s; }
+  .insight-card.revealed .car:nth-of-type(8) { transition-delay: 0.48s; }
+  .haze {
+    width: 148px; height: 38px; display: block; flex: 0 0 auto; overflow: visible;
+  }
+  .p {
+    fill: rgba(0,0,0,0.28);
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.4);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    transition-delay: var(--d, 0s);
+  }
+  .p--heavy { fill: var(--accent); }
+  .insight-card.revealed .p { opacity: 1; transform: scale(1); }
+
+  .problem__closing {
+    margin-top: 48px;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    color: var(--dark);
+    text-align: center;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .problem__closing em { font-style: italic; color: var(--accent); }
+
+  /* ---------- DOING ---------- */
+  .doing__intro {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 4.5vw, 4.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    max-width: 1100px;
+  }
+  .doing__intro .strike {
+    position: relative;
+    display: inline-block;
+    color: var(--muted-light);
+  }
+  .doing__intro .strike::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: 55%;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s var(--ease);
+  }
+  .doing__intro.animate .strike::after { transform: scaleX(1); }
+  .doing__intro em { font-style: italic; color: var(--accent); }
+
+  /* ---------- START ---------- */
+  .start__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .start__visual {
+    aspect-ratio: 4/5;
+    background: linear-gradient(160deg, #efefef 0%, #e8e8e8 60%, #dcdcdc 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .start__fleet {
+    position: absolute;
+    inset: 84px 44px 120px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fleet {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    display: block;
+    overflow: visible;
+  }
+  .bus {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.6);
+    transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+    transition-delay: var(--d, 0s);
+  }
+  .bus--off rect { fill: none; stroke: rgba(0,0,0,0.22); stroke-width: 1.2; }
+  .bus--off line { stroke: rgba(0,0,0,0.3); stroke-width: 1.3; stroke-linecap: round; }
+  .bus--on rect  { fill: var(--accent); stroke: none; }
+  .start__visual.revealed .bus { opacity: 1; transform: scale(1); }
+  .start__offline {
+    position: absolute;
+    top: 40px; left: 40px;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .start__offline::before {
+    content: "";
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+  }
+  .start__stat {
+    position: absolute;
+    bottom: 40px; right: 40px;
+    text-align: right;
+    font-family: 'Fraunces', serif;
+  }
+  .start__stat-num {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--dark);
+  }
+  .start__stat-label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    margin-top: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ---------- ROADMAP (non-pinned slide version) ---------- */
+  section.slide.roadmap {
+    padding: 0 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .roadmap__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .roadmap__left .eyebrow { margin-bottom: 32px; }
+  .roadmap__title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2.2rem, 4.5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 40px;
+  }
+  .roadmap__progress {
+    display: flex;
+    gap: 8px;
+    margin-top: 56px;
+  }
+  .roadmap__progress span {
+    flex: 1;
+    height: 2px;
+    background: var(--line-dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .roadmap__progress span::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s var(--ease);
+  }
+  .roadmap__progress span.active::after { transform: scaleX(1); }
+  .roadmap__steps {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .roadmap__step {
+    opacity: 0.2;
+    transform: translateX(40px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 28px 0;
+    border-top: 1px solid var(--line-dark);
+  }
+  .roadmap__step.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .roadmap__step-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+    min-width: 40px;
+  }
+  .roadmap__step-content { flex: 1; }
+  .roadmap__step-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .roadmap__step-desc {
+    font-size: 14px;
+    color: var(--muted-light);
+  }
+  .roadmap__final {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--dark);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s var(--ease);
+    padding: 0 48px;
+    text-align: center;
+    z-index: 5;
+  }
+  .roadmap__final.active { opacity: 1; }
+  .roadmap__final-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 5vw, 5rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    max-width: 1100px;
+  }
+  .roadmap__final-text em { font-style: italic; color: var(--accent); }
+
+  /* ---------- GTM ---------- */
+  .gtm__header { margin-bottom: 48px; }
+  .gtm__intro {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 800px;
+  }
+  .gtm__intro em { font-style: italic; color: var(--accent); }
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--line-light);
+    border: 1px solid var(--line-light);
+  }
+  .flow__item {
+    background: var(--light);
+    padding: 32px 28px;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    position: relative;
+    transition: background 0.4s var(--ease);
+  }
+  .flow__item:hover { background: #f2f2f2; }
+  .flow__step {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+  }
+  .flow__body { display: flex; flex-direction: column; gap: 10px; }
+  .flow__text {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.3rem, 2vw, 1.8rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .flow__desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted-dark);
+    max-width: 260px;
+  }
+  .flow__arrow {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: var(--dark);
+    color: var(--light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 2;
+  }
+  .flow__item:last-child .flow__arrow { display: none; }
+  .gtm__sub {
+    margin-top: 20px;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.6;
+    color: var(--muted-dark);
+    max-width: 620px;
+  }
+  .gtm__stage { margin-top: 40px; }
+  .gtm__stage-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .gtm__stage-num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .gtm__stage-title {
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--dark);
+  }
+  .chain {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 32px;
+    padding: 20px 0 0;
+    position: relative;
+  }
+  .chain__node {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    padding: 0 12px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .chain__node.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chain__node:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    width: 100%;
+    height: 1px;
+    background-image: linear-gradient(to right, var(--accent) 0, var(--accent) 6px, transparent 6px, transparent 12px);
+    background-size: 12px 1px;
+    background-repeat: repeat-x;
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s var(--ease) 0.35s, opacity 0.6s var(--ease);
+  }
+  .chain__node.revealed:not(:last-child)::after { transform: scaleX(1); }
+  .chain__dot {
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--dark);
+    border-radius: 50%;
+    background: var(--light);
+    position: relative;
+    z-index: 2;
+    transform: scale(0);
+    transition: transform 0.5s var(--ease) 0.15s, background 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.7s var(--ease) 0.45s;
+  }
+  .chain__node.revealed .chain__dot { transform: scale(1); }
+  .chain__node--accent .chain__dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+  .chain__node--accent.revealed .chain__dot {
+    box-shadow: 0 0 0 8px var(--accent-soft);
+  }
+  .chain__label {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.2rem, 2vw, 1.65rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s var(--ease) 0.3s, transform 0.6s var(--ease) 0.3s;
+  }
+  .chain__node.revealed .chain__label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .chain__node--accent .chain__label {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .chain__meta {
+    font-size: 12px;
+    color: var(--muted-dark);
+    text-align: center;
+    max-width: 180px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s var(--ease) 0.45s, transform 0.6s var(--ease) 0.45s;
+  }
+  .chain__node.revealed .chain__meta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .gtm__chain {
+    margin-top: 48px;
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: var(--dark);
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+  .gtm__chain em { font-style: italic; color: var(--accent); }
+  .gtm__outcome {
+    margin-top: 32px;
+    padding: 32px 40px;
+    background: var(--dark);
+    color: var(--light);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    border-radius: 2px;
+  }
+  .gtm__outcome-label {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .gtm__outcome-label::before {
+    content: "";
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .gtm__outcome-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    flex: 1;
+  }
+  .gtm__outcome-text em { color: var(--accent); font-style: italic; }
+
+  /* ---------- TRACTION ---------- */
+  .traction__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    background: var(--line-dark);
+    border: 1px solid var(--line-dark);
+    margin-top: 56px;
+  }
+  .stat {
+    background: var(--dark);
+    padding: 48px 40px;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .stat__label {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+  .stat__value {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .stat__value em { font-style: italic; color: var(--accent); font-size: 0.7em; }
+  .stat__value .small { font-size: 0.5em; color: var(--muted-light); vertical-align: top; font-style: italic; font-family: 'Fraunces', serif; }
+  .stat__sub {
+    font-size: 14px;
+    color: var(--muted-light);
+  }
+  .stat__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .stat__status::before {
+    content: "";
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ---------- NEXT ---------- */
+  .next__list {
+    margin-top: 40px;
+    border-top: 1px solid var(--line-light);
+  }
+  .next__item {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--line-light);
+    display: flex;
+    align-items: baseline;
+    gap: 40px;
+    transition: padding 0.4s var(--ease);
+  }
+  .next__item:hover { padding-left: 24px; }
+  .next__num {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+    min-width: 40px;
+  }
+  .next__text {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    flex: 1;
+  }
+  .next__arrow {
+    font-size: 24px;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.4s var(--ease);
+    color: var(--accent);
+  }
+  .next__item:hover .next__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ---------- CTA Button ---------- */
+  .cta__button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 44px;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--light);
+    background: transparent;
+    border: 1px solid var(--light);
+    border-radius: 999px;
+    overflow: hidden;
+    transition: color 0.4s var(--ease);
+    z-index: 1;
+  }
+  .cta__button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateY(101%);
+    transition: transform 0.5s var(--ease);
+    z-index: -1;
+  }
+  .cta__button:hover { border-color: var(--accent); }
+  .cta__button:hover::before { transform: translateY(0); }
+  .cta__button .arrow {
+    display: inline-block;
+    transition: transform 0.4s var(--ease);
+  }
+  .cta__button:hover .arrow { transform: translateX(6px); }
+
+  /* ---------- CLOSING ---------- */
+  .closing {
+    text-align: center;
+    align-items: center;
+  }
+  .closing__text {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .closing__text em { font-style: italic; color: var(--accent); }
+  .closing .cta__button {
+    margin-top: 48px;
+  }
+  .closing__foot {
+    margin-top: 48px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+
+  /* ---------- Modal ---------- */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease);
+  }
+  .modal.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .modal__dialog {
+    position: relative;
+    background: var(--light);
+    color: var(--dark);
+    max-width: 520px;
+    width: 100%;
+    padding: 56px 48px 44px;
+    border-radius: 4px;
+    transform: translateY(24px) scale(0.97);
+    transition: transform 0.5s var(--ease);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+  .modal.open .modal__dialog {
+    transform: translateY(0) scale(1);
+  }
+  .modal__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--muted-dark);
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+  .modal__close:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .modal__eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .modal__eyebrow::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .modal__title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.8rem, 3vw, 2.2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .modal__title em { font-style: italic; color: var(--accent); }
+  .modal__sub {
+    color: var(--muted-dark);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 36px;
+  }
+  .modal__form[hidden] { display: none; }
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-dark);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .field__optional {
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--muted-dark);
+    opacity: 0.6;
+    padding: 2px 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 999px;
+    font-weight: 400;
+  }
+  .field input {
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    padding: 10px 0;
+    font-family: inherit;
+    font-size: 17px;
+    background: transparent;
+    color: var(--dark);
+    transition: border-color 0.3s;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .field input::placeholder { color: var(--muted-dark); opacity: 0.5; }
+  .field.error input { border-color: #e74c3c; }
+  .modal__submit {
+    margin-top: 12px;
+    padding: 20px 28px;
+    background: var(--dark);
+    color: var(--light);
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 500;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .modal__submit:not(:disabled):hover { background: var(--accent); }
+  .modal__submit:disabled { opacity: 0.6; cursor: wait; }
+  .modal__submit .arrow { transition: transform 0.3s var(--ease); }
+  .modal__submit:not(:disabled):hover .arrow { transform: translateX(4px); }
+  .modal__success { text-align: center; padding: 8px 0 4px; }
+  .modal__success[hidden] { display: none; }
+  .modal__success .check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 8px auto 24px;
+    animation: popIn 0.6s var(--ease);
+  }
+  @keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .modal__success-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 2.6vw, 1.9rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .modal__success-title em { font-style: italic; color: var(--accent); }
+  .modal__success-text {
+    color: var(--muted-dark);
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .modal__success-text a {
+    color: var(--dark);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 1px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    section.slide { padding: 90px 24px 90px; }
+    section.slide.roadmap { padding: 90px 24px; }
+    .nav { padding: 20px 24px; }
+    .nav-arrow { width: 44px; height: 44px; }
+    .nav-arrow--prev { left: 12px; }
+    .nav-arrow--next { right: 12px; }
+    .slide-hint { display: none; }
+    .start__grid, .roadmap__inner { grid-template-columns: 1fr; gap: 48px; }
+    .flow { grid-template-columns: 1fr; }
+    .flow__arrow { display: none !important; }
+    .traction__grid { grid-template-columns: 1fr; }
+    .stat { padding: 32px 24px; min-height: 180px; }
+    .next__item { gap: 20px; padding: 24px 0; }
+    .fragmented__headline { max-width: 100%; }
+    .network { margin-top: 20px; padding: 4px 0; }
+    .fragmented__closing { margin-top: 24px; }
+    .problem__headline { margin-bottom: 32px; }
+    .problem__grid { grid-template-columns: 1fr; }
+    .insight-card { min-height: 220px; padding: 24px; gap: 18px; }
+    .insight-card--right { text-align: left; }
+    .insight-card--right .insight-card__head,
+    .insight-card--right .insight-card__foot { flex-direction: row; }
+    .jam, .haze { max-width: 100%; }
+    .problem__closing { margin-top: 32px; }
+    .chain { flex-direction: column; gap: 36px; align-items: flex-start; padding: 0; }
+    .chain__node { flex-direction: row; text-align: left; gap: 20px; padding: 0; align-items: center; }
+    .chain__node::after { display: none !important; }
+    .chain__label { text-align: left; }
+    .chain__meta { text-align: left; }
+    .gtm__outcome { flex-direction: column; align-items: flex-start; gap: 20px; padding: 24px; }
+    .modal__dialog { padding: 48px 28px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__logo">Urbanfolks<em> Mobility</em></div>
+  <div class="nav__tag">Pitch Deck · 2026</div>
+</nav>
+
+<div class="deck" id="deck">
+
+  <!-- ============ SLIDE 1 — HERO ============ -->
+  <section class="slide hero dark" id="hero">
+    <div class="hero__grid"></div>
+    <div class="container hero__content">
+      <div class="eyebrow fade-up">The story of how India moves</div>
+
+      <h1 class="display">
+        <span class="reveal-line"><span><em>36 million</em> Indians move using</span></span>
+        <span class="reveal-line"><span>public transport every day.</span></span>
+      </h1>
+
+      <p class="lede" style="margin-top: 56px;">
+        <span class="reveal-line"><span>Yet only a small percentage of these trips</span></span>
+        <span class="reveal-line"><span>are completed in one mode.</span></span>
+        <span class="reveal-line"><span>Reaching from Point A to Point B</span></span>
+        <span class="reveal-line"><span>is not a journey.</span></span>
+      </p>
+
+      <div class="hero__switch fade-up">
+        <span>Reaching A to B is a constant switch</span>
+        <span class="mode">Bus</span>
+        <span class="arrow">→</span>
+        <span class="mode">Metro</span>
+        <span class="arrow">→</span>
+        <span class="mode">Auto</span>
+        <span class="arrow">→</span>
+        <span class="mode">Repeat</span>
+      </div>
+
+      <div class="hero__struggle reveal-line"><span>A fragmented struggle.</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 2 — FRAGMENTED TROUBLE ============ -->
+  <section class="slide fragmented dark" id="fragmented">
+    <div class="container">
+      <div class="eyebrow fade-up">The fragmented trouble</div>
+
+      <h2 class="fragmented__headline fade-up">
+        A network that <em>never connected.</em>
+      </h2>
+
+      <div class="network fade-up" id="brokenNetwork" aria-hidden="true">
+        <svg class="network__svg" viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet">
+          <g class="network__lines">
+            <line class="stub" x1="285" y1="130" x2="420" y2="130"/>
+            <line class="stub" x1="480" y1="130" x2="615" y2="130"/>
+            <line class="stub" x1="285" y1="430" x2="420" y2="430"/>
+            <line class="stub" x1="480" y1="430" x2="615" y2="430"/>
+            <line class="stub" x1="240" y1="175" x2="240" y2="255"/>
+            <line class="stub" x1="240" y1="305" x2="240" y2="385"/>
+            <line class="stub" x1="660" y1="175" x2="660" y2="255"/>
+            <line class="stub" x1="660" y1="305" x2="660" y2="385"/>
+            <line class="stub" x1="276" y1="156" x2="419" y2="257"/>
+            <line class="stub" x1="482" y1="303" x2="624" y2="404"/>
+            <line class="stub" x1="624" y1="156" x2="482" y2="257"/>
+            <line class="stub" x1="276" y1="404" x2="419" y2="303"/>
+          </g>
+          <g class="network__breaks">
+            <g class="break" transform="translate(450, 130)"><line x1="-6" y1="-6" x2="6" y2="6"/><line x1="-6" y1="6" x2="6" y2="-6"/></g>
+            <g class="break" transform="translate(450, 430)"><line x1="-6" y1="-6" x2="6" y2="6"/><line x1="-6" y1="6" x2="6" y2="-6"/></g>
+            <g class="break" transform="translate(240, 280)"><line x1="-6" y1="-6" x2="6" y2="6"/><line x1="-6" y1="6" x2="6" y2="-6"/></g>
+            <g class="break" transform="translate(660, 280)"><line x1="-6" y1="-6" x2="6" y2="6"/><line x1="-6" y1="6" x2="6" y2="-6"/></g>
+            <g class="break break--center" transform="translate(450, 280)"><line x1="-9" y1="-9" x2="9" y2="9"/><line x1="-9" y1="9" x2="9" y2="-9"/></g>
+          </g>
+          <g class="network__nodes">
+            <g class="node"><circle cx="240" cy="130" r="45"/><text x="240" y="130" text-anchor="middle" dominant-baseline="central">BUS</text></g>
+            <g class="node"><circle cx="660" cy="130" r="45"/><text x="660" y="130" text-anchor="middle" dominant-baseline="central">METRO</text></g>
+            <g class="node"><circle cx="240" cy="430" r="45"/><text x="240" y="430" text-anchor="middle" dominant-baseline="central">AUTO</text></g>
+            <g class="node"><circle cx="660" cy="430" r="45"/><text x="660" y="430" text-anchor="middle" dominant-baseline="central">RAIL</text></g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="fragmented__closing fade-up">
+        So people stop trusting it.<br />
+        They just <em>buy a vehicle.</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 3 — PROBLEM ============ -->
+  <section class="slide problem light" id="problem">
+    <div class="container">
+      <div class="eyebrow fade-up">The state of mobility</div>
+
+      <h2 class="problem__headline fade-up">
+        The <em>divergence</em> is widening.
+      </h2>
+
+      <div class="problem__grid">
+        <div class="insight-card insight-card--fall fade-up">
+          <div class="insight-card__head">
+            <span class="insight-card__num">01</span>
+            <span class="trend trend--down">
+              <svg class="trend__arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2 L10 10 M10 10 L6 10 M10 10 L10 6"/></svg>
+              Falling
+            </span>
+          </div>
+          <div class="insight-card__label">Public transport usage is <em>falling.</em></div>
+          <div class="insight-card__foot">
+            <svg class="spark" viewBox="0 0 96 28" preserveAspectRatio="none" aria-hidden="true">
+              <rect x="0"  y="0"  width="16" height="28"/>
+              <rect x="20" y="6"  width="16" height="22"/>
+              <rect x="40" y="12" width="16" height="16"/>
+              <rect x="60" y="18" width="16" height="10"/>
+              <rect x="80" y="24" width="16" height="4"/>
+            </svg>
+            <span class="insight-card__meta">India, last decade</span>
+          </div>
+        </div>
+
+        <div class="insight-card insight-card--rise insight-card--right fade-up">
+          <div class="insight-card__head">
+            <span class="insight-card__num">02</span>
+            <span class="trend trend--up">
+              <svg class="trend__arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 L10 2 M10 2 L6 2 M10 2 L10 6"/></svg>
+              Rising
+            </span>
+          </div>
+          <div class="insight-card__label">Private vehicle usage is <em>rising.</em></div>
+          <div class="insight-card__foot">
+            <svg class="spark" viewBox="0 0 96 28" preserveAspectRatio="none" aria-hidden="true">
+              <rect x="0"  y="24" width="16" height="4"/>
+              <rect x="20" y="18" width="16" height="10"/>
+              <rect x="40" y="12" width="16" height="16"/>
+              <rect x="60" y="6"  width="16" height="22"/>
+              <rect x="80" y="0"  width="16" height="28"/>
+            </svg>
+            <span class="insight-card__meta">India, last decade</span>
+          </div>
+        </div>
+
+        <div class="insight-card insight-card--congestion fade-up">
+          <div class="insight-card__head">
+            <span class="insight-card__num">03</span>
+            <span class="trend trend--up">
+              <svg class="trend__arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 L10 2 M10 2 L6 2 M10 2 L10 6"/></svg>
+              Denser
+            </span>
+          </div>
+          <div class="insight-card__label">Cities are getting <em>more congested.</em></div>
+          <div class="insight-card__foot">
+            <svg class="jam" viewBox="0 0 200 40" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <line class="jam__road" x1="0" y1="32" x2="200" y2="32"/>
+              <rect class="car"          x="0"   y="14" width="18" height="12" rx="2"/>
+              <rect class="car"          x="30"  y="14" width="18" height="12" rx="2"/>
+              <rect class="car"          x="60"  y="14" width="18" height="12" rx="2"/>
+              <rect class="car car--jam" x="100" y="14" width="18" height="12" rx="2"/>
+              <rect class="car car--jam" x="120" y="14" width="18" height="12" rx="2"/>
+              <rect class="car car--jam" x="140" y="14" width="18" height="12" rx="2"/>
+              <rect class="car car--jam" x="160" y="14" width="18" height="12" rx="2"/>
+              <rect class="car car--jam" x="180" y="14" width="18" height="12" rx="2"/>
+            </svg>
+            <span class="insight-card__meta">Urban roads, peak hours</span>
+          </div>
+        </div>
+
+        <div class="insight-card insight-card--pollution insight-card--right fade-up">
+          <div class="insight-card__head">
+            <span class="insight-card__num">04</span>
+            <span class="trend trend--up">
+              <svg class="trend__arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 L10 2 M10 2 L6 2 M10 2 L10 6"/></svg>
+              Heavier
+            </span>
+          </div>
+          <div class="insight-card__label">The air is <em>more polluted.</em></div>
+          <div class="insight-card__foot">
+            <svg class="haze" viewBox="0 0 200 52" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <circle class="p" cx="10"  cy="22" r="1.5" style="--d: 0.02s"/>
+              <circle class="p" cx="26"  cy="36" r="1"   style="--d: 0.05s"/>
+              <circle class="p" cx="40"  cy="14" r="1.5" style="--d: 0.08s"/>
+              <circle class="p" cx="56"  cy="30" r="2"   style="--d: 0.12s"/>
+              <circle class="p" cx="70"  cy="42" r="1.5" style="--d: 0.15s"/>
+              <circle class="p" cx="82"  cy="18" r="2"   style="--d: 0.19s"/>
+              <circle class="p" cx="94"  cy="34" r="2"   style="--d: 0.23s"/>
+              <circle class="p p--heavy" cx="108" cy="12" r="2.5" style="--d: 0.28s"/>
+              <circle class="p p--heavy" cx="120" cy="28" r="2.5" style="--d: 0.32s"/>
+              <circle class="p p--heavy" cx="132" cy="42" r="3"   style="--d: 0.36s"/>
+              <circle class="p p--heavy" cx="144" cy="18" r="2.5" style="--d: 0.40s"/>
+              <circle class="p p--heavy" cx="156" cy="32" r="3"   style="--d: 0.44s"/>
+              <circle class="p p--heavy" cx="166" cy="10" r="3"   style="--d: 0.48s"/>
+              <circle class="p p--heavy" cx="176" cy="24" r="3.5" style="--d: 0.52s"/>
+              <circle class="p p--heavy" cx="186" cy="42" r="3"   style="--d: 0.56s"/>
+              <circle class="p p--heavy" cx="194" cy="16" r="3.5" style="--d: 0.60s"/>
+            </svg>
+            <span class="insight-card__meta">Urban AQI trend</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="problem__closing fade-up">It&rsquo;s time to rethink mobility for the <em>majority.</em></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4 — WHAT WE ARE DOING ============ -->
+  <section class="slide doing dark" id="doing">
+    <div class="container">
+      <div class="eyebrow fade-up">What we are doing</div>
+      <h2 class="doing__intro fade-up">
+        We are <span class="strike">building another transport system.</span>
+        <br />
+        We are <em>connecting the existing ones.</em>
+      </h2>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 5 — WHERE WE START ============ -->
+  <section class="slide start light" id="start">
+    <div class="container">
+      <div class="eyebrow fade-up">Where we start</div>
+      <div class="start__grid">
+        <div>
+          <h2 class="display fade-up" style="font-size: clamp(1.8rem, 3.5vw, 3rem); margin-bottom: 32px;">
+            To connect systems,<br />they need a <em>digital footprint</em> first.
+          </h2>
+          <p class="body fade-up" style="color: var(--muted-dark); margin-bottom: 24px; font-size: 1.15rem;">
+            In India, most people move by bus. But most of that system is still offline. No schedules. No payments. No data.
+          </p>
+          <p class="body fade-up" style="color: var(--dark); font-weight: 500; font-size: 1.2rem;">
+            So we start with the <em>Elephant in the room!</em>
+          </p>
+        </div>
+        <div class="start__visual fade-up">
+          <div class="start__offline">Still Offline</div>
+          <div class="start__fleet" aria-hidden="true">
+            <svg class="fleet" viewBox="0 0 278 200" preserveAspectRatio="xMidYMid meet">
+              <g class="bus bus--off" style="--d: 0.02s"><rect x="12" y="10" width="56" height="28" rx="3"/><line x1="32" y1="18" x2="48" y2="30"/><line x1="48" y1="18" x2="32" y2="30"/></g>
+              <g class="bus bus--off" style="--d: 0.05s"><rect x="78" y="10" width="56" height="28" rx="3"/><line x1="98" y1="18" x2="114" y2="30"/><line x1="114" y1="18" x2="98" y2="30"/></g>
+              <g class="bus bus--off" style="--d: 0.08s"><rect x="144" y="10" width="56" height="28" rx="3"/><line x1="164" y1="18" x2="180" y2="30"/><line x1="180" y1="18" x2="164" y2="30"/></g>
+              <g class="bus bus--off" style="--d: 0.11s"><rect x="210" y="10" width="56" height="28" rx="3"/><line x1="230" y1="18" x2="246" y2="30"/><line x1="246" y1="18" x2="230" y2="30"/></g>
+              <g class="bus bus--off" style="--d: 0.14s"><rect x="12" y="48" width="56" height="28" rx="3"/><line x1="32" y1="56" x2="48" y2="68"/><line x1="48" y1="56" x2="32" y2="68"/></g>
+              <g class="bus bus--off" style="--d: 0.17s"><rect x="78" y="48" width="56" height="28" rx="3"/><line x1="98" y1="56" x2="114" y2="68"/><line x1="114" y1="56" x2="98" y2="68"/></g>
+              <g class="bus bus--off" style="--d: 0.20s"><rect x="144" y="48" width="56" height="28" rx="3"/><line x1="164" y1="56" x2="180" y2="68"/><line x1="180" y1="56" x2="164" y2="68"/></g>
+              <g class="bus bus--off" style="--d: 0.23s"><rect x="210" y="48" width="56" height="28" rx="3"/><line x1="230" y1="56" x2="246" y2="68"/><line x1="246" y1="56" x2="230" y2="68"/></g>
+              <g class="bus bus--off" style="--d: 0.26s"><rect x="12" y="86" width="56" height="28" rx="3"/><line x1="32" y1="94" x2="48" y2="106"/><line x1="48" y1="94" x2="32" y2="106"/></g>
+              <g class="bus bus--off" style="--d: 0.29s"><rect x="78" y="86" width="56" height="28" rx="3"/><line x1="98" y1="94" x2="114" y2="106"/><line x1="114" y1="94" x2="98" y2="106"/></g>
+              <g class="bus bus--off" style="--d: 0.32s"><rect x="144" y="86" width="56" height="28" rx="3"/><line x1="164" y1="94" x2="180" y2="106"/><line x1="180" y1="94" x2="164" y2="106"/></g>
+              <g class="bus bus--off" style="--d: 0.35s"><rect x="210" y="86" width="56" height="28" rx="3"/><line x1="230" y1="94" x2="246" y2="106"/><line x1="246" y1="94" x2="230" y2="106"/></g>
+              <g class="bus bus--off" style="--d: 0.38s"><rect x="12" y="124" width="56" height="28" rx="3"/><line x1="32" y1="132" x2="48" y2="144"/><line x1="48" y1="132" x2="32" y2="144"/></g>
+              <g class="bus bus--off" style="--d: 0.41s"><rect x="78" y="124" width="56" height="28" rx="3"/><line x1="98" y1="132" x2="114" y2="144"/><line x1="114" y1="132" x2="98" y2="144"/></g>
+              <g class="bus bus--on" style="--d: 0.46s"><rect x="144" y="124" width="56" height="28" rx="3"/></g>
+              <g class="bus bus--on" style="--d: 0.50s"><rect x="210" y="124" width="56" height="28" rx="3"/></g>
+              <g class="bus bus--on" style="--d: 0.54s"><rect x="12" y="162" width="56" height="28" rx="3"/></g>
+              <g class="bus bus--on" style="--d: 0.58s"><rect x="78" y="162" width="56" height="28" rx="3"/></g>
+              <g class="bus bus--on" style="--d: 0.62s"><rect x="144" y="162" width="56" height="28" rx="3"/></g>
+              <g class="bus bus--on" style="--d: 0.66s"><rect x="210" y="162" width="56" height="28" rx="3"/></g>
+            </svg>
+          </div>
+          <div class="start__stat">
+            <div class="start__stat-num">&gt; 70%</div>
+            <div class="start__stat-label">of bus ops are offline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 6 — ROADMAP ============ -->
+  <section class="slide roadmap dark" id="roadmap">
+    <div class="roadmap__inner">
+      <div class="roadmap__left">
+        <div class="eyebrow fade-up">The roadmap</div>
+        <h2 class="roadmap__title fade-up">One layer.<br />Built in <em style="font-style: italic; color: var(--accent);">three moves.</em></h2>
+        <p class="body fade-up" style="color: var(--muted-light);">Each step deepens the network. Each step adds a new mode to the connected layer beneath India&rsquo;s movement.</p>
+        <div class="roadmap__progress">
+          <span data-step="0"></span>
+          <span data-step="1"></span>
+          <span data-step="2"></span>
+        </div>
+      </div>
+
+      <div class="roadmap__steps">
+        <div class="roadmap__step" data-step="0">
+          <div class="roadmap__step-num">01</div>
+          <div class="roadmap__step-content">
+            <div class="roadmap__step-title">Digitizing bus fleets</div>
+            <div class="roadmap__step-desc">Bringing the largest, most fragmented mode online first.</div>
+          </div>
+        </div>
+        <div class="roadmap__step" data-step="1">
+          <div class="roadmap__step-num">02</div>
+          <div class="roadmap__step-content">
+            <div class="roadmap__step-title">Metro and rail integration</div>
+            <div class="roadmap__step-desc">Stitching scheduled systems into a unified grid.</div>
+          </div>
+        </div>
+        <div class="roadmap__step" data-step="2">
+          <div class="roadmap__step-num">03</div>
+          <div class="roadmap__step-content">
+            <div class="roadmap__step-title">Last-mile connectivity</div>
+            <div class="roadmap__step-desc">Auto, bikes, shared micro-mobility. The final stretch.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap__final" id="roadmapFinal">
+      <div class="roadmap__final-text">
+        One network.<br />Multiple modes.<br /><em>Seamless movement.</em>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 7 — GO-TO-MARKET ============ -->
+  <section class="slide gtm light" id="gtm">
+    <div class="container">
+      <div class="gtm__header">
+        <div class="eyebrow fade-up">Go-to-market</div>
+        <h2 class="gtm__intro fade-up">
+          Start with a real problem.<br />
+          <em>Payments.</em>
+        </h2>
+        <p class="gtm__sub fade-up">
+          We don&rsquo;t ask operators to change how they run their buses.
+          We remove the friction they already feel, and earn the right to build everything else on top.
+        </p>
+      </div>
+
+      <div class="gtm__stage">
+        <div class="gtm__stage-head fade-up">
+          <span class="gtm__stage-num">01</span>
+          <span class="gtm__stage-title">The entry wedge</span>
+        </div>
+        <div class="flow">
+          <div class="flow__item fade-up">
+            <div class="flow__step">01</div>
+            <div class="flow__body">
+              <div class="flow__text">Simple UPI payments</div>
+              <div class="flow__desc">No hardware. No training. Start transacting today.</div>
+            </div>
+            <div class="flow__arrow">→</div>
+          </div>
+          <div class="flow__item fade-up">
+            <div class="flow__step">02</div>
+            <div class="flow__body">
+              <div class="flow__text">Easy onboarding</div>
+              <div class="flow__desc">One conversation. One QR. Live in minutes.</div>
+            </div>
+            <div class="flow__arrow">→</div>
+          </div>
+          <div class="flow__item fade-up">
+            <div class="flow__step">03</div>
+            <div class="flow__body">
+              <div class="flow__text">Immediate value</div>
+              <div class="flow__desc">Collections up. Leakage down. Visible from day one.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gtm__stage">
+        <div class="gtm__stage-head fade-up">
+          <span class="gtm__stage-num">02</span>
+          <span class="gtm__stage-title">The compound effect</span>
+        </div>
+        <div class="chain" id="gtmChain">
+          <div class="chain__node">
+            <div class="chain__dot"></div>
+            <div class="chain__label">Operators adopt</div>
+            <div class="chain__meta">The first wedge takes hold. Usage becomes routine.</div>
+          </div>
+          <div class="chain__node">
+            <div class="chain__dot"></div>
+            <div class="chain__label">Trust builds</div>
+            <div class="chain__meta">Daily reliability earns permission for deeper tools.</div>
+          </div>
+          <div class="chain__node chain__node--accent">
+            <div class="chain__dot"></div>
+            <div class="chain__label">Upgrade to POS</div>
+            <div class="chain__meta">Operators now run on our layer, not alongside it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gtm__chain fade-up">
+        A <em>chain reaction</em> begins.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 8 — TRACTION ============ -->
+  <section class="slide traction dark" id="traction">
+    <div class="container">
+      <div class="eyebrow fade-up">Early traction</div>
+      <h2 class="display fade-up" style="font-size: clamp(2rem, 4vw, 3.5rem); max-width: 900px;">
+        Numbers from the ground,<br />in <em>real operations.</em>
+      </h2>
+
+      <div class="traction__grid">
+        <div class="stat">
+          <div class="stat__label">Operators</div>
+          <div class="stat__value" data-count="12">0</div>
+          <div class="stat__sub">Onboarded and transacting</div>
+        </div>
+        <div class="stat">
+          <div class="stat__label">Daily transactions</div>
+          <div class="stat__value"><span class="small">₹</span><span data-count="1">0</span> <em>lakh+</em></div>
+          <div class="stat__sub">Processed daily through the layer</div>
+        </div>
+        <div class="stat">
+          <div class="stat__label">POS System</div>
+          <div class="stat__status">Live</div>
+          <div class="stat__sub">Deployed with early operators</div>
+        </div>
+        <div class="stat">
+          <div class="stat__label">Consumer App</div>
+          <div class="stat__status">Ready</div>
+          <div class="stat__sub">Launching with expansion wave</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 9 — WHAT'S NEXT ============ -->
+  <section class="slide next light" id="next">
+    <div class="container">
+      <div class="eyebrow fade-up">What&rsquo;s next</div>
+      <h2 class="display fade-up" style="font-size: clamp(2rem, 4vw, 3.5rem); max-width: 900px;">
+        The next chapter<br />of the network.
+      </h2>
+
+      <div class="next__list">
+        <div class="next__item fade-up">
+          <div class="next__num">01</div>
+          <div class="next__text">Expanding operators</div>
+          <div class="next__arrow">→</div>
+        </div>
+        <div class="next__item fade-up">
+          <div class="next__num">02</div>
+          <div class="next__text">Launching app</div>
+          <div class="next__arrow">→</div>
+        </div>
+        <div class="next__item fade-up">
+          <div class="next__num">03</div>
+          <div class="next__text">Scaling payments</div>
+          <div class="next__arrow">→</div>
+        </div>
+        <div class="next__item fade-up">
+          <div class="next__num">04</div>
+          <div class="next__text">Connecting modes</div>
+          <div class="next__arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 10 — CLOSING + CTA ============ -->
+  <section class="slide closing dark" id="closing">
+    <div class="container">
+      <div class="eyebrow fade-up" style="justify-content: center; display: inline-flex;">A closing thought</div>
+      <p class="closing__text">
+        <span class="reveal-line"><span>If you believe mobility should be</span></span>
+        <span class="reveal-line"><span><em>simple, connected, and accessible,</em></span></span>
+        <span class="reveal-line"><span>let&rsquo;s build this together.</span></span>
+      </p>
+      <a href="#" class="cta__button fade-up">
+        View Pitch Deck
+        <span class="arrow">→</span>
+      </a>
+      <div class="closing__foot fade-up">Urbanfolks Mobility &middot; contact@urbanfolksmobility.in</div>
+    </div>
+  </section>
+
+</div><!-- /.deck -->
+
+<!-- ============ NAV ARROWS ============ -->
+<button class="nav-arrow nav-arrow--prev" id="prevBtn" type="button" aria-label="Previous slide">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 6 9 12 15 18"/></svg>
+</button>
+<button class="nav-arrow nav-arrow--next" id="nextBtn" type="button" aria-label="Next slide">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+</button>
+
+<!-- ============ SLIDE INDICATOR ============ -->
+<div class="slide-indicator" aria-live="polite">
+  <span class="slide-indicator__current" id="slideCurrent">01</span>
+  <span class="slide-indicator__separator">/</span>
+  <span class="slide-indicator__total" id="slideTotal">10</span>
+</div>
+<div class="slide-hint">← / → to navigate</div>
+
+<!-- ============ PITCH DECK MODAL ============ -->
+<div class="modal" id="pitchModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="pitchModalTitle">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__dialog">
+    <button class="modal__close" type="button" aria-label="Close" data-close>&times;</button>
+
+    <div class="modal__eyebrow">The Pitch Deck</div>
+    <h3 class="modal__title" id="pitchModalTitle">We&rsquo;ll send it to your <em>inbox.</em></h3>
+    <p class="modal__sub">Takes about a minute. Be with us on the journey.</p>
+
+    <form class="modal__form" id="pitchForm" novalidate>
+      <div class="field">
+        <label for="pitchName">Your name</label>
+        <input type="text" id="pitchName" name="name" required autocomplete="name" placeholder="First and last name" />
+      </div>
+      <div class="field">
+        <label for="pitchEmail">Email address</label>
+        <input type="email" id="pitchEmail" name="email" required autocomplete="email" placeholder="you@company.com" />
+      </div>
+      <div class="field">
+        <label for="pitchLink">LinkedIn or website <span class="field__optional">optional</span></label>
+        <input type="text" id="pitchLink" name="link" autocomplete="url" placeholder="Anything that helps us know you better" />
+      </div>
+      <button type="submit" class="modal__submit">
+        <span class="label">Send me the deck</span>
+        <span class="arrow">→</span>
+      </button>
+    </form>
+
+    <div class="modal__success" hidden>
+      <div class="check">&#10003;</div>
+      <h3 class="modal__success-title">On its <em>way.</em></h3>
+      <p class="modal__success-text">
+        We&rsquo;ve received your request. The deck is heading to your inbox.
+        If you don&rsquo;t see it, write to us at
+        <a href="mailto:contact@urbanfolksmobility.in">contact@urbanfolksmobility.in</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  const hasGSAP = typeof window.gsap !== 'undefined';
+
+  /* ---------- Slide deck state ---------- */
+  const slides = Array.from(document.querySelectorAll('section.slide'));
+  const total = slides.length;
+  let currentSlide = 0;
+  let isTransitioning = false;
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const currentEl = document.getElementById('slideCurrent');
+  const totalEl = document.getElementById('slideTotal');
+  if (totalEl) totalEl.textContent = String(total).padStart(2, '0');
+
+  /* ---------- Prep initial state ---------- */
+  if (hasGSAP) {
+    gsap.set('.fade-up', { y: 40, opacity: 0 });
+    gsap.set('.reveal-line > span', { y: '110%', opacity: 0 });
+  }
+
+  /* ---------- Reset a slide (so its animations can replay on return) ---------- */
+  function resetSlide(slide) {
+    if (hasGSAP) {
+      gsap.set(slide.querySelectorAll('.fade-up'), { y: 40, opacity: 0 });
+      gsap.set(slide.querySelectorAll('.reveal-line > span'), { y: '110%', opacity: 0 });
+    }
+    slide.querySelectorAll('.insight-card, .network, .chain__node, .start__visual').forEach(el => el.classList.remove('revealed'));
+    slide.querySelectorAll('.roadmap__step, .roadmap__progress span, .roadmap__final').forEach(el => el.classList.remove('active'));
+    slide.querySelectorAll('.doing__intro').forEach(el => el.classList.remove('animate'));
+    slide.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseFloat(el.getAttribute('data-count'));
+      el.textContent = '0';
+      el._done = false;
+      el._target = target;
+    });
+  }
+
+  /* ---------- Pre-reset every slide so starting state is clean ---------- */
+  slides.forEach(resetSlide);
+
+  /* ---------- Animation: generic fade-ups + reveal-lines ---------- */
+  function animateGenericIn(slide) {
+    if (!hasGSAP) {
+      slide.querySelectorAll('.fade-up').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; el.style.transition = 'opacity 0.9s, transform 0.9s'; });
+      slide.querySelectorAll('.reveal-line > span').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; el.style.transition = 'opacity 0.9s, transform 0.9s'; });
+      return;
+    }
+    const fadeUps = slide.querySelectorAll('.fade-up');
+    if (fadeUps.length) {
+      gsap.to(fadeUps, {
+        y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.1
+      });
+    }
+    const spans = slide.querySelectorAll('.reveal-line > span');
+    if (spans.length) {
+      gsap.to(spans, {
+        y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out', delay: 0.15
+      });
+    }
+  }
+
+  /* ---------- Hero-specific timeline ---------- */
+  function runHeroTimeline(slide) {
+    if (!hasGSAP) { animateGenericIn(slide); return; }
+    const tl = gsap.timeline({ delay: 0.15 });
+    tl.to(slide.querySelector('.eyebrow'), { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' })
+      .to(slide.querySelectorAll('.display .reveal-line > span'), { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out', stagger: 0.12 }, '-=0.3')
+      .to(slide.querySelectorAll('.lede .reveal-line > span'), { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.5')
+      .to(slide.querySelector('.hero__switch'), { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, '-=0.3')
+      .to(slide.querySelectorAll('.hero__struggle .reveal-line > span'), { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, '-=0.3');
+  }
+
+  /* ---------- Roadmap manual step control ---------- */
+  // States: 0 = step 1 only | 1 = steps 1-2 | 2 = steps 1-3 | 3 = final overlay
+  const ROADMAP_MAX = 3;
+  let roadmapStep = 0;
+
+  function setRoadmapStep(slide, step) {
+    roadmapStep = Math.max(0, Math.min(ROADMAP_MAX, step));
+    const steps = slide.querySelectorAll('.roadmap__step');
+    const progressSpans = slide.querySelectorAll('.roadmap__progress span');
+    const finalFrame = slide.querySelector('.roadmap__final');
+
+    steps.forEach((s, i) => {
+      if (i <= roadmapStep && roadmapStep < 3) s.classList.add('active');
+      else if (i <= 2 && roadmapStep === 3) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+    progressSpans.forEach((s, i) => {
+      if (i <= roadmapStep && roadmapStep < 3) s.classList.add('active');
+      else if (roadmapStep === 3) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+    if (finalFrame) {
+      if (roadmapStep === 3) finalFrame.classList.add('active');
+      else finalFrame.classList.remove('active');
+    }
+  }
+
+  /* ---------- Traction count-up ---------- */
+  function runTractionCounter(slide) {
+    setTimeout(() => {
+      slide.querySelectorAll('[data-count]').forEach(el => {
+        if (el._done) { el.textContent = el._target; return; }
+        const target = parseFloat(el.getAttribute('data-count'));
+        if (!hasGSAP) { el.textContent = target; el._done = true; return; }
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: target,
+          duration: 1.6,
+          ease: 'power2.out',
+          onUpdate: () => {
+            if (target >= 10) el.textContent = Math.round(obj.val);
+            else el.textContent = obj.val.toFixed(0);
+          },
+          onComplete: () => { el.textContent = target; el._done = true; }
+        });
+      });
+    }, 600);
+  }
+
+  /* ---------- Trigger animations for a slide ---------- */
+  function animateSlide(slide, direction) {
+    const id = slide.id;
+    direction = direction || 1;
+
+    if (id === 'hero') {
+      runHeroTimeline(slide);
+      return;
+    }
+
+    animateGenericIn(slide);
+
+    if (id === 'fragmented') {
+      setTimeout(() => { if (slide.classList.contains('active')) slide.querySelector('#brokenNetwork').classList.add('revealed'); }, 450);
+    }
+    if (id === 'problem') {
+      slide.querySelectorAll('.insight-card').forEach((card, i) => {
+        setTimeout(() => { if (slide.classList.contains('active')) card.classList.add('revealed'); }, 400 + i * 150);
+      });
+    }
+    if (id === 'doing') {
+      setTimeout(() => { if (slide.classList.contains('active')) slide.querySelector('.doing__intro').classList.add('animate'); }, 600);
+    }
+    if (id === 'start') {
+      setTimeout(() => { if (slide.classList.contains('active')) slide.querySelector('.start__visual').classList.add('revealed'); }, 500);
+    }
+    if (id === 'roadmap') {
+      // Entering forward: land on step 1 (step=0). Entering backward: land on final overlay (step=3).
+      setRoadmapStep(slide, direction === -1 ? ROADMAP_MAX : 0);
+    }
+    if (id === 'gtm') {
+      const nodes = slide.querySelectorAll('#gtmChain .chain__node');
+      nodes.forEach((node, i) => {
+        setTimeout(() => { if (slide.classList.contains('active')) node.classList.add('revealed'); }, 1100 + i * 320);
+      });
+    }
+    if (id === 'traction') {
+      runTractionCounter(slide);
+    }
+  }
+
+  /* ---------- Go to slide ---------- */
+  function go(to) {
+    if (to < 0 || to >= total || to === currentSlide || isTransitioning) return;
+    isTransitioning = true;
+    const direction = to > currentSlide ? 1 : -1;
+
+    const prev = slides[currentSlide];
+    const nextEl = slides[to];
+
+    prev.classList.remove('active');
+
+    // Reset the outgoing slide after the fade-out completes
+    setTimeout(() => {
+      if (!prev.classList.contains('active')) resetSlide(prev);
+    }, 600);
+
+    currentSlide = to;
+    nextEl.classList.add('active');
+
+    // Wait for fade-in to begin, then trigger animations
+    setTimeout(() => {
+      animateSlide(nextEl, direction);
+      isTransitioning = false;
+    }, 120);
+
+    // Body bg
+    document.body.style.background = nextEl.classList.contains('dark') ? '#0a0a0a' : '#fafafa';
+
+    // Indicator
+    if (currentEl) currentEl.textContent = String(to + 1).padStart(2, '0');
+
+    // Arrow enabled states
+    prevBtn.disabled = to === 0;
+    nextBtn.disabled = to === total - 1;
+  }
+
+  function next() {
+    const cur = slides[currentSlide];
+    // Inside roadmap: advance sub-step first before leaving the slide
+    if (cur.id === 'roadmap' && roadmapStep < ROADMAP_MAX) {
+      setRoadmapStep(cur, roadmapStep + 1);
+      return;
+    }
+    go(currentSlide + 1);
+  }
+  function prev() {
+    const cur = slides[currentSlide];
+    // Inside roadmap: reverse sub-step first before leaving the slide
+    if (cur.id === 'roadmap' && roadmapStep > 0) {
+      setRoadmapStep(cur, roadmapStep - 1);
+      return;
+    }
+    go(currentSlide - 1);
+  }
+
+  prevBtn.addEventListener('click', prev);
+  nextBtn.addEventListener('click', next);
+
+  /* ---------- Keyboard nav ---------- */
+  document.addEventListener('keydown', (e) => {
+    // Ignore when modal is open
+    const modalOpen = document.getElementById('pitchModal').classList.contains('open');
+    if (modalOpen) {
+      if (e.key === 'Escape') closeModal();
+      return;
+    }
+    // Ignore when typing in an input
+    const tag = (e.target && e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      next();
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      prev();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      go(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      go(total - 1);
+    }
+  });
+
+  /* ---------- Touch swipe support ---------- */
+  let touchStartX = 0;
+  let touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  /* ---------- Activate first slide ---------- */
+  slides[0].classList.add('active');
+  document.body.style.background = slides[0].classList.contains('dark') ? '#0a0a0a' : '#fafafa';
+  prevBtn.disabled = true;
+  nextBtn.disabled = total <= 1;
+  // Fire hero animations
+  setTimeout(() => animateSlide(slides[0]), 100);
+
+  /* ========================================================== */
+  /* ================== PITCH DECK MODAL ====================== */
+  /* ========================================================== */
+  const modal = document.getElementById('pitchModal');
+  const pitchBtn = document.querySelector('.cta__button');
+  const form = document.getElementById('pitchForm');
+  const successEl = modal ? modal.querySelector('.modal__success') : null;
+  const submitBtn = form ? form.querySelector('.modal__submit') : null;
+  const submitLabel = submitBtn ? submitBtn.querySelector('.label') : null;
+  let lastFocus = null;
+
+  function resetModalState() {
+    if (!form || !successEl) return;
+    form.hidden = false;
+    successEl.hidden = true;
+    form.reset();
+    form.querySelectorAll('.field').forEach(f => f.classList.remove('error'));
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitLabel) submitLabel.textContent = 'Send me the deck';
+  }
+
+  function openModal(e) {
+    if (e) e.preventDefault();
+    if (!modal) return;
+    lastFocus = document.activeElement;
+    resetModalState();
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => {
+      const firstInput = form && form.querySelector('input');
+      if (firstInput) firstInput.focus();
+    }, 350);
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  if (pitchBtn) pitchBtn.addEventListener('click', openModal);
+
+  if (modal) {
+    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
+  }
+
+  if (form) {
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const link = form.link ? form.link.value.trim() : '';
+      let hasError = false;
+
+      form.querySelectorAll('.field').forEach(f => f.classList.remove('error'));
+
+      if (!name) {
+        form.querySelector('#pitchName').closest('.field').classList.add('error');
+        hasError = true;
+      }
+      if (!email || !emailRe.test(email)) {
+        form.querySelector('#pitchEmail').closest('.field').classList.add('error');
+        hasError = true;
+      }
+      if (hasError) return;
+
+      submitBtn.disabled = true;
+      submitLabel.textContent = 'Sending…';
+
+      // Lead capture: wire up to your backend, EmailJS, Formspree, etc.
+      // await fetch('/api/request-deck', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ name, email, link })
+      // });
+      try {
+        await new Promise(r => setTimeout(r, 900));
+      } catch (err) {
+        console.warn('Pitch deck request failed:', err);
+      }
+
+      form.hidden = true;
+      successEl.hidden = false;
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>

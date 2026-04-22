@@ -4,6 +4,27 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Urbanfolks Mobility | Connecting the movement of a nation</title>
+<meta name="description" content="36 million Indians move by public transport every day. We're building the digital layer that connects every bus, metro, auto, and rail into one network." />
+
+<!-- Open Graph: shown in WhatsApp, LinkedIn, Facebook, iMessage previews -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Urbanfolks Mobility" />
+<meta property="og:title" content="Urbanfolks Mobility · Connecting how India moves" />
+<meta property="og:description" content="36 million Indians move by public transport every day. We're building the digital layer that connects it all." />
+<meta property="og:url" content="https://urbanfolksmobility.in/invest" />
+<meta property="og:locale" content="en_IN" />
+<!-- Replace with an absolute URL to a 1200x630 PNG/JPG hosted on your domain -->
+<meta property="og:image" content="https://urbanfolksmobility.in/og-preview.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Urbanfolks Mobility — the digital layer beneath India's public transport" />
+
+<!-- Twitter Card (also used by some other apps) -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Urbanfolks Mobility · Connecting how India moves" />
+<meta name="twitter:description" content="36 million Indians move by public transport every day. We're building the digital layer that connects it all." />
+<meta name="twitter:image" content="https://urbanfolksmobility.in/og-preview.jpg" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -49,7 +70,7 @@
 
   /* ---------- Nav ---------- */
   .nav {
-    position: fixed;
+    position: absolute;
     top: 0; left: 0; right: 0;
     padding: 28px 48px;
     display: flex;
@@ -213,7 +234,7 @@
   .hero__scroll {
     position: absolute;
     bottom: 40px;
-    left: 48px;
+    right: 48px;
     font-size: 11px;
     letter-spacing: 0.25em;
     text-transform: uppercase;
@@ -365,8 +386,8 @@
   }
   .problem__headline em { font-style: italic; color: var(--accent); }
 
-  /* Divergence row: public transport vs private vehicles */
-  .divergence {
+  /* Unified 2×2 grid for all four insight cards */
+  .problem__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2px;
@@ -416,6 +437,13 @@
     stroke-linejoin: round;
   }
 
+  /* Right-column cards: mirror — number sits on the right, viz on the right */
+  .insight-card--right { text-align: right; }
+  .insight-card--right .insight-card__head,
+  .insight-card--right .insight-card__foot {
+    flex-direction: row-reverse;
+  }
+
   .insight-card__label {
     font-family: 'Fraunces', serif;
     font-weight: 300;
@@ -425,7 +453,9 @@
   }
   .insight-card__label em { font-style: italic; }
   .insight-card--fall .insight-card__label em { color: #d13b3b; }
-  .insight-card--rise .insight-card__label em { color: var(--accent); }
+  .insight-card--rise .insight-card__label em,
+  .insight-card--congestion .insight-card__label em,
+  .insight-card--pollution .insight-card__label em { color: var(--accent); }
 
   .insight-card__foot {
     border-top: 1px solid var(--line-light);
@@ -469,59 +499,12 @@
   .insight-card.revealed .spark rect:nth-of-type(4) { transition-delay: 0.19s; }
   .insight-card.revealed .spark rect:nth-of-type(5) { transition-delay: 0.24s; }
 
-  /* Symptoms row: congestion + pollution */
-  .symptoms {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    background: var(--line-light);
-    border: 1px solid var(--line-light);
-    border-top: none;
-    margin-top: -1px;
-  }
-  .symptom {
-    background: var(--light);
-    padding: 36px;
-    display: flex;
-    align-items: center;
-    gap: 32px;
-    min-height: 140px;
-  }
-  .symptom__viz {
-    flex: 0 0 auto;
-    width: 200px;
-    min-height: 52px;
-    display: flex;
-    align-items: center;
-  }
-  .symptom__body {
-    flex: 1;
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-  }
-  .symptom__num {
-    font-family: 'Fraunces', serif;
-    font-size: 13px;
-    color: var(--muted-dark);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.08em;
-  }
-  .symptom__label {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: clamp(1.2rem, 2vw, 1.6rem);
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    flex: 1;
-  }
-  .symptom__label em { font-style: italic; color: var(--accent); }
-
   /* Congestion: traffic jam — cars spaced on the left, bumper-to-bumper on the right */
   .jam {
-    width: 200px;
-    height: 40px;
+    width: 148px;
+    height: 30px;
     display: block;
+    flex: 0 0 auto;
     overflow: visible;
   }
   .jam__road {
@@ -539,21 +522,22 @@
     transition: transform 0.55s var(--ease), opacity 0.4s var(--ease);
   }
   .car--jam { fill: var(--accent); }
-  .symptom.revealed .car { transform: scale(1) translateX(0); opacity: 1; }
-  .symptom.revealed .car:nth-of-type(1) { transition-delay: 0.02s; }
-  .symptom.revealed .car:nth-of-type(2) { transition-delay: 0.08s; }
-  .symptom.revealed .car:nth-of-type(3) { transition-delay: 0.14s; }
-  .symptom.revealed .car:nth-of-type(4) { transition-delay: 0.24s; }
-  .symptom.revealed .car:nth-of-type(5) { transition-delay: 0.30s; }
-  .symptom.revealed .car:nth-of-type(6) { transition-delay: 0.36s; }
-  .symptom.revealed .car:nth-of-type(7) { transition-delay: 0.42s; }
-  .symptom.revealed .car:nth-of-type(8) { transition-delay: 0.48s; }
+  .insight-card.revealed .car { transform: scale(1) translateX(0); opacity: 1; }
+  .insight-card.revealed .car:nth-of-type(1) { transition-delay: 0.02s; }
+  .insight-card.revealed .car:nth-of-type(2) { transition-delay: 0.08s; }
+  .insight-card.revealed .car:nth-of-type(3) { transition-delay: 0.14s; }
+  .insight-card.revealed .car:nth-of-type(4) { transition-delay: 0.24s; }
+  .insight-card.revealed .car:nth-of-type(5) { transition-delay: 0.30s; }
+  .insight-card.revealed .car:nth-of-type(6) { transition-delay: 0.36s; }
+  .insight-card.revealed .car:nth-of-type(7) { transition-delay: 0.42s; }
+  .insight-card.revealed .car:nth-of-type(8) { transition-delay: 0.48s; }
 
   /* Pollution: particle haze — sparse small dots on the left, dense larger particles on the right */
   .haze {
-    width: 200px;
-    height: 52px;
+    width: 148px;
+    height: 38px;
     display: block;
+    flex: 0 0 auto;
     overflow: visible;
   }
   .p {
@@ -566,7 +550,7 @@
     transition-delay: var(--d, 0s);
   }
   .p--heavy { fill: var(--accent); }
-  .symptom.revealed .p { opacity: 1; transform: scale(1); }
+  .insight-card.revealed .p { opacity: 1; transform: scale(1); }
 
   .problem__closing {
     margin-top: 72px;
@@ -607,13 +591,6 @@
   }
   .doing__intro.animate .strike::after { transform: scaleX(1); }
   .doing__intro em { font-style: italic; color: var(--accent); }
-  .doing__sub {
-    margin-top: 56px;
-    font-size: clamp(1.05rem, 1.3vw, 1.25rem);
-    max-width: 620px;
-    line-height: 1.6;
-    color: var(--muted-light);
-  }
 
   /* ---------- START ---------- */
   .start__grid {
@@ -932,6 +909,13 @@
     gap: 20px;
     position: relative;
     padding: 0 12px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .chain__node.revealed {
+    opacity: 1;
+    transform: translateY(0);
   }
   .chain__node:not(:last-child)::after {
     content: "";
@@ -946,9 +930,10 @@
     opacity: 0.35;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 1s var(--ease) 0.2s, opacity 0.6s var(--ease);
+    transition: transform 1s var(--ease) 0.35s, opacity 0.6s var(--ease);
   }
   .chain__node.revealed:not(:last-child)::after { transform: scaleX(1); }
+
   .chain__dot {
     width: 24px;
     height: 24px;
@@ -957,13 +942,19 @@
     background: var(--light);
     position: relative;
     z-index: 2;
-    transition: all 0.5s var(--ease);
+    transform: scale(0);
+    transition: transform 0.5s var(--ease) 0.15s, background 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.7s var(--ease) 0.45s;
   }
+  .chain__node.revealed .chain__dot { transform: scale(1); }
   .chain__node--accent .chain__dot {
     background: var(--accent);
     border-color: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent-soft);
+  }
+  .chain__node--accent.revealed .chain__dot {
     box-shadow: 0 0 0 8px var(--accent-soft);
   }
+
   .chain__label {
     font-family: 'Fraunces', serif;
     font-weight: 300;
@@ -971,6 +962,13 @@
     line-height: 1.2;
     letter-spacing: -0.01em;
     text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s var(--ease) 0.3s, transform 0.6s var(--ease) 0.3s;
+  }
+  .chain__node.revealed .chain__label {
+    opacity: 1;
+    transform: translateY(0);
   }
   .chain__node--accent .chain__label {
     color: var(--accent);
@@ -982,6 +980,13 @@
     text-align: center;
     max-width: 180px;
     line-height: 1.5;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s var(--ease) 0.45s, transform 0.6s var(--ease) 0.45s;
+  }
+  .chain__node.revealed .chain__meta {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .gtm__chain {
@@ -1387,7 +1392,7 @@
   @media (max-width: 900px) {
     section { padding: 80px 24px; }
     .nav { padding: 20px 24px; }
-    .hero__scroll { left: 24px; }
+    .hero__scroll { right: 24px; }
     .start__grid, .roadmap__inner { grid-template-columns: 1fr; gap: 48px; }
     .roadmap { padding: 0 24px; }
     .flow { grid-template-columns: 1fr; }
@@ -1399,11 +1404,12 @@
     .network { margin-top: 20px; padding: 4px 0; }
     .fragmented__closing { margin-top: 24px; }
     .problem__headline { margin-bottom: 40px; }
-    .divergence, .symptoms { grid-template-columns: 1fr; }
-    .insight-card { min-height: 300px; padding: 28px 24px; gap: 20px; }
-    .symptom { flex-direction: column; align-items: flex-start; padding: 28px 24px; gap: 20px; min-height: 0; }
-    .symptom__viz { width: 100%; }
-    .jam, .haze { max-width: 100%; width: 100%; }
+    .problem__grid { grid-template-columns: 1fr; }
+    .insight-card { min-height: 260px; padding: 28px 24px; gap: 20px; }
+    .insight-card--right { text-align: left; }
+    .insight-card--right .insight-card__head,
+    .insight-card--right .insight-card__foot { flex-direction: row; }
+    .jam, .haze { max-width: 100%; }
     .problem__closing { margin-top: 56px; }
     .chain { flex-direction: column; gap: 40px; align-items: flex-start; padding: 0; }
     .chain__node { flex-direction: row; text-align: left; gap: 20px; padding: 0; align-items: center; }
@@ -1438,15 +1444,11 @@
     <p class="lede" style="margin-top: 56px;">
       <span class="reveal-line"><span>Yet only a small percentage of these trips</span></span>
       <span class="reveal-line"><span>are completed in one mode.</span></span>
-    </p>
-
-    <p class="lede" style="margin-top: 40px; color: var(--muted-light);">
-      <span class="reveal-line"><span>Reaching from Point A to Point B</span></span>
-      <span class="reveal-line"><span>is not a journey.</span></span>
+      
     </p>
 
     <div class="hero__switch fade-up">
-      <span>It&rsquo;s a constant</span>
+      <span>Reaching A to B is a constant switch</span>
       <span class="mode">Bus</span>
       <span class="arrow">→</span>
       <span class="mode">Metro</span>
@@ -1541,8 +1543,9 @@
       The <em>divergence</em> is widening.
     </h2>
 
-    <!-- Divergence: public transport falling vs private vehicles rising -->
-    <div class="divergence">
+    <!-- Four insight cards in a 2×2 grid. Left column: number left. Right column: number right (mirrored). -->
+    <div class="problem__grid">
+      <!-- 01 · Falling (left column) -->
       <div class="insight-card insight-card--fall fade-up">
         <div class="insight-card__head">
           <span class="insight-card__num">01</span>
@@ -1564,7 +1567,8 @@
         </div>
       </div>
 
-      <div class="insight-card insight-card--rise fade-up">
+      <!-- 02 · Rising (right column, mirrored) -->
+      <div class="insight-card insight-card--rise insight-card--right fade-up">
         <div class="insight-card__head">
           <span class="insight-card__num">02</span>
           <span class="trend trend--up">
@@ -1584,13 +1588,19 @@
           <span class="insight-card__meta">India, last decade</span>
         </div>
       </div>
-    </div>
 
-    <!-- Symptoms: congestion + pollution -->
-    <div class="symptoms">
-      <div class="symptom fade-up">
-        <div class="symptom__viz" aria-hidden="true">
-          <svg class="jam" viewBox="0 0 200 40" preserveAspectRatio="xMidYMid meet">
+      <!-- 03 · Congestion (left column) -->
+      <div class="insight-card insight-card--congestion fade-up">
+        <div class="insight-card__head">
+          <span class="insight-card__num">03</span>
+          <span class="trend trend--up">
+            <svg class="trend__arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 L10 2 M10 2 L6 2 M10 2 L10 6"/></svg>
+            Denser
+          </span>
+        </div>
+        <div class="insight-card__label">Cities are getting <em>more congested.</em></div>
+        <div class="insight-card__foot">
+          <svg class="jam" viewBox="0 0 200 40" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <line class="jam__road" x1="0" y1="32" x2="200" y2="32"/>
             <rect class="car"          x="0"   y="14" width="18" height="12" rx="2"/>
             <rect class="car"          x="30"  y="14" width="18" height="12" rx="2"/>
@@ -1601,16 +1611,22 @@
             <rect class="car car--jam" x="160" y="14" width="18" height="12" rx="2"/>
             <rect class="car car--jam" x="180" y="14" width="18" height="12" rx="2"/>
           </svg>
-        </div>
-        <div class="symptom__body">
-          <span class="symptom__num">03</span>
-          <div class="symptom__label">Cities are getting <em>more congested.</em></div>
+          <span class="insight-card__meta">Urban roads, peak hours</span>
         </div>
       </div>
 
-      <div class="symptom fade-up">
-        <div class="symptom__viz" aria-hidden="true">
-          <svg class="haze" viewBox="0 0 200 52" preserveAspectRatio="xMidYMid meet">
+      <!-- 04 · Pollution (right column, mirrored) -->
+      <div class="insight-card insight-card--pollution insight-card--right fade-up">
+        <div class="insight-card__head">
+          <span class="insight-card__num">04</span>
+          <span class="trend trend--up">
+            <svg class="trend__arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 10 L10 2 M10 2 L6 2 M10 2 L10 6"/></svg>
+            Heavier
+          </span>
+        </div>
+        <div class="insight-card__label">The air is <em>more polluted.</em></div>
+        <div class="insight-card__foot">
+          <svg class="haze" viewBox="0 0 200 52" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <circle class="p" cx="10"  cy="22" r="1.5" style="--d: 0.02s"/>
             <circle class="p" cx="26"  cy="36" r="1"   style="--d: 0.05s"/>
             <circle class="p" cx="40"  cy="14" r="1.5" style="--d: 0.08s"/>
@@ -1628,10 +1644,7 @@
             <circle class="p p--heavy" cx="186" cy="42" r="3"   style="--d: 0.56s"/>
             <circle class="p p--heavy" cx="194" cy="16" r="3.5" style="--d: 0.60s"/>
           </svg>
-        </div>
-        <div class="symptom__body">
-          <span class="symptom__num">04</span>
-          <div class="symptom__label"><em>More polluted.</em></div>
+          <span class="insight-card__meta">Urban AQI trend</span>
         </div>
       </div>
     </div>
@@ -1649,9 +1662,6 @@
       <br />
       We are <em>connecting the existing ones.</em>
     </h2>
-    <p class="doing__sub fade-up">
-      Bringing together fragmented pieces by building the digital infrastructure beneath them. One layer that turns disconnected services into continuous movement.
-    </p>
   </div>
 </section>
 
@@ -1872,17 +1882,17 @@
         <span class="gtm__stage-title">The compound effect</span>
       </div>
       <div class="chain" id="gtmChain">
-        <div class="chain__node fade-up">
+        <div class="chain__node">
           <div class="chain__dot"></div>
           <div class="chain__label">Operators adopt</div>
           <div class="chain__meta">The first wedge takes hold. Usage becomes routine.</div>
         </div>
-        <div class="chain__node fade-up">
+        <div class="chain__node">
           <div class="chain__dot"></div>
           <div class="chain__label">Trust builds</div>
           <div class="chain__meta">Daily reliability earns permission for deeper tools.</div>
         </div>
-        <div class="chain__node chain__node--accent fade-up">
+        <div class="chain__node chain__node--accent">
           <div class="chain__dot"></div>
           <div class="chain__label">Upgrade to POS</div>
           <div class="chain__meta">Operators now run on our layer, not alongside it.</div>
@@ -1892,13 +1902,6 @@
 
     <div class="gtm__chain fade-up">
       A <em>chain reaction</em> begins.
-    </div>
-
-    <div class="gtm__outcome fade-up">
-      <div class="gtm__outcome-label">The Outcome</div>
-      <div class="gtm__outcome-text">
-        A payments wedge becomes the <em>operating layer of mobility.</em>
-      </div>
     </div>
   </div>
 </section>
@@ -2078,7 +2081,7 @@
         }
       });
     }, { threshold: 0.2 });
-    document.querySelectorAll('.insight-card, .symptom, .network, #start .start__visual').forEach(el => vizIo.observe(el));
+    document.querySelectorAll('.insight-card, .network, #start .start__visual, #gtmChain .chain__node').forEach(el => vizIo.observe(el));
     return;
   }
 
@@ -2130,8 +2133,7 @@
   heroTl
     .to('#hero .eyebrow', { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' })
     .to('#hero .display .reveal-line > span', { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out', stagger: 0.12 }, '-=0.3')
-    .to('#hero .lede:nth-of-type(1) .reveal-line > span', { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.5')
-    .to('#hero .lede:nth-of-type(2) .reveal-line > span', { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.4')
+    .to('#hero .lede .reveal-line > span', { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', stagger: 0.1 }, '-=0.5')
     .to('#hero .hero__switch', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, '-=0.3')
     .to('#hero .hero__struggle .reveal-line > span', { y: 0, opacity: 1, duration: 1, ease: 'power3.out' }, '-=0.3');
 
@@ -2153,7 +2155,7 @@
   fadeUpIn('#problem');
 
   // Data-viz reveal: charts, dot rows, AQI bars
-  gsap.utils.toArray('#problem .insight-card, #problem .symptom').forEach(el => {
+  gsap.utils.toArray('#problem .insight-card').forEach(el => {
     ScrollTrigger.create({
       trigger: el,
       start: 'top 82%',
