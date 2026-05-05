@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>allrides · Financial Model — 36-month projections</title>
+<meta name="description" content="Cohort-based 36-month financial model for allrides by Urbanfolks Mobility Pvt. Ltd. — revenue, expenses, P&L, cash flow, unit economics and TAM." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js'"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  :root {
+    --bg:        #f7f7f5;
+    --surface:   #ffffff;
+    --surface-2: #fbfbf9;
+    --ink:       #0e0e10;
+    --ink-2:     #2b2b30;
+    --muted:     #6b6b75;
+    --muted-2:   #9b9ba5;
+    --line:      rgba(14, 14, 16, 0.08);
+    --line-2:    rgba(14, 14, 16, 0.04);
+    --accent:    #6E13EF;
+    --accent-soft: rgba(110, 19, 239, 0.08);
+    --accent-2:  #0a8a5b;
+    --warn:      #d97706;
+    --danger:    #c0322b;
+    --gold:      #b8860b;
+    --shadow-1:  0 1px 2px rgba(14,14,16,.04), 0 4px 16px rgba(14,14,16,.04);
+    --shadow-2:  0 8px 30px rgba(14,14,16,.08), 0 2px 6px rgba(14,14,16,.04);
+    --radius:    14px;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    font-size: 15px;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ---------- Layout ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(247,247,245,.85);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 14px 28px; display: flex; gap: 32px; align-items: center; justify-content: space-between;
+  }
+  .brand {
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .brand-mark {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; letter-spacing: -0.02em;
+  }
+  .brand-sub { font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+  nav.section-nav {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  nav.section-nav a {
+    color: var(--ink-2); font-size: 13.5px; padding: 7px 12px; border-radius: 8px;
+    transition: background .15s ease, color .15s ease; font-weight: 500;
+  }
+  nav.section-nav a:hover { background: var(--surface); text-decoration: none; }
+  nav.section-nav a.active { background: var(--ink); color: #fff; }
+
+  main { max-width: 1280px; margin: 0 auto; padding: 36px 28px 96px; }
+
+  section { scroll-margin-top: 80px; padding: 28px 0 56px; }
+  section + section { border-top: 1px solid var(--line-2); }
+
+  .section-eyebrow {
+    font-size: 11.5px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 38px; letter-spacing: -0.02em; line-height: 1.05;
+  }
+  .section-lede {
+    color: var(--muted); margin-top: 8px; max-width: 760px; font-size: 15.5px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 56px 0 28px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 64px; letter-spacing: -0.03em; line-height: 1.0;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero p.lede { color: var(--muted); font-size: 18px; max-width: 720px; margin-top: 18px; }
+
+  .meta-row {
+    display: flex; flex-wrap: wrap; gap: 28px; margin-top: 28px;
+    padding-top: 22px; border-top: 1px solid var(--line);
+  }
+  .meta-row > div { font-size: 13.5px; }
+  .meta-row dt { color: var(--muted); font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+  .meta-row dd { color: var(--ink); font-weight: 500; }
+
+  /* ---------- KPI Grid ---------- */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-top: 36px;
+  }
+  .kpi {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px 22px; box-shadow: var(--shadow-1);
+    position: relative; overflow: hidden;
+  }
+  .kpi.accent { background: linear-gradient(135deg, #fbf7ff 0%, #fff 100%); border-color: rgba(110,19,239,.16); }
+  .kpi-label { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .kpi-value {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 32px; letter-spacing: -0.02em;
+    margin-top: 8px; line-height: 1.0;
+  }
+  .kpi-unit { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .kpi-foot { font-size: 12px; color: var(--muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line-2); }
+  @media (max-width: 980px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .kpi-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 44px; } .section-title { font-size: 30px; } }
+
+  /* ---------- Card ---------- */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-1); overflow: hidden;
+  }
+  .card-head {
+    padding: 18px 24px; border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .card-head h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 19px; letter-spacing: -0.01em; }
+  .card-head .sub { font-size: 12.5px; color: var(--muted); }
+  .card-body { padding: 18px 24px; }
+  .card-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px;
+  }
+  @media (max-width: 980px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Tables ---------- */
+  .tbl-wrap { width: 100%; overflow-x: auto; }
+  table.fin {
+    width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.fin th, table.fin td {
+    padding: 11px 14px; text-align: right; border-bottom: 1px solid var(--line-2);
+    white-space: nowrap;
+  }
+  table.fin th:first-child, table.fin td:first-child { text-align: left; }
+  table.fin thead th {
+    background: var(--surface-2); font-weight: 600; font-size: 12px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid var(--line);
+  }
+  table.fin tbody tr:hover td { background: var(--surface-2); }
+  table.fin tr.summary-row { background: var(--surface-2); }
+  table.fin tr.summary-row td { font-weight: 600; }
+  table.fin tr.total-row td {
+    background: #f0ecfb; color: var(--ink); font-weight: 700;
+    border-top: 1px solid rgba(110,19,239,.18); border-bottom: 1px solid rgba(110,19,239,.18);
+  }
+  table.fin .num-pos { color: var(--accent-2); }
+  table.fin .num-neg { color: var(--danger); }
+  table.fin .num-warn { color: var(--warn); }
+
+  /* Expandable quarterly */
+  .q-toggle {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px;
+    font-size: 11.5px; color: var(--muted-2); transition: all .15s ease;
+  }
+  .q-toggle:hover { color: var(--ink); border-color: var(--ink); }
+  .q-toggle .chev { transition: transform .2s ease; display: inline-block; }
+  tr.q-row.open .q-toggle .chev { transform: rotate(90deg); }
+  tr.q-row.open .q-toggle { color: var(--accent); border-color: var(--accent); }
+
+  tr.month-row { background: #fcfcfa; font-size: 12.5px; }
+  tr.month-row td { padding: 8px 14px; color: var(--ink-2); border-bottom: 1px dashed var(--line-2); }
+  tr.month-row td:first-child { padding-left: 36px; color: var(--muted); font-weight: 500; }
+  tr.month-row.hidden { display: none; }
+
+  /* Detailed modal trigger button */
+  .detail-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--ink); color: #fff;
+    border: 1px solid var(--ink); border-radius: 999px; padding: 8px 16px;
+    font-size: 12.5px; font-weight: 500;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .detail-btn:hover { background: var(--accent); border-color: var(--accent); }
+  .detail-btn .arrow { transition: transform .2s ease; }
+  .detail-btn:hover .arrow { transform: translate(2px, -2px); }
+  .ghost-btn {
+    background: transparent; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 999px; padding: 8px 16px; font-size: 12.5px; font-weight: 500;
+  }
+  .ghost-btn:hover { border-color: var(--ink); }
+
+  /* Segmented quarterly/yearly toggle */
+  .seg-toggle {
+    display: inline-flex; padding: 3px; gap: 2px;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px;
+  }
+  .seg-btn {
+    background: transparent; border: none; color: var(--muted);
+    font-size: 12.5px; font-weight: 500; padding: 6px 14px;
+    border-radius: 999px; cursor: pointer; transition: background .15s ease, color .15s ease;
+  }
+  .seg-btn:hover { color: var(--ink); }
+  .seg-btn.active {
+    background: var(--ink); color: #fff;
+    box-shadow: 0 1px 2px rgba(14,14,16,.12);
+  }
+
+  /* ---------- Charts ---------- */
+  .chart-box {
+    position: relative; width: 100%; height: 320px;
+  }
+  .chart-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 22px;
+  }
+  @media (max-width: 980px) { .chart-row { grid-template-columns: 1fr; } }
+
+  /* ---------- Highlights ---------- */
+  .callout-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px;
+  }
+  .callout {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .callout.warn { border-left-color: var(--warn); }
+  .callout.good { border-left-color: var(--accent-2); }
+  .callout-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); font-weight: 600; }
+  .callout-text { margin-top: 4px; font-size: 13.5px; color: var(--ink-2); }
+  @media (max-width: 980px) { .callout-grid { grid-template-columns: 1fr; } }
+
+  /* ---------- Highlights pill row ---------- */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 7px 14px; border-radius: 999px; font-size: 12.5px;
+  }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .pill.good .dot { background: var(--accent-2); }
+  .pill.warn .dot { background: var(--warn); }
+
+  /* ---------- Assumptions ---------- */
+  .assumption-group { margin-bottom: 28px; }
+  .assumption-group h4 {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 17px; letter-spacing: -0.01em;
+    color: var(--accent); padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid var(--line);
+  }
+  .assumption-row {
+    display: grid; grid-template-columns: 1fr auto 2fr; gap: 18px;
+    padding: 10px 0; border-bottom: 1px dashed var(--line-2); align-items: baseline;
+  }
+  .assumption-row .name { font-weight: 500; }
+  .assumption-row .value {
+    font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--accent);
+    background: var(--accent-soft); padding: 2px 8px; border-radius: 6px; font-size: 13px;
+  }
+  .assumption-row .note { color: var(--muted); font-size: 13px; }
+  @media (max-width: 720px) {
+    .assumption-row { grid-template-columns: 1fr; gap: 4px; }
+    .assumption-row .value { justify-self: start; }
+  }
+
+  /* ---------- Market table ---------- */
+  table.market { font-size: 13.5px; }
+  table.market td.bar-cell {
+    padding: 0; width: 200px;
+  }
+  .bar {
+    height: 8px; border-radius: 999px; background: var(--accent);
+    margin: 0 14px; min-width: 4px;
+  }
+
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(14,14,16,.55);
+    display: none; align-items: center; justify-content: center; z-index: 100;
+    padding: 20px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--bg); border-radius: var(--radius); width: 100%; max-width: 1180px;
+    max-height: 92vh; display: flex; flex-direction: column;
+    box-shadow: 0 30px 80px rgba(0,0,0,.25);
+    overflow: hidden;
+  }
+  .modal-head {
+    padding: 20px 28px; border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  .modal-head h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; letter-spacing: -0.01em; }
+  .modal-head p { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  .modal-close {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px;
+    width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ink); font-size: 16px; line-height: 1;
+  }
+  .modal-close:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .modal-body { overflow: auto; padding: 24px 28px; }
+  .modal-actions { display: flex; gap: 8px; }
+
+  /* sticky first column for very wide monthly table */
+  table.detail th, table.detail td { white-space: nowrap; }
+  table.detail thead th:first-child,
+  table.detail tbody td:first-child {
+    position: sticky; left: 0; background: var(--surface); z-index: 2;
+    box-shadow: 1px 0 0 var(--line);
+  }
+  table.detail thead th:first-child { background: var(--surface-2); }
+
+  footer { color: var(--muted); font-size: 12.5px; text-align: center; padding-top: 32px; }
+
+  /* small utilities */
+  .row-flex { display: flex; gap: 8px; align-items: center; }
+  .grow { flex: 1; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .tag {
+    display: inline-block; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">allrides</span>
+      <span class="brand-sub">Urbanfolks Mobility · Financial Model · 36 months</span>
+    </div>
+    <nav class="section-nav" id="sectionNav">
+      <a href="#overview">Overview</a>
+      <a href="#revenue">Revenue</a>
+      <a href="#expenses">Expenses</a>
+      <a href="#pnl">P&amp;L &amp; Cash</a>
+      <a href="#unit">Unit econ</a>
+      <a href="#market">Market</a>
+      <a href="#assumptions">Assumptions</a>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="overview">
+  <div class="section-eyebrow">allrides · by Urbanfolks Mobility · India</div>
+  <h1>3 Year Financial Projection,<br/>break-even by <em>Month 20</em>.</h1>
+  <p class="lede">36-month projection across three revenue streams — ticket fees, pass margin, operator subscription — built up from monthly bus-onboarding cohorts. All figures in <span class="mono">₹ lakh</span> unless marked.</p>
+
+  <div class="meta-row">
+    <div><dt>Company</dt><dd>Urbanfolks Mobility Pvt. Ltd.</dd></div>
+    <div><dt>Product</dt><dd>allrides</dd></div>
+    <div><dt>Sector</dt><dd>Mobility fintech · B2B2C</dd></div>
+    <div><dt>Stage</dt><dd>Launched · pre-revenue · 5 cofounders</dd></div>
+    <div><dt>Geography</dt><dd>India · private stage carriage</dd></div>
+    <div><dt>TAM</dt><dd>~1,80,000 buses</dd></div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi accent">
+      <div class="kpi-label">Buses live · M36</div>
+      <div class="kpi-value">3,450</div>
+      <div class="kpi-unit">1.92% of TAM</div>
+      <div class="kpi-foot">From 50 buses/month onboarding ramp at M1</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Year 3 revenue</div>
+      <div class="kpi-value">₹1,895 L</div>
+      <div class="kpi-unit">≈ ₹19.0 cr</div>
+      <div class="kpi-foot">Up from ₹95 L in Y1 · 20.0× growth</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Exit ARR · M36×12</div>
+      <div class="kpi-value">₹2,522 L</div>
+      <div class="kpi-unit">≈ ₹25.2 cr</div>
+      <div class="kpi-foot">Run-rate at end of Year 3</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Cumulative break-even</div>
+      <div class="kpi-value">M21</div>
+      <div class="kpi-unit">Monthly EBITDA+ from M12</div>
+      <div class="kpi-foot">Max trough ₹–89 L at M11</div>
+    </div>
+  </div>
+
+  <div class="callout-grid">
+    <div class="callout good">
+      <div class="callout-label">Year 3 EBITDA margin</div>
+      <div class="callout-text"><b>36.5%</b> on ₹1,895 L revenue · ₹691 L EBITDA</div>
+    </div>
+    <div class="callout">
+      <div class="callout-label">GMV processed · Year 3</div>
+      <div class="callout-text"><b>₹22,624 L</b> (₹226.2 cr) flowing through the platform</div>
+    </div>
+    <div class="callout warn">
+      <div class="callout-label">Max cash trough</div>
+      <div class="callout-text"><b>₹–89 L</b> at M11 · seed of ₹2 cr lands Y1 at +₹112 L</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REVENUE ===================== -->
+<section id="revenue">
+  <div class="section-eyebrow">Revenue build</div>
+  <h2 class="section-title">Four streams, cohort-aware</h2>
+  <p class="section-lede">Every cell sums across 36 cohorts. Ticket fees apply at life-month ≥ 5. Ads + ad-free pass introduced at L7 (after a 6-month rider awareness build) — pass adoption ramps L7–L11 (2%→10% of digital users at ₹49/mo); ad revenue covers the remaining users. Operator subscription kicks in at L ≥ 25, post-EMI.</p>
+
+  <div class="kpi-grid" style="margin-top:22px">
+    <div class="kpi">
+      <div class="kpi-label">Year 1 revenue</div>
+      <div class="kpi-value">₹94.6 L</div>
+      <div class="kpi-unit">Tickets ₹53 L · Ads ₹33 L · Pass ₹8 L</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Year 2 revenue</div>
+      <div class="kpi-value">₹771.1 L</div>
+      <div class="kpi-unit">8.2× growth on Y1</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Year 3 revenue</div>
+      <div class="kpi-value">₹1,894.7 L</div>
+      <div class="kpi-unit">2.5× growth on Y2</div>
+    </div>
+    <div class="kpi accent">
+      <div class="kpi-label">3-year total</div>
+      <div class="kpi-value">₹2,760 L</div>
+      <div class="kpi-unit">≈ ₹27.6 cr revenue</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head"><h3>Revenue by stream — monthly</h3><span class="sub">M1 → M36 · ₹ lakh</span></div>
+      <div class="card-body"><div class="chart-box"><canvas id="chartRevenueStream"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Revenue mix — Year 3</h3><span class="sub">Steady-state composition</span></div>
+      <div class="card-body"><div class="chart-box"><canvas id="chartRevenueMix"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head">
+      <div>
+        <h3 id="revenueTableTitle">Yearly revenue summary</h3>
+        <div class="sub">Click any row to expand month-level rows · open the modal for the full 36-month grid</div>
+      </div>
+      <div class="modal-actions">
+        <div class="seg-toggle" data-kind="revenue" role="tablist" aria-label="Revenue view">
+          <button class="seg-btn"        data-view="quarter" onclick="setView('revenue','quarter')">Quarterly</button>
+          <button class="seg-btn active" data-view="year"    onclick="setView('revenue','year')">Yearly</button>
+        </div>
+        <button class="ghost-btn" onclick="expandAll('revenue')">Expand all</button>
+        <button class="ghost-btn" onclick="collapseAll('revenue')">Collapse</button>
+        <button class="detail-btn" onclick="openModal('revenue')">Detailed view <span class="arrow">↗</span></button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="tbl-wrap">
+        <table class="fin" id="revenueQuarterTable">
+          <thead>
+            <tr>
+              <th>Quarter</th><th>Onboardings</th><th>Ticket fees</th><th>Ad revenue</th><th>Ad-free pass</th><th>Op subscription</th><th>Total revenue</th><th>QoQ growth</th>
+            </tr>
+          </thead>
+          <tbody id="revenueQuarterBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EXPENSES ===================== -->
+<section id="expenses">
+  <div class="section-eyebrow">Expense plan</div>
+  <h2 class="section-title">Seven categories, 36 months</h2>
+  <p class="section-lede">Salaries scale with headcount; PG fees scale with GMV; field deployment scales with onboarding pace. Marketing is the largest discretionary lever in Y2–Y3.</p>
+
+  <div class="kpi-grid" style="margin-top:22px">
+    <div class="kpi">
+      <div class="kpi-label">Year 1 expenses</div>
+      <div class="kpi-value">₹183 L</div>
+      <div class="kpi-unit">Salaries 27% · Marketing 19%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Year 2 expenses</div>
+      <div class="kpi-value">₹574 L</div>
+      <div class="kpi-unit">PG fees become #1 line</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Year 3 expenses</div>
+      <div class="kpi-value">₹1,203 L</div>
+      <div class="kpi-unit">PG fees ₹393 L · Salaries ₹306 L</div>
+    </div>
+    <div class="kpi accent">
+      <div class="kpi-label">3-year total</div>
+      <div class="kpi-value">₹1,960 L</div>
+      <div class="kpi-unit">≈ ₹19.6 cr cost base</div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head"><h3>Expenses by category — monthly</h3><span class="sub">Stacked, ₹ lakh</span></div>
+      <div class="card-body"><div class="chart-box"><canvas id="chartExpenseStack"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Expense mix — Year 3</h3><span class="sub">Where every rupee goes</span></div>
+      <div class="card-body"><div class="chart-box"><canvas id="chartExpenseMix"></canvas></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head">
+      <div>
+        <h3 id="expenseTableTitle">Yearly expense summary</h3>
+        <div class="sub">Click any row to see month-level lines · use detailed view for the full 36-month grid</div>
+      </div>
+      <div class="modal-actions">
+        <div class="seg-toggle" data-kind="expense" role="tablist" aria-label="Expense view">
+          <button class="seg-btn"        data-view="quarter" onclick="setView('expense','quarter')">Quarterly</button>
+          <button class="seg-btn active" data-view="year"    onclick="setView('expense','year')">Yearly</button>
+        </div>
+        <button class="ghost-btn" onclick="expandAll('expense')">Expand all</button>
+        <button class="ghost-btn" onclick="collapseAll('expense')">Collapse</button>
+        <button class="detail-btn" onclick="openModal('expense')">Detailed view <span class="arrow">↗</span></button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="tbl-wrap">
+        <table class="fin" id="expenseQuarterTable">
+          <thead>
+            <tr>
+              <th>Quarter</th><th>Salaries</th><th>Field</th><th>PG fees</th><th>HW reserve</th><th>Marketing</th><th>Cloud/tech</th><th>Office/legal</th><th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="expenseQuarterBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== P&L AND CASH ===================== -->
+<section id="pnl">
+  <div class="section-eyebrow">P&amp;L &amp; cash flow</div>
+  <h2 class="section-title">Trough at M11, surplus by M21</h2>
+  <p class="section-lede">Monthly EBITDA turns positive at M12; cumulative cash position turns positive at M21. The deepest cash trough is ₹–89 L at M11 — fundable with an angel round of ₹2 cr.</p>
+
+  <div class="kpi-grid" style="margin-top:22px">
+    <div class="kpi">
+      <div class="kpi-label">Y1 EBITDA</div>
+      <div class="kpi-value num-neg" style="color:var(--danger)">₹–88.1 L</div>
+      <div class="kpi-unit">Margin –93.2%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Y2 EBITDA</div>
+      <div class="kpi-value" style="color:var(--accent-2)">₹197 L</div>
+      <div class="kpi-unit">Margin 25.5%</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Y3 EBITDA</div>
+      <div class="kpi-value" style="color:var(--accent-2)">₹691 L</div>
+      <div class="kpi-unit">Margin 36.5%</div>
+    </div>
+    <div class="kpi accent">
+      <div class="kpi-label">End-of-Y3 cash</div>
+      <div class="kpi-value">₹800 L</div>
+      <div class="kpi-unit">Cumulative · self-funded from M21</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><h3>Cumulative cash position</h3><span class="sub">M1 → M36 · ₹ lakh · trough M11 / surplus M21</span></div>
+    <div class="card-body"><div class="chart-box"><canvas id="chartCash"></canvas></div></div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head">
+      <div>
+        <h3 id="pnlTableTitle">P&amp;L — yearly</h3>
+        <div class="sub">Click a row for month detail · open detailed view for everything</div>
+      </div>
+      <div class="modal-actions">
+        <div class="seg-toggle" data-kind="pnl" role="tablist" aria-label="P&amp;L view">
+          <button class="seg-btn"        data-view="quarter" onclick="setView('pnl','quarter')">Quarterly</button>
+          <button class="seg-btn active" data-view="year"    onclick="setView('pnl','year')">Yearly</button>
+        </div>
+        <button class="ghost-btn" onclick="expandAll('pnl')">Expand all</button>
+        <button class="ghost-btn" onclick="collapseAll('pnl')">Collapse</button>
+        <button class="detail-btn" onclick="openModal('pnl')">Detailed view <span class="arrow">↗</span></button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="tbl-wrap">
+        <table class="fin" id="pnlQuarterTable">
+          <thead id="pnlQuarterHead">
+            <tr>
+              <th>Quarter</th><th>Revenue</th><th>Expenses</th><th>Q EBITDA</th><th>Margin %</th><th>End-of-Q cash</th>
+            </tr>
+          </thead>
+          <tbody id="pnlQuarterBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head"><h3>Funding scenarios</h3><span class="sub">Ending Year 1 cash position</span></div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="fin">
+            <thead><tr><th>Scenario</th><th>Y1 end-cash (₹ lakh)</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>No raise · self-funded</td><td class="num-neg">–88.10</td><td style="text-align:left;color:var(--muted)">Below trough — non-viable</td></tr>
+              <tr><td>+ ₹50 L from angels</td><td class="num-neg">–38.10</td><td style="text-align:left;color:var(--muted)">Still tight; bridges ~6 months</td></tr>
+              <tr><td>+ ₹2 cr seed</td><td class="num-pos">+111.90</td><td style="text-align:left;color:var(--muted)">Comfortable buffer through M24</td></tr>
+              <tr class="total-row"><td>+ ₹5 cr seed</td><td class="num-pos">+411.90</td><td style="text-align:left;color:var(--muted)">Aggressive ramp · spare for marketing &amp; team</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Break-even highlights</h3></div>
+      <div class="card-body">
+        <div class="pill-row">
+          <span class="pill warn"><span class="dot"></span>Max trough <b class="mono" style="margin-left:4px">₹–89 L · M11</b></span>
+          <span class="pill good"><span class="dot"></span>Monthly EBITDA+ <b class="mono" style="margin-left:4px">M12</b></span>
+          <span class="pill good"><span class="dot"></span>Cumulative cash+ <b class="mono" style="margin-left:4px">M21</b></span>
+          <span class="pill"><span class="dot"></span>Y3 margin <b class="mono" style="margin-left:4px">36.5%</b></span>
+          <span class="pill"><span class="dot"></span>Take rate <b class="mono" style="margin-left:4px">7.5%</b></span>
+        </div>
+        <p style="margin-top:14px;color:var(--muted);font-size:13.5px">Run-rate at M36 is ₹210.1 L/month — implying an ARR of <b style="color:var(--ink)">₹2,522 L</b> (~₹25 cr) entering Year 4 with 3,450 buses live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== UNIT ECONOMICS ===================== -->
+<section id="unit">
+  <div class="section-eyebrow">Unit economics</div>
+  <h2 class="section-title">Per-bus economics, steady state</h2>
+  <p class="section-lede">Steady state = cohort at life-month ≥ 11 (full pass-adoption ramp complete). Real blended ARPU is lower because newer cohorts haven't yet ramped.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-head"><h3>Per bus · per month</h3></div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="fin">
+            <thead><tr><th>Metric</th><th>Value</th><th>Calc</th></tr></thead>
+            <tbody>
+              <tr><td>Daily riders</td><td class="mono">900</td><td style="text-align:left;color:var(--muted)">Tier 2/3 baseline</td></tr>
+              <tr><td>Operating days</td><td class="mono">30</td><td style="text-align:left;color:var(--muted)">Days/month</td></tr>
+              <tr><td>Total rider-trips/mo</td><td class="mono">27,000</td><td style="text-align:left;color:var(--muted)">900 × 30</td></tr>
+              <tr><td>Digital adoption</td><td class="mono">35%</td><td style="text-align:left;color:var(--muted)">Lower friction with free app</td></tr>
+              <tr><td>Digital trips/mo</td><td class="mono">9,450</td><td style="text-align:left;color:var(--muted)">Riders × digital%</td></tr>
+              <tr><td>Unique digital users/mo</td><td class="mono">315</td><td style="text-align:left;color:var(--muted)">9,450 ÷ 30 trips/user</td></tr>
+              <tr><td>Ad-free pass conversion</td><td class="mono">10%</td><td style="text-align:left;color:var(--muted)">31.5 paying users · ₹49/mo</td></tr>
+              <tr><td>Ad-supported users</td><td class="mono">283.5</td><td style="text-align:left;color:var(--muted)">Remaining 90%</td></tr>
+              <tr class="summary-row"><td>Ticket fees / bus / mo</td><td class="mono">₹2,835</td><td style="text-align:left;color:var(--muted)">9,450 × ₹0.30 · L ≥ 5</td></tr>
+              <tr class="summary-row"><td>Ad revenue / bus / mo</td><td class="mono">₹2,977</td><td style="text-align:left;color:var(--muted)">283.5 × 150 imp × ₹70 eCPM · L ≥ 7</td></tr>
+              <tr class="summary-row"><td>Ad-free pass / bus / mo</td><td class="mono">₹1,544</td><td style="text-align:left;color:var(--muted)">31.5 × ₹49 · L ≥ 7</td></tr>
+              <tr class="summary-row"><td>Subscription (post-EMI)</td><td class="mono">₹1,000</td><td style="text-align:left;color:var(--muted)">L ≥ 25</td></tr>
+              <tr class="total-row"><td>Pre-sub ARPU / bus / mo</td><td class="mono">₹7,355</td><td style="text-align:left;color:var(--muted)">Tickets + ads + pass</td></tr>
+              <tr class="total-row"><td>Post-sub ARPU / bus / mo</td><td class="mono">₹8,355</td><td style="text-align:left;color:var(--muted)">After Year 2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>GMV &amp; LTV</h3></div>
+      <div class="card-body" style="padding:0">
+        <div class="tbl-wrap">
+          <table class="fin">
+            <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td>Trip GMV / bus / mo</td><td class="mono">₹94,500</td><td style="text-align:left;color:var(--muted)">9,450 trips × ₹10</td></tr>
+              <tr><td>Pass purchases / bus / mo</td><td class="mono">₹1,544</td><td style="text-align:left;color:var(--muted)">31.5 × ₹49</td></tr>
+              <tr class="summary-row"><td>Total GMV / bus / mo</td><td class="mono">₹96,044</td><td style="text-align:left;color:var(--muted)">Trip + pass flow</td></tr>
+              <tr class="summary-row"><td>Take rate</td><td class="mono">7.7%</td><td style="text-align:left;color:var(--muted)">Effective platform take</td></tr>
+              <tr><td>Steady-state revenue / bus / yr</td><td class="mono">₹88,260</td><td style="text-align:left;color:var(--muted)">Annualized</td></tr>
+              <tr><td>Bus 24-month LTV</td><td class="mono">₹1,76,520</td><td style="text-align:left;color:var(--muted)">2-year horizon</td></tr>
+              <tr class="total-row"><td>Bus 36-month LTV</td><td class="mono">₹2,76,780</td><td style="text-align:left;color:var(--muted)">3-yr · sub kicks in last 12 mo</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><h3>Bus onboarding ramp</h3><span class="sub">Cumulative buses live, M1 → M36</span></div>
+    <div class="card-body"><div class="chart-box" style="height:280px"><canvas id="chartBuses"></canvas></div></div>
+  </div>
+</section>
+
+<!-- ===================== MARKET ===================== -->
+<section id="market">
+  <div class="section-eyebrow">Market sizing</div>
+  <h2 class="section-title">India · private stage carriage</h2>
+  <p class="section-lede">~21 lakh buses on Indian roads (MoRTH 2022). 92–95% private. Of those, 29% hold valid permits — and ~1.8 lakh hold stage carriage permits. <b>That is our TAM.</b></p>
+
+  <div class="kpi-grid" style="margin-top:22px">
+    <div class="kpi">
+      <div class="kpi-label">National TAM</div>
+      <div class="kpi-value">1,80,000</div>
+      <div class="kpi-unit">Private stage-carriage buses</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Industry GMV</div>
+      <div class="kpi-value">₹54,000 cr</div>
+      <div class="kpi-unit">1.8 L buses × ₹30 L/yr</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">M36 penetration</div>
+      <div class="kpi-value">1.92%</div>
+      <div class="kpi-unit">3,450 of 1,80,000</div>
+    </div>
+    <div class="kpi accent">
+      <div class="kpi-label">Headroom</div>
+      <div class="kpi-value">1,76,550</div>
+      <div class="kpi-unit">Buses still untouched at end of Y3</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-head"><h3>State-wise TAM (estimated)</h3><span class="sub">Sources: MoRTH / Shakti Foundation 2021 — to be RTI-validated</span></div>
+    <div class="card-body" style="padding:0">
+      <div class="tbl-wrap">
+        <table class="fin market" id="marketTable">
+          <thead><tr><th>State</th><th>Est. private SC buses</th><th>% of national</th><th class="bar-cell">Share</th><th>Notes</th></tr></thead>
+          <tbody id="marketBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ASSUMPTIONS ===================== -->
+<section id="assumptions">
+  <div class="section-eyebrow">Assumptions</div>
+  <h2 class="section-title">Inputs driving the model</h2>
+  <p class="section-lede">Stress-test these first: pass adoption %, digital payment %, onboarding pace. Pass adoption alone drives ~80% of revenue — halving it cuts Y3 ARR by ~40%.</p>
+
+  <div class="card" style="margin-top:18px">
+    <div class="card-body" id="assumptionsBody"></div>
+  </div>
+</section>
+
+<footer>
+  <p>All figures in ₹ lakh unless stated · 1 lakh = 1,00,000 · 1 crore = 100 lakh · allrides financial model · Urbanfolks Mobility Pvt. Ltd. — generated from <span class="mono">allrides_financial_model.xlsx</span></p>
+</footer>
+
+</main>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <h3 id="modalTitle">Detailed monthly view</h3>
+        <p id="modalSub">All 36 months · scroll horizontally</p>
+      </div>
+      <div class="modal-actions">
+        <button class="ghost-btn" onclick="openInNewWindow()">Open in new window ↗</button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA — extracted from allrides_financial_model.xlsx
+   All figures in ₹ lakh unless otherwise noted.
+============================================================ */
+const months = Array.from({length:36}, (_,i)=>'M'+(i+1));
+const busesLive = [50,100,150,200,250,300,375,450,525,600,675,750,850,950,1050,1150,1250,1350,1450,1550,1650,1750,1850,1950,2075,2200,2325,2450,2575,2700,2825,2950,3075,3200,3325,3450];
+const newBuses  = busesLive.map((v,i) => i === 0 ? v : v - busesLive[i-1]);
+
+/* Rider monetization: 35% digital adoption · ads + ₹49 ad-free pass introduced at L7 (after 6 mo) · 10% pass conversion at full ramp */
+const revenue = {
+  ticket:  [0,0,0,0,1.4175,2.835,4.2525,5.67,7.0875,8.505,10.6312,12.7575,14.8837,17.01,19.1363,21.2625,24.0975,26.9325,29.7675,32.6025,35.4375,38.2725,41.1075,43.9425,46.7775,49.6125,52.4475,55.2825,58.8263,62.37,65.9137,69.4575,73.0012,76.545,80.0888,83.6325],
+  ads:     [0,0,0,0,0,0,1.6207,3.2083,4.7628,6.2843,7.7726,9.261,11.5597,13.8419,16.1075,18.3566,20.5892,22.8218,25.8647,28.891,31.9008,34.8941,37.8709,40.8476,43.8244,46.8011,49.7779,52.7546,55.7314,58.7081,62.4952,66.2658,70.0198,73.7572,77.4782,81.1991],
+  pass:    [0,0,0,0,0,0,0.1543,0.4631,0.9261,1.5435,2.3152,3.087,3.9359,4.862,5.8653,6.9458,8.1034,9.261,10.4958,11.8078,13.1969,14.6632,16.2067,17.7503,19.2937,20.8373,22.3807,23.9243,25.4677,27.0113,28.6319,30.3298,32.1048,33.957,35.8864,37.8158],
+  opSub:   [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,1,1.5,2,2.5,3,3.75,4.5,5.25,6,6.75,7.5],
+  total:   [0,0,0,0,1.4175,2.835,6.0275,9.3413,12.7764,16.3328,20.7191,25.1055,30.3794,35.7139,41.1091,46.5649,52.7901,59.0153,66.1279,73.3013,80.5353,87.8299,95.1851,102.54,110.396,118.251,126.106,133.961,142.525,151.089,160.791,170.553,180.376,190.259,200.203,210.147],
+  gmv:     [0,0,0,0,47.25,94.5,141.904,189.463,237.176,285.043,356.69,428.337,500.061,571.862,643.74,715.696,811.353,907.011,1002.75,1098.56,1194.45,1290.41,1386.46,1482.5,1578.54,1674.59,1770.63,1866.67,1986.34,2106.01,2225.76,2345.58,2465.48,2585.46,2705.51,2825.57]
+};
+
+const expenses = {
+  salaries:  [1.5,1.75,3.5,4,4.25,4.85,4.85,4.85,4.85,4.85,4.85,4.85,6.235,7.135,8.035,8.935,9.835,10.735,11.635,12.535,13.435,14.335,15.235,16.135,18.9385,20.1285,21.3185,22.5085,23.6985,24.8885,26.0785,27.2685,28.4585,29.6485,30.8385,32.0285],
+  field:     [2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5],
+  pg:        [0,0,0,0,0.7087,1.4175,2.1286,2.8419,3.5576,4.2757,5.3504,6.4251,7.5009,8.5779,9.6561,10.7354,12.1703,13.6052,15.0412,16.4784,17.9167,19.3562,20.7969,22.2375,23.6782,25.1188,26.5595,28.0001,29.7951,31.5902,33.3864,35.1837,36.9822,38.7819,40.5827,42.3835],
+  hw:        [0.5,0.5,0.5,0.5,0.5,0.5,0.75,0.75,0.75,0.75,0.75,0.75,1,1,1,1,1,1,1,1,1,1,1,1,1.25,1.25,1.25,1.25,1.25,1.25,1.25,1.25,1.25,1.25,1.25,1.25],
+  marketing: [0.5,0.5,1,1,2,3,3,4,4,5,5,5,5,6,7,8,9,10,11,12,12,13,13,13,15,17,18,19,20,22,23,24,25,26,27,28],
+  tech:      [0.5,0.5,0.7,0.8,1,1,1.2,1.2,1.3,1.3,1.5,1.5,2,2,2.5,2.5,2.5,3,3,3,3,3,3,3,3.5,3.5,4,4,4,4.5,4.5,4.5,5,5,5,5],
+  office:    [1,1,1.5,1.5,2,2,2,2,2.5,2.5,2.5,2.5,3,3,3.5,3.5,4,4.5,5,5,5.5,5.5,6,6,8,8,8.5,9,9,9.5,9.5,10,10,10.5,11,11],
+  total:     [6,6.25,9.2,9.8,12.4587,14.7675,16.9286,18.6419,19.9576,21.6757,22.9504,24.0251,28.7359,31.7129,35.6911,38.6704,42.5053,46.8402,50.6762,54.0134,56.8517,60.1912,63.0319,65.3725,75.3667,79.9973,84.628,88.7586,92.7436,98.7287,102.715,107.202,111.691,116.18,120.671,124.662]
+};
+
+const pnl = {
+  ebitda:    [-6,-6.25,-9.2,-9.8,-11.0412,-11.9325,-10.9011,-9.3006,-7.1812,-5.3429,-2.2313,1.0804,1.6435,4.001,5.418,7.8945,10.2848,12.175,15.4517,19.2879,23.6836,27.6387,32.1532,37.1679,35.0289,38.2536,41.4781,45.2028,49.7818,52.3607,58.076,63.3508,68.6851,74.0789,79.5321,85.4854],
+  margin:    [0,0,0,0,-7.78921,-4.20899,-1.80855,-0.99564,-0.562068,-0.327128,-0.107693,0.043034,0.054099,0.112029,0.131796,0.169538,0.194825,0.206303,0.233664,0.263132,0.294077,0.314684,0.337796,0.362471,0.317303,0.323495,0.328914,0.337432,0.349284,0.346554,0.36119,0.371443,0.380789,0.389358,0.397257,0.406788],
+  cumCash:   [-6,-12.25,-21.45,-31.25,-42.2912,-54.2237,-65.1248,-74.4254,-81.6066,-86.9495,-89.1808,-88.1004,-86.4569,-82.4559,-77.0379,-69.1434,-58.8586,-46.6836,-31.2319,-11.944,11.7396,39.3783,71.5315,108.699,143.728,181.982,223.46,268.663,318.445,370.805,428.881,492.232,560.917,634.996,714.528,800.014]
+};
+
+/* Quarterly P&L (12 quarters) */
+const pnlQuarters = [
+  {q:'Q1',  range:'M1–M3',   start:0,  end:3,  rev:0,        exp:21.45,    eb:-21.45,    cash:-21.45},
+  {q:'Q2',  range:'M4–M6',   start:3,  end:6,  rev:4.2525,   exp:37.0262,  eb:-32.7737,  cash:-54.2237},
+  {q:'Q3',  range:'M7–M9',   start:6,  end:9,  rev:28.1452,  exp:55.5281,  eb:-27.3829,  cash:-81.6066},
+  {q:'Q4',  range:'M10–M12', start:9,  end:12, rev:62.1574,  exp:68.6512,  eb:-6.4938,   cash:-88.1004},
+  {q:'Q5',  range:'M13–M15', start:12, end:15, rev:107.2024, exp:96.1399,  eb:11.0625,   cash:-77.0379},
+  {q:'Q6',  range:'M16–M18', start:15, end:18, rev:158.3702, exp:128.0159, eb:30.3543,   cash:-46.6836},
+  {q:'Q7',  range:'M19–M21', start:18, end:21, rev:219.9645, exp:161.5413, eb:58.4232,   cash:11.7396},
+  {q:'Q8',  range:'M22–M24', start:21, end:24, rev:285.5554, exp:188.5956, eb:96.9598,   cash:108.699},
+  {q:'Q9',  range:'M25–M27', start:24, end:27, rev:354.7526, exp:239.992,  eb:114.7606,  cash:223.46},
+  {q:'Q10', range:'M28–M30', start:27, end:30, rev:427.5761, exp:280.2309, eb:147.3453,  cash:370.805},
+  {q:'Q11', range:'M31–M33', start:30, end:33, rev:511.7197, exp:321.6078, eb:190.1119,  cash:560.917},
+  {q:'Q12', range:'M34–M36', start:33, end:36, rev:600.6099, exp:361.5136, eb:239.0964,  cash:800.014},
+];
+
+const states = [
+  {name:'Uttar Pradesh',          buses:50000, note:'Largest state · weak STU coverage'},
+  {name:'Maharashtra',             buses:25000, note:'MSRTC dominates · private in metros'},
+  {name:'Madhya Pradesh',          buses:16000, note:'STU dissolved 2005 · all-private SC'},
+  {name:'Bihar',                   buses:16000, note:'Very weak STU · almost all intercity private'},
+  {name:'Kerala',                  buses:13000, note:'Private-dominated SC (KSRTC ~6K)'},
+  {name:'West Bengal',             buses:13000, note:'Kolkata bus system substantially private'},
+  {name:'Punjab',                  buses:8000,  note:'Active private SC alongside PRTC/PUNBUS'},
+  {name:'Gujarat',                 buses:7000,  note:'GSRTC dominant · select private corridors'},
+  {name:'Rajasthan',               buses:6000,  note:'Mixed regime'},
+  {name:'Odisha',                  buses:6000,  note:'Weak STU · growing private'},
+  {name:'Tamil Nadu',              buses:4500,  note:'New private SC permits not being issued'},
+  {name:'Andhra Pradesh + Telangana',buses:4000,note:'APSRTC/TSRTC dominate'},
+  {name:'Karnataka',               buses:3000,  note:'KSRTC + BMTC near-monopoly'},
+  {name:'All other states',        buses:8500,  note:'Haryana, Jharkhand, NE, hill states'},
+];
+
+const assumptions = [
+  {group:'Bus operations', items:[
+    {name:'Riders per bus per day', value:'900', note:'Avg daily ridership for 1–5 bus operator on T2/T3 routes'},
+    {name:'Operating days per month', value:'30', note:'Standard for Indian intercity/local'},
+    {name:'Digital payment adoption %', value:'30%', note:'KEY ASSUMPTION — biggest swing variable'},
+    {name:'Average ticket price', value:'₹10', note:'Local route bus avg · range ₹10–₹500+'},
+    {name:'Convenience fee on tickets', value:'3%', note:'Platform take per digital trip'},
+  ]},
+  {group:'Pass economics', items:[
+    {name:'Pass price to rider', value:'₹400', note:'Monthly pass'},
+    {name:'Pass nominal trips', value:'30', note:'2 trips × 22 working days, rounded down'},
+    {name:'Operator share per ride', value:'₹10', note:'Settled at ₹10 per actual scan — same as cash'},
+    {name:'Conv fee on pass purchase', value:'3%', note:'Same 3% applied at pass sale'},
+    {name:'Pass margin per pass', value:'₹100', note:'Pass price − (trips × operator share)'},
+    {name:'Conv fee on pass', value:'₹12', note:'Pass price × conv fee'},
+    {name:'Steady-state pass adoption %', value:'25%', note:'KEY ASSUMPTION'},
+  ]},
+  {group:'Operator subscription', items:[
+    {name:'Subscription start (life-month)', value:'L25', note:'After 24-month hardware EMI ends'},
+    {name:'Subscription per bus per month', value:'₹1,000', note:'Monthly SaaS fee post-EMI'},
+  ]},
+  {group:'Onboarding ramp (buses/month)', items:[
+    {name:'Months 1–6 (initial pilot expansion)', value:'50', note:'5 cofounders + 3 field reps · 1.5K hrs/mo'},
+    {name:'Months 7–12 (post-funding ramp)', value:'75', note:'Adds 2–3 field reps from seed funding'},
+    {name:'Year 2 (M13–M24)', value:'100', note:'Multi-state expansion · 6+ field reps'},
+    {name:'Year 3 (M25–M36)', value:'125', note:'Mature ops · 10+ field reps · regional managers'},
+  ]},
+  {group:'Revenue ramp-up per bus (life-stage)', items:[
+    {name:'Ticket fees start at life-month', value:'L5', note:'After 4-month onboarding/training ramp'},
+    {name:'Pass adoption start at life-month', value:'L7', note:'After 6-month rider awareness build'},
+    {name:'Pass adoption ramp duration', value:'5 mo', note:'L7–L11 → 5%, 10%, 15%, 20%, 25%'},
+  ]},
+  {group:'Cost assumptions', items:[
+    {name:'Field deployment cost per bus', value:'₹4,000', note:'One-time: install, training, signage, support'},
+    {name:'Payment gateway fee % of GMV', value:'1.5%', note:'Razorpay/Cashfree — volume-based'},
+    {name:'Hardware default reserve % of new buses', value:'5%', note:'FLDG / risk reserve for bank EMI defaults'},
+    {name:'Hardware unit cost', value:'₹20,000', note:'POS device · bank EMI funded by operator'},
+    {name:'Cofounder salary (all 5)', value:'₹30,000/mo', note:'Founder draw — minimum until Y2'},
+    {name:'Field rep salary', value:'₹25,000/mo', note:'Tier 2 city field/sales/support'},
+    {name:'Senior dev salary', value:'₹1,50,000/mo', note:'Bangalore-eq · backend/infra'},
+    {name:'Junior dev salary', value:'₹60,000/mo', note:'Mid-level engineer'},
+    {name:'Finance person salary', value:'₹50,000/mo', note:'Settlement, GST, reconciliation'},
+    {name:'Customer support agent', value:'₹30,000/mo', note:'Y2+ hires'},
+    {name:'Salary inflation Y2 onwards', value:'10%', note:'Annual increment + market correction'},
+  ]},
+  {group:'Market', items:[
+    {name:'Total private stage carriage buses (India)', value:'1,80,000', note:'MoRTH 2017 cited in Shakti Foundation 2021'},
+    {name:'Avg fare GMV per bus per year', value:'₹30,00,000', note:'Lower bound: 900 × ₹10 × 333 days'},
+    {name:'Total industry GMV', value:'₹54,000 cr', note:'Calculated · in crores'},
+  ]},
+];
+
+/* ============================================================
+   FORMATTING HELPERS
+============================================================ */
+const fmt = (n, dec=1) => {
+  if (n === null || n === undefined) return '—';
+  if (Math.abs(n) < 0.005) return '0';
+  return n.toLocaleString('en-IN', {minimumFractionDigits:dec, maximumFractionDigits:dec});
+};
+const fmtPct = (n) => (n*100).toFixed(1)+'%';
+const fmtSign = (n, dec=1) => {
+  if (n === 0) return '0';
+  const cls = n < 0 ? 'num-neg' : 'num-pos';
+  const sign = n < 0 ? '−' : '';
+  return `<span class="${cls}">${sign}${fmt(Math.abs(n), dec)}</span>`;
+};
+
+/* ============================================================
+   QUARTERLY TABLE BUILDERS
+============================================================ */
+function sumRange(arr, start, end) {
+  let s = 0;
+  for (let i = start; i < end; i++) s += arr[i];
+  return s;
+}
+function avgRange(arr, start, end) {
+  return sumRange(arr, start, end) / (end - start);
+}
+
+/* ----- View state (per table) ----- */
+const tableView = { revenue: 'year', expense: 'year', pnl: 'year' };
+
+function getGroups(view) {
+  if (view === 'year') {
+    return [
+      { label: 'Y1', range: 'M1–M12',  start: 0,  end: 12 },
+      { label: 'Y2', range: 'M13–M24', start: 12, end: 24 },
+      { label: 'Y3', range: 'M25–M36', start: 24, end: 36 },
+    ];
+  }
+  return Array.from({length:12}, (_,qi) => ({
+    label: 'Q'+(qi+1),
+    range: `M${qi*3+1}–M${qi*3+3}`,
+    start: qi*3, end: qi*3+3
+  }));
+}
+
+/* ----- Revenue table ----- */
+function buildRevenueQuarters() {
+  const view = tableView.revenue;
+  const groups = getGroups(view);
+  const tbody = document.getElementById('revenueQuarterBody');
+  let html = '';
+  let prevTotal = null;
+  groups.forEach((g, gi) => {
+    const t = sumRange(revenue.ticket, g.start, g.end);
+    const a = sumRange(revenue.ads,    g.start, g.end);
+    const p = sumRange(revenue.pass,   g.start, g.end);
+    const o = sumRange(revenue.opSub,  g.start, g.end);
+    const tot = sumRange(revenue.total, g.start, g.end);
+    const onboard = sumRange(newBuses, g.start, g.end);
+    const growth = prevTotal ? ((tot/prevTotal - 1)*100).toFixed(0)+'%' : '—';
+    const growthClass = prevTotal && tot >= prevTotal ? 'num-pos' : 'num-neg';
+    html += `<tr class="q-row" data-qi="${gi}" onclick="toggleQuarter('revenue',${gi})">
+      <td><button class="q-toggle"><span class="chev">›</span> ${g.label} <span class="tag" style="margin-left:6px">${g.range}</span></button></td>
+      <td class="mono">${onboard.toLocaleString('en-IN')}</td>
+      <td class="mono">${fmt(t)}</td>
+      <td class="mono">${fmt(a)}</td>
+      <td class="mono">${fmt(p)}</td>
+      <td class="mono">${fmt(o)}</td>
+      <td class="mono"><b>${fmt(tot)}</b></td>
+      <td class="mono ${prevTotal ? growthClass : ''}">${growth}</td>
+    </tr>`;
+    for (let mi = g.start; mi < g.end; mi++) {
+      html += `<tr class="month-row hidden" data-parent="revenue-${gi}">
+        <td>${months[mi]}</td>
+        <td class="mono">${newBuses[mi].toLocaleString('en-IN')}</td>
+        <td class="mono">${fmt(revenue.ticket[mi])}</td>
+        <td class="mono">${fmt(revenue.ads[mi])}</td>
+        <td class="mono">${fmt(revenue.pass[mi])}</td>
+        <td class="mono">${fmt(revenue.opSub[mi])}</td>
+        <td class="mono">${fmt(revenue.total[mi])}</td>
+        <td>—</td>
+      </tr>`;
+    }
+    prevTotal = tot;
+  });
+  const tT = revenue.ticket.reduce((a,b)=>a+b,0);
+  const tA = revenue.ads.reduce((a,b)=>a+b,0);
+  const tP = revenue.pass.reduce((a,b)=>a+b,0);
+  const tO = revenue.opSub.reduce((a,b)=>a+b,0);
+  const tTot = revenue.total.reduce((a,b)=>a+b,0);
+  const tOnb = newBuses.reduce((a,b)=>a+b,0);
+  html += `<tr class="total-row"><td>3-year total</td><td class="mono">${tOnb.toLocaleString('en-IN')}</td><td class="mono">${fmt(tT)}</td><td class="mono">${fmt(tA)}</td><td class="mono">${fmt(tP)}</td><td class="mono">${fmt(tO)}</td><td class="mono">${fmt(tTot)}</td><td>—</td></tr>`;
+  tbody.innerHTML = html;
+  updateTableHead('revenue');
+}
+
+/* ----- Expense table ----- */
+function buildExpenseQuarters() {
+  const view = tableView.expense;
+  const groups = getGroups(view);
+  const tbody = document.getElementById('expenseQuarterBody');
+  let html = '';
+  groups.forEach((g, gi) => {
+    const sal = sumRange(expenses.salaries, g.start, g.end);
+    const fld = sumRange(expenses.field,    g.start, g.end);
+    const pg  = sumRange(expenses.pg,       g.start, g.end);
+    const hw  = sumRange(expenses.hw,       g.start, g.end);
+    const mkt = sumRange(expenses.marketing,g.start, g.end);
+    const tch = sumRange(expenses.tech,     g.start, g.end);
+    const off = sumRange(expenses.office,   g.start, g.end);
+    const tot = sumRange(expenses.total,    g.start, g.end);
+    html += `<tr class="q-row" data-qi="${gi}" onclick="toggleQuarter('expense',${gi})">
+      <td><button class="q-toggle"><span class="chev">›</span> ${g.label} <span class="tag" style="margin-left:6px">${g.range}</span></button></td>
+      <td class="mono">${fmt(sal)}</td>
+      <td class="mono">${fmt(fld)}</td>
+      <td class="mono">${fmt(pg)}</td>
+      <td class="mono">${fmt(hw)}</td>
+      <td class="mono">${fmt(mkt)}</td>
+      <td class="mono">${fmt(tch)}</td>
+      <td class="mono">${fmt(off)}</td>
+      <td class="mono"><b>${fmt(tot)}</b></td>
+    </tr>`;
+    for (let mi = g.start; mi < g.end; mi++) {
+      html += `<tr class="month-row hidden" data-parent="expense-${gi}">
+        <td>${months[mi]}</td>
+        <td class="mono">${fmt(expenses.salaries[mi])}</td>
+        <td class="mono">${fmt(expenses.field[mi])}</td>
+        <td class="mono">${fmt(expenses.pg[mi])}</td>
+        <td class="mono">${fmt(expenses.hw[mi])}</td>
+        <td class="mono">${fmt(expenses.marketing[mi])}</td>
+        <td class="mono">${fmt(expenses.tech[mi])}</td>
+        <td class="mono">${fmt(expenses.office[mi])}</td>
+        <td class="mono">${fmt(expenses.total[mi])}</td>
+      </tr>`;
+    }
+  });
+  const sums = (k) => expenses[k].reduce((a,b)=>a+b,0);
+  html += `<tr class="total-row"><td>3-year total</td><td class="mono">${fmt(sums('salaries'))}</td><td class="mono">${fmt(sums('field'))}</td><td class="mono">${fmt(sums('pg'))}</td><td class="mono">${fmt(sums('hw'))}</td><td class="mono">${fmt(sums('marketing'))}</td><td class="mono">${fmt(sums('tech'))}</td><td class="mono">${fmt(sums('office'))}</td><td class="mono">${fmt(sums('total'))}</td></tr>`;
+  tbody.innerHTML = html;
+  updateTableHead('expense');
+}
+
+/* ----- P&L table ----- */
+function buildPnlQuarters() {
+  const view = tableView.pnl;
+  const groups = getGroups(view);
+  const tbody = document.getElementById('pnlQuarterBody');
+  let html = '';
+  groups.forEach((g, gi) => {
+    const rev = sumRange(revenue.total, g.start, g.end);
+    const exp = sumRange(expenses.total, g.start, g.end);
+    const eb  = sumRange(pnl.ebitda, g.start, g.end);
+    const cashEnd = pnl.cumCash[g.end - 1];
+    const margin = rev > 0 ? (eb / rev) : null;
+    const ebClass = eb >= 0 ? 'num-pos' : 'num-neg';
+    const cashClass = cashEnd >= 0 ? 'num-pos' : 'num-neg';
+    html += `<tr class="q-row" data-qi="${gi}" onclick="toggleQuarter('pnl',${gi})">
+      <td><button class="q-toggle"><span class="chev">›</span> ${g.label} <span class="tag" style="margin-left:6px">${g.range}</span></button></td>
+      <td class="mono">${fmt(rev)}</td>
+      <td class="mono">${fmt(exp)}</td>
+      <td class="mono ${ebClass}">${eb < 0 ? '−' : ''}${fmt(Math.abs(eb))}</td>
+      <td class="mono ${margin === null ? '' : (margin>=0?'num-pos':'num-neg')}">${margin === null ? '—' : fmtPct(margin)}</td>
+      <td class="mono ${cashClass}">${cashEnd < 0 ? '−' : ''}${fmt(Math.abs(cashEnd))}</td>
+    </tr>`;
+    for (let mi = g.start; mi < g.end; mi++) {
+      const r = revenue.total[mi], ex = expenses.total[mi], ebm = pnl.ebitda[mi], cash = pnl.cumCash[mi];
+      const m = r > 0 ? ebm/r : null;
+      html += `<tr class="month-row hidden" data-parent="pnl-${gi}">
+        <td>${months[mi]}</td>
+        <td class="mono">${fmt(r)}</td>
+        <td class="mono">${fmt(ex)}</td>
+        <td class="mono ${ebm>=0?'num-pos':'num-neg'}">${ebm<0?'−':''}${fmt(Math.abs(ebm))}</td>
+        <td class="mono">${m===null?'—':fmtPct(m)}</td>
+        <td class="mono ${cash>=0?'num-pos':'num-neg'}">${cash<0?'−':''}${fmt(Math.abs(cash))}</td>
+      </tr>`;
+    }
+  });
+  const totalRev = revenue.total.reduce((a,b)=>a+b,0);
+  const totalExp = expenses.total.reduce((a,b)=>a+b,0);
+  const totalEb  = pnl.ebitda.reduce((a,b)=>a+b,0);
+  html += `<tr class="total-row"><td>3-year total</td><td class="mono">${fmt(totalRev)}</td><td class="mono">${fmt(totalExp)}</td><td class="mono">${fmt(totalEb)}</td><td class="mono">${fmtPct(totalEb/totalRev)}</td><td class="mono">${fmt(pnl.cumCash[35])}</td></tr>`;
+  tbody.innerHTML = html;
+  updateTableHead('pnl');
+}
+
+/* ----- Update card titles + first column header based on view ----- */
+function updateTableHead(kind) {
+  const view = tableView[kind];
+  const titles = {
+    revenue: { quarter: 'Quarterly revenue summary', year: 'Yearly revenue summary' },
+    expense: { quarter: 'Quarterly expense summary', year: 'Yearly expense summary' },
+    pnl:     { quarter: 'P&L — quarterly',           year: 'P&L — yearly' },
+  };
+  const titleEl = document.getElementById(kind + 'TableTitle');
+  if (titleEl) titleEl.textContent = titles[kind][view];
+  const periodLabel = view === 'year' ? 'Year' : 'Quarter';
+  const head = document.querySelector(`#${kind}QuarterTable thead tr th:first-child`);
+  if (head) head.textContent = periodLabel;
+  if (kind === 'revenue') {
+    const growthHead = document.querySelector(`#revenueQuarterTable thead tr th:last-child`);
+    if (growthHead) growthHead.textContent = view === 'year' ? 'YoY growth' : 'QoQ growth';
+  }
+  if (kind === 'pnl') {
+    const cashHead = document.querySelector(`#pnlQuarterTable thead tr th:last-child`);
+    if (cashHead) cashHead.textContent = view === 'year' ? 'End-of-year cash' : 'End-of-Q cash';
+    const ebHead = document.querySelector(`#pnlQuarterTable thead tr th:nth-child(4)`);
+    if (ebHead) ebHead.textContent = view === 'year' ? 'EBITDA' : 'Q EBITDA';
+  }
+}
+
+/* ----- View switch ----- */
+function setView(kind, view) {
+  if (tableView[kind] === view) return;
+  tableView[kind] = view;
+  /* update segmented control */
+  document.querySelectorAll(`.seg-toggle[data-kind="${kind}"] .seg-btn`).forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.view === view);
+  });
+  /* re-render */
+  if (kind === 'revenue') buildRevenueQuarters();
+  if (kind === 'expense') buildExpenseQuarters();
+  if (kind === 'pnl')     buildPnlQuarters();
+}
+
+/* ----- Market table ----- */
+function buildMarketTable() {
+  const total = states.reduce((a,b)=>a+b.buses, 0); // 180000
+  const tbody = document.getElementById('marketBody');
+  let html = '';
+  const max = Math.max(...states.map(s=>s.buses));
+  for (const s of states) {
+    const pct = s.buses/total;
+    const w = (s.buses/max)*100;
+    html += `<tr>
+      <td>${s.name}</td>
+      <td class="mono">${s.buses.toLocaleString('en-IN')}</td>
+      <td class="mono">${(pct*100).toFixed(1)}%</td>
+      <td class="bar-cell"><div class="bar" style="width:${w}%"></div></td>
+      <td style="text-align:left;color:var(--muted);font-size:13px">${s.note}</td>
+    </tr>`;
+  }
+  html += `<tr class="total-row"><td>Total TAM</td><td class="mono">1,80,000</td><td class="mono">100%</td><td></td><td style="text-align:left;color:var(--muted)">Private stage carriage buses · India</td></tr>`;
+  tbody.innerHTML = html;
+}
+
+/* ----- Assumptions ----- */
+function buildAssumptions() {
+  const root = document.getElementById('assumptionsBody');
+  let html = '';
+  for (const g of assumptions) {
+    html += `<div class="assumption-group"><h4>${g.group}</h4>`;
+    for (const it of g.items) {
+      html += `<div class="assumption-row"><div class="name">${it.name}</div><div class="value">${it.value}</div><div class="note">${it.note}</div></div>`;
+    }
+    html += `</div>`;
+  }
+  root.innerHTML = html;
+}
+
+/* ============================================================
+   QUARTER EXPAND/COLLAPSE
+============================================================ */
+function toggleQuarter(kind, qi) {
+  const row = document.querySelector(`#${kind}QuarterTable tr.q-row[data-qi="${qi}"]`);
+  const isOpen = row.classList.toggle('open');
+  document.querySelectorAll(`#${kind}QuarterTable tr.month-row[data-parent="${kind}-${qi}"]`)
+    .forEach(r => r.classList.toggle('hidden', !isOpen));
+}
+function expandAll(kind) {
+  document.querySelectorAll(`#${kind}QuarterTable tr.q-row`).forEach(r => {
+    r.classList.add('open');
+  });
+  document.querySelectorAll(`#${kind}QuarterTable tr.month-row`).forEach(r => r.classList.remove('hidden'));
+}
+function collapseAll(kind) {
+  document.querySelectorAll(`#${kind}QuarterTable tr.q-row`).forEach(r => r.classList.remove('open'));
+  document.querySelectorAll(`#${kind}QuarterTable tr.month-row`).forEach(r => r.classList.add('hidden'));
+}
+
+/* ============================================================
+   MODAL: detailed monthly view
+============================================================ */
+let currentModalKind = null;
+function openModal(kind) {
+  currentModalKind = kind;
+  const titles = {
+    revenue: ['Revenue — full monthly breakdown', '36 months · all streams · ₹ lakh'],
+    expense: ['Expenses — full monthly breakdown', '36 months · all 7 categories · ₹ lakh'],
+    pnl:     ['P&L — full monthly breakdown', '36 months · revenue, expense, EBITDA, cumulative cash · ₹ lakh'],
+  };
+  document.getElementById('modalTitle').textContent = titles[kind][0];
+  document.getElementById('modalSub').textContent   = titles[kind][1];
+  document.getElementById('modalBody').innerHTML = renderDetailTable(kind);
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+  currentModalKind = null;
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function renderDetailTable(kind) {
+  if (kind === 'revenue') {
+    let h = `<table class="fin detail"><thead><tr><th>Stream</th>${months.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+    const streams = [
+      ['Buses live', busesLive, 0],
+      ['Ticket fees', revenue.ticket, 1],
+      ['Ad revenue', revenue.ads, 1],
+      ['Ad-free pass', revenue.pass, 1],
+      ['Op subscription', revenue.opSub, 1],
+      ['GMV processed', revenue.gmv, 1],
+    ];
+    for (const [name, arr, dec] of streams) {
+      const total = arr.reduce((a,b)=>a+b,0);
+      const isBuses = name === 'Buses live';
+      const cls = name === 'GMV processed' ? 'summary-row' : '';
+      h += `<tr class="${cls}"><td>${name}</td>${arr.map(v=>`<td class="mono">${isBuses?v.toLocaleString('en-IN'):fmt(v,dec)}</td>`).join('')}<td class="mono"><b>${isBuses?'—':fmt(total,dec)}</b></td></tr>`;
+    }
+    const total = revenue.total.reduce((a,b)=>a+b,0);
+    h += `<tr class="total-row"><td>TOTAL REVENUE</td>${revenue.total.map(v=>`<td class="mono">${fmt(v,1)}</td>`).join('')}<td class="mono">${fmt(total,1)}</td></tr>`;
+    h += `</tbody></table>`;
+    return h;
+  }
+  if (kind === 'expense') {
+    let h = `<table class="fin detail"><thead><tr><th>Category</th>${months.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+    const cats = [
+      ['Salaries', expenses.salaries],
+      ['Field deployment', expenses.field],
+      ['PG fees', expenses.pg],
+      ['Hardware reserve', expenses.hw],
+      ['Marketing', expenses.marketing],
+      ['Cloud / tech', expenses.tech],
+      ['Office / legal / misc', expenses.office],
+    ];
+    for (const [name, arr] of cats) {
+      const total = arr.reduce((a,b)=>a+b,0);
+      h += `<tr><td>${name}</td>${arr.map(v=>`<td class="mono">${fmt(v,1)}</td>`).join('')}<td class="mono"><b>${fmt(total,1)}</b></td></tr>`;
+    }
+    const total = expenses.total.reduce((a,b)=>a+b,0);
+    h += `<tr class="total-row"><td>TOTAL EXPENSES</td>${expenses.total.map(v=>`<td class="mono">${fmt(v,1)}</td>`).join('')}<td class="mono">${fmt(total,1)}</td></tr>`;
+    h += `</tbody></table>`;
+    return h;
+  }
+  if (kind === 'pnl') {
+    let h = `<table class="fin detail"><thead><tr><th>Line</th>${months.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+    const tRev = revenue.total.reduce((a,b)=>a+b,0);
+    const tExp = expenses.total.reduce((a,b)=>a+b,0);
+    const tEb  = pnl.ebitda.reduce((a,b)=>a+b,0);
+    h += `<tr><td>Revenue</td>${revenue.total.map(v=>`<td class="mono">${fmt(v,1)}</td>`).join('')}<td class="mono"><b>${fmt(tRev,1)}</b></td></tr>`;
+    h += `<tr><td>Expenses</td>${expenses.total.map(v=>`<td class="mono">${fmt(v,1)}</td>`).join('')}<td class="mono"><b>${fmt(tExp,1)}</b></td></tr>`;
+    h += `<tr class="summary-row"><td>EBITDA</td>${pnl.ebitda.map(v=>`<td class="mono ${v>=0?'num-pos':'num-neg'}">${v<0?'−':''}${fmt(Math.abs(v),1)}</td>`).join('')}<td class="mono"><b>${fmt(tEb,1)}</b></td></tr>`;
+    h += `<tr><td>EBITDA margin</td>${pnl.margin.map((v,i)=>`<td class="mono">${revenue.total[i]>0?fmtPct(v):'—'}</td>`).join('')}<td>—</td></tr>`;
+    h += `<tr class="total-row"><td>Cumulative cash</td>${pnl.cumCash.map(v=>`<td class="mono ${v>=0?'num-pos':'num-neg'}">${v<0?'−':''}${fmt(Math.abs(v),1)}</td>`).join('')}<td class="mono">${fmt(pnl.cumCash[35],1)}</td></tr>`;
+    h += `</tbody></table>`;
+    return h;
+  }
+  return '';
+}
+
+function openInNewWindow() {
+  if (!currentModalKind) return;
+  const titleMap = {revenue:'Revenue · monthly detail', expense:'Expenses · monthly detail', pnl:'P&L · monthly detail'};
+  const title = titleMap[currentModalKind];
+  const tableHtml = renderDetailTable(currentModalKind);
+  const win = window.open('', '_blank', 'width=1400,height=820');
+  if (!win) return;
+  const doc = win.document;
+  doc.title = title;
+  /* Build the new window content via DOM APIs so no HTML literals live inside this script. */
+  const head = doc.head;
+  const m = doc.createElement('meta'); m.setAttribute('charset', 'utf-8'); head.appendChild(m);
+  const link = doc.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:wght@500&family=JetBrains+Mono:wght@400;500&display=swap';
+  head.appendChild(link);
+  const style = doc.createElement('style');
+  style.textContent = "body{font-family:'Inter',system-ui,sans-serif;background:#f7f7f5;color:#0e0e10;padding:32px;font-size:13.5px}"
+    + "h1{font-family:'Fraunces',serif;font-weight:500;font-size:28px;margin-bottom:8px;letter-spacing:-.01em}"
+    + "p.sub{color:#6b6b75;margin-bottom:24px;font-size:13px}"
+    + "table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid rgba(14,14,16,.08);border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums}"
+    + "th,td{padding:10px 14px;text-align:right;border-bottom:1px solid rgba(14,14,16,.05);white-space:nowrap}"
+    + "th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:#fff;box-shadow:1px 0 0 rgba(14,14,16,.06)}"
+    + "thead th{background:#fbfbf9;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:#6b6b75;font-weight:600}"
+    + "thead th:first-child{background:#fbfbf9}"
+    + ".mono{font-family:'JetBrains Mono',monospace;font-weight:500}"
+    + ".num-pos{color:#0a8a5b}.num-neg{color:#c0322b}"
+    + ".summary-row td{background:#fbfbf9;font-weight:600}"
+    + ".total-row td{background:#f0ecfb;font-weight:700;color:#0e0e10}"
+    + ".scroll{overflow-x:auto}";
+  head.appendChild(style);
+  const h1 = doc.createElement('h1'); h1.textContent = title; doc.body.appendChild(h1);
+  const sub = doc.createElement('p'); sub.className = 'sub';
+  sub.textContent = 'allrides · Urbanfolks Mobility Pvt. Ltd. — financial model · ₹ lakh · 36 months';
+  doc.body.appendChild(sub);
+  const wrap = doc.createElement('div'); wrap.className = 'scroll'; wrap.innerHTML = tableHtml;
+  doc.body.appendChild(wrap);
+}
+
+/* ============================================================
+   CHARTS
+============================================================ */
+const COLORS = {
+  ticket: '#6E13EF',
+  ads:    '#8a3df1',
+  pass:   '#b58cf3',
+  opSub:  '#cdb1f5',
+  ink:    '#0e0e10',
+  good:   '#0a8a5b',
+  bad:    '#c0322b',
+  warn:   '#d97706',
+  muted:  '#9b9ba5',
+};
+function gridOpts() {
+  return {
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 }, color: '#2b2b30', boxWidth: 12, padding: 14 } },
+      tooltip: { backgroundColor: '#0e0e10', titleColor:'#fff', bodyColor:'#fff', padding:10, cornerRadius:8, displayColors:true, callbacks: {
+        label: (ctx) => `${ctx.dataset.label}: ${typeof ctx.parsed.y === 'number' ? '₹'+ctx.parsed.y.toLocaleString('en-IN', {maximumFractionDigits:1})+' L' : ctx.parsed.y}`
+      }}
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: '#6b6b75', font: { family: 'Inter', size: 11 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
+      y: { grid: { color: 'rgba(14,14,16,.05)' }, ticks: { color: '#6b6b75', font: { family: 'Inter', size: 11 }, callback: v => '₹'+v.toLocaleString('en-IN') } }
+    },
+    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+  };
+}
+
+function chartRevenueStream() {
+  new Chart(document.getElementById('chartRevenueStream'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Ticket fees',     data: revenue.ticket, backgroundColor: COLORS.ticket, stack:'a', borderRadius: 2 },
+        { label: 'Ad revenue',      data: revenue.ads,    backgroundColor: COLORS.ads,    stack:'a', borderRadius: 2 },
+        { label: 'Ad-free pass',    data: revenue.pass,   backgroundColor: COLORS.pass,   stack:'a', borderRadius: 2 },
+        { label: 'Op subscription', data: revenue.opSub,  backgroundColor: COLORS.opSub,  stack:'a', borderRadius: 2 },
+      ]
+    },
+    options: { ...gridOpts(), scales: { ...gridOpts().scales, x:{ ...gridOpts().scales.x, stacked:true }, y:{ ...gridOpts().scales.y, stacked:true } } }
+  });
+}
+function chartRevenueMix() {
+  const y3 = {
+    ticket: sumRange(revenue.ticket, 24, 36),
+    ads:    sumRange(revenue.ads, 24, 36),
+    pass:   sumRange(revenue.pass, 24, 36),
+    opSub:  sumRange(revenue.opSub, 24, 36),
+  };
+  const tot = y3.ticket + y3.ads + y3.pass + y3.opSub;
+  new Chart(document.getElementById('chartRevenueMix'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Ticket fees', 'Ad revenue', 'Ad-free pass', 'Op subscription'],
+      datasets: [{ data:[y3.ticket, y3.ads, y3.pass, y3.opSub], backgroundColor:[COLORS.ticket, COLORS.ads, COLORS.pass, COLORS.opSub], borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'bottom', labels:{color:'#2b2b30', font:{family:'Inter', size:12}, padding:14, boxWidth:12 }},
+        tooltip:{backgroundColor:'#0e0e10', callbacks:{ label: ctx => `${ctx.label}: ₹${ctx.parsed.toLocaleString('en-IN',{maximumFractionDigits:1})} L (${(ctx.parsed/tot*100).toFixed(1)}%)` }}
+      },
+      cutout: '62%'
+    }
+  });
+}
+
+function chartExpenseStack() {
+  new Chart(document.getElementById('chartExpenseStack'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label: 'Salaries',  data: expenses.salaries,  backgroundColor:'#6E13EF', stack:'a', borderRadius:2 },
+        { label: 'Field',     data: expenses.field,     backgroundColor:'#9656f0', stack:'a', borderRadius:2 },
+        { label: 'PG fees',   data: expenses.pg,        backgroundColor:'#b58cf3', stack:'a', borderRadius:2 },
+        { label: 'HW reserve',data: expenses.hw,        backgroundColor:'#cdb1f5', stack:'a', borderRadius:2 },
+        { label: 'Marketing', data: expenses.marketing, backgroundColor:'#d97706', stack:'a', borderRadius:2 },
+        { label: 'Cloud/tech',data: expenses.tech,      backgroundColor:'#f59e0b', stack:'a', borderRadius:2 },
+        { label: 'Office',    data: expenses.office,    backgroundColor:'#fbcd71', stack:'a', borderRadius:2 },
+      ]
+    },
+    options: { ...gridOpts(), scales: { ...gridOpts().scales, x:{ ...gridOpts().scales.x, stacked:true }, y:{ ...gridOpts().scales.y, stacked:true } } }
+  });
+}
+function chartExpenseMix() {
+  const y3 = {
+    sal: sumRange(expenses.salaries, 24, 36),
+    fld: sumRange(expenses.field, 24, 36),
+    pg:  sumRange(expenses.pg, 24, 36),
+    hw:  sumRange(expenses.hw, 24, 36),
+    mkt: sumRange(expenses.marketing, 24, 36),
+    tch: sumRange(expenses.tech, 24, 36),
+    off: sumRange(expenses.office, 24, 36),
+  };
+  const arr = [y3.sal, y3.fld, y3.pg, y3.hw, y3.mkt, y3.tch, y3.off];
+  const tot = arr.reduce((a,b)=>a+b,0);
+  new Chart(document.getElementById('chartExpenseMix'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Salaries', 'Field', 'PG fees', 'HW reserve', 'Marketing', 'Cloud/tech', 'Office'],
+      datasets: [{ data: arr, backgroundColor:['#6E13EF','#9656f0','#b58cf3','#cdb1f5','#d97706','#f59e0b','#fbcd71'], borderWidth: 2, borderColor:'#fff' }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'bottom', labels:{color:'#2b2b30', font:{family:'Inter', size:12}, padding:12, boxWidth:12 }},
+        tooltip:{backgroundColor:'#0e0e10', callbacks:{ label: ctx => `${ctx.label}: ₹${ctx.parsed.toLocaleString('en-IN',{maximumFractionDigits:1})} L (${(ctx.parsed/tot*100).toFixed(1)}%)` }}
+      },
+      cutout: '62%'
+    }
+  });
+}
+
+function chartCash() {
+  new Chart(document.getElementById('chartCash'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [{
+        label: 'Cumulative cash',
+        data: pnl.cumCash,
+        borderColor: '#6E13EF',
+        backgroundColor: (ctx) => {
+          const chart = ctx.chart;
+          const {ctx: c, chartArea} = chart;
+          if (!chartArea) return null;
+          const g = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          g.addColorStop(0, 'rgba(110,19,239,0.25)');
+          g.addColorStop(1, 'rgba(110,19,239,0.00)');
+          return g;
+        },
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        borderWidth: 2.5,
+      }]
+    },
+    options: {
+      ...gridOpts(),
+      plugins: {
+        ...gridOpts().plugins,
+        annotation: {}
+      },
+      scales: {
+        ...gridOpts().scales,
+        y: {
+          ...gridOpts().scales.y,
+          beginAtZero: false,
+          ticks: { color:'#6b6b75', callback: v => (v<0?'−':'')+'₹'+Math.abs(v).toLocaleString('en-IN') }
+        }
+      }
+    }
+  });
+}
+
+function chartBuses() {
+  new Chart(document.getElementById('chartBuses'), {
+    type:'line',
+    data:{
+      labels: months,
+      datasets: [{
+        label: 'Buses live',
+        data: busesLive,
+        borderColor: '#0e0e10',
+        backgroundColor: 'rgba(14,14,16,0.06)',
+        fill: true, tension: 0.3, pointRadius: 0, pointHoverRadius: 5, borderWidth: 2.5,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend:{display:false}, tooltip: gridOpts().plugins.tooltip },
+      scales: {
+        x: gridOpts().scales.x,
+        y: { grid:{color:'rgba(14,14,16,.05)'}, ticks:{ color:'#6b6b75', callback: v => v.toLocaleString('en-IN') } }
+      }
+    }
+  });
+}
+
+/* ============================================================
+   ACTIVE-NAV HIGHLIGHTING
+============================================================ */
+function setupNav() {
+  const links = document.querySelectorAll('#sectionNav a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  const onScroll = () => {
+    const scrollY = window.scrollY + 120;
+    let active = sections[0];
+    for (const s of sections) {
+      if (s && s.offsetTop <= scrollY) active = s;
+    }
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + active.id));
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+/* ============================================================
+   INIT — each step wrapped so a failure in one doesn't block others
+============================================================ */
+function _safe(label, fn) {
+  try { fn(); }
+  catch (err) {
+    console.error('[' + label + '] failed:', err);
+    const banner = document.getElementById('errBanner') || (function(){
+      const b = document.createElement('div');
+      b.id = 'errBanner';
+      b.style.cssText = 'position:fixed;bottom:14px;left:14px;right:14px;background:#fff5f5;border:1px solid #c0322b;color:#c0322b;padding:10px 14px;border-radius:10px;font:13px/1.5 Inter,system-ui,sans-serif;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.1)';
+      b.innerHTML = '<b>Render error</b> — see browser console for details.<button onclick="this.parentNode.remove()" style="float:right;background:transparent;border:1px solid #c0322b;color:#c0322b;border-radius:999px;padding:2px 10px;cursor:pointer">dismiss</button>';
+      document.body.appendChild(b);
+      return b;
+    })();
+    banner.querySelector('b').textContent = 'Render error in ' + label;
+  }
+}
+
+function init() {
+  _safe('revenue table',  buildRevenueQuarters);
+  _safe('expense table',  buildExpenseQuarters);
+  _safe('p&l table',      buildPnlQuarters);
+  _safe('market table',   buildMarketTable);
+  _safe('assumptions',    buildAssumptions);
+  _safe('nav',            setupNav);
+
+  if (typeof Chart === 'undefined') {
+    const slot = document.querySelector('main');
+    const w = document.createElement('div');
+    w.style.cssText = 'background:#fff8e6;border:1px solid #d97706;color:#7a4500;padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:13.5px';
+    w.innerHTML = 'Chart.js could not load (offline or blocked). Tables and numbers still work — open via a local web server or check your network for charts.';
+    if (slot) slot.insertBefore(w, slot.firstChild);
+    return;
+  }
+  _safe('chart revenue stream', chartRevenueStream);
+  _safe('chart revenue mix',    chartRevenueMix);
+  _safe('chart expense stack',  chartExpenseStack);
+  _safe('chart expense mix',    chartExpenseMix);
+  _safe('chart cash',           chartCash);
+  _safe('chart buses',          chartBuses);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>
