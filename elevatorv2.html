@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>allrides · Meet Rithika · Elevator Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  :root {
+    --bg:        #f7f7f5;
+    --surface:   #ffffff;
+    --surface-2: #fbfbf9;
+    --ink:       #0e0e10;
+    --ink-2:     #2b2b30;
+    --muted:     #6b6b75;
+    --muted-2:   #9b9ba5;
+    --line:      rgba(14, 14, 16, 0.08);
+    --line-2:    rgba(14, 14, 16, 0.04);
+    --accent:    #6E13EF;
+    --accent-soft: rgba(110, 19, 239, 0.08);
+    --accent-deep: #4a0aa8;
+    --good:      #0a8a5b;
+    --warn:      #d97706;
+    --danger:    #c0322b;
+    --bubble-them: #ffffff;
+    --bubble-me:   #6E13EF;
+    --shadow-1:  0 1px 2px rgba(14,14,16,.04), 0 4px 16px rgba(14,14,16,.04);
+    --shadow-2:  0 8px 30px rgba(14,14,16,.08), 0 2px 6px rgba(14,14,16,.04);
+    --shadow-3:  0 20px 60px rgba(14,14,16,.18), 0 6px 20px rgba(14,14,16,.10);
+    --radius:    18px;
+  }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; color: var(--ink); background: #0a0a0a; line-height: 1.45; }
+
+  /* ---------- Stage / canvas ---------- */
+  .stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #0a0a0a; }
+  .deck {
+    width: 1920px; height: 1080px; position: relative; flex-shrink: 0;
+    background: var(--bg);
+    transform: scale(min(calc(100vw / 1920), calc(100vh / 1080)));
+    transform-origin: center; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+    cursor: pointer;
+  }
+
+  /* ---------- HUD ---------- */
+  .hud-brand { position: absolute; top: 36px; left: 48px; display: flex; align-items: center; gap: 10px; z-index: 50; }
+  .hud-brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .hud-brand .name { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: .14em; color: var(--muted); text-transform: uppercase; }
+  .hud-counter { position: absolute; top: 36px; right: 48px; font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: .14em; color: var(--muted-2); z-index: 50; }
+  .hud-hint { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .18em; color: var(--muted-2); text-transform: uppercase; z-index: 50; opacity: .7; }
+  .hud-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: rgba(14,14,16,.05); z-index: 50; }
+  .hud-progress .bar { height: 100%; background: var(--accent); width: 0%; transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+  /* ---------- Scenes ---------- */
+  .scene {
+    position: absolute; inset: 0;
+    width: 1920px; height: 1080px;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none;
+    transition: opacity .6s ease;
+    overflow: hidden;
+  }
+  .scene.active { opacity: 1; pointer-events: auto; }
+
+  /* Scene backgrounds */
+  .scene.s-intro     { background: radial-gradient(ellipse at 70% 30%, #f5edff 0%, #f7f7f5 60%); }
+  .scene.s-morning   { background: linear-gradient(180deg, #fef6e4 0%, #f7f7f5 70%); }
+  .scene.s-bus       { background: linear-gradient(180deg, #fff4d6 0%, #f9e8be 70%, #fef0c8 100%); }
+  .scene.s-stop      { background: linear-gradient(180deg, #ffe9d9 0%, #f7f7f5 80%); }
+  .scene.s-office    { background: linear-gradient(180deg, #eef0f5 0%, #f7f7f5 100%); }
+  .scene.s-reflect   { background: radial-gradient(ellipse at 30% 50%, #fbf6ff 0%, var(--bg) 70%); }
+  .scene.s-pivot     { background: linear-gradient(135deg, #1a0838 0%, #4a0aa8 100%); color: #fff; }
+  .scene.s-market    { background: var(--bg); }
+  .scene.s-solution  { background: linear-gradient(180deg, #ecfff5 0%, #f7f7f5 100%); }
+  .scene.s-traction  { background: var(--bg); }
+  .scene.s-close     { background: linear-gradient(135deg, #6E13EF 0%, #1a0838 100%); color: #fff; }
+
+  /* Animated reveals */
+  [data-show] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .55s cubic-bezier(.2,.7,.2,1), transform .55s cubic-bezier(.2,.7,.2,1);
+  }
+  [data-show].in { opacity: 1; transform: translateY(0); }
+  [data-show].in-pop { opacity: 1; transform: scale(1); }
+  [data-show][data-anim="pop"] { transform: scale(.85); }
+  [data-show][data-anim="pop"].in { opacity: 1; transform: scale(1); }
+  [data-show][data-anim="left"] { transform: translateX(-30px); }
+  [data-show][data-anim="left"].in { opacity: 1; transform: translateX(0); }
+  [data-show][data-anim="right"] { transform: translateX(30px); }
+  [data-show][data-anim="right"].in { opacity: 1; transform: translateX(0); }
+  [data-show][data-anim="fade"] { transform: none; }
+  [data-show][data-anim="fade"].in { opacity: 1; }
+
+  /* ---------- Typography ---------- */
+  .eyebrow { font-size: 18px; letter-spacing: .18em; color: var(--accent); text-transform: uppercase; font-weight: 600; }
+  .scene.s-pivot .eyebrow,
+  .scene.s-close .eyebrow { color: #c9a8ff; }
+  .h-display { font-family: 'Fraunces', serif; font-weight: 500; font-size: 140px; letter-spacing: -0.04em; line-height: .98; color: var(--ink); }
+  .h-display em { color: var(--accent); font-style: italic; }
+  .h-1 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 96px; letter-spacing: -0.03em; line-height: 1.04; }
+  .h-2 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 72px; letter-spacing: -0.025em; line-height: 1.06; }
+  .h-3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 52px; letter-spacing: -0.02em; line-height: 1.1; }
+  .lede { font-size: 30px; color: var(--ink-2); line-height: 1.4; max-width: 1100px; }
+  .lede-lg { font-size: 38px; color: var(--ink-2); line-height: 1.35; max-width: 1200px; }
+  .scene.s-pivot .h-1, .scene.s-close .h-1, .scene.s-pivot .h-2, .scene.s-close .h-2,
+  .scene.s-pivot .h-display, .scene.s-close .h-display { color: #fff; }
+  .scene.s-pivot .h-display em, .scene.s-close .h-display em { color: #c9a8ff; }
+  .scene.s-pivot .lede, .scene.s-close .lede, .scene.s-pivot .lede-lg, .scene.s-close .lede-lg { color: rgba(255,255,255,.85); }
+
+  /* ---------- Layout primitives ---------- */
+  .pad { padding: 96px 120px; }
+  .col { display: flex; flex-direction: column; gap: 24px; }
+  .row { display: flex; flex-direction: row; gap: 24px; }
+  .between { justify-content: space-between; }
+  .center { align-items: center; justify-content: center; }
+  .fill { flex: 1; min-height: 0; }
+  .grow { flex: 1; }
+
+  /* ---------- Avatar / character chips ---------- */
+  .avatar {
+    width: 92px; height: 92px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 2px solid var(--line);
+    box-shadow: var(--shadow-1); flex-shrink: 0; overflow: hidden;
+    position: relative;
+  }
+  .avatar svg { width: 100%; height: 100%; display: block; }
+  .avatar .avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .avatar.lg { width: 220px; height: 220px; border-width: 4px; }
+  .avatar.xl { width: 340px; height: 340px; border-width: 6px; box-shadow: var(--shadow-3); }
+  .avatar.sm { width: 64px; height: 64px; border-width: 2px; }
+  .avatar.dim { filter: grayscale(.3) brightness(.95); }
+
+  .id-chip {
+    display: inline-flex; align-items: center; gap: 16px;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 999px; padding: 14px 26px 14px 14px;
+    box-shadow: var(--shadow-1);
+  }
+  .id-chip .avatar { width: 56px; height: 56px; border-width: 2px; box-shadow: none; }
+  .id-chip .meta { display: flex; flex-direction: column; }
+  .id-chip .name { font-weight: 700; font-size: 20px; color: var(--ink); }
+  .id-chip .role { font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 10px 18px; border-radius: 999px; font-size: 16px; color: var(--ink-2);
+    box-shadow: var(--shadow-1);
+  }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+  /* ---------- Chat ---------- */
+  .chat-stage {
+    position: relative; flex: 1; min-height: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 30px 60px;
+  }
+  .chat-frame {
+    width: 980px; max-width: 100%;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfbf9 100%);
+    border: 1px solid var(--line); border-radius: 28px;
+    box-shadow: var(--shadow-3);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    height: 820px;
+  }
+  .chat-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 22px 28px; border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, #fafaf8 0%, #ffffff 100%);
+  }
+  .chat-head .ch-avatar { width: 52px; height: 52px; }
+  .chat-head .meta .name { font-weight: 700; font-size: 20px; }
+  .chat-head .meta .sub { font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+  .chat-head .badge {
+    margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--muted); letter-spacing: .1em; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--bg);
+  }
+  .chat-body {
+    flex: 1; min-height: 0; padding: 28px 28px 22px;
+    display: flex; flex-direction: column; gap: 14px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(110,19,239,0.05), transparent 30%),
+      radial-gradient(circle at 80% 80%, rgba(110,19,239,0.03), transparent 30%),
+      #fbfaf7;
+  }
+  .chat-row { display: flex; gap: 12px; align-items: flex-end; max-width: 78%; }
+  .chat-row.them { align-self: flex-start; }
+  .chat-row.me   { align-self: flex-end; flex-direction: row-reverse; }
+  /* 'them-right' = same as 'them' (other person speaking) but avatar on the right + tail on right */
+  .chat-row.them-right { align-self: flex-end; flex-direction: row-reverse; }
+  .chat-row .bubble-avatar { width: 40px; height: 40px; flex-shrink: 0; }
+  .chat-row .bubble-avatar.lg { width: 96px; height: 96px; }
+  .bubble {
+    padding: 14px 18px; border-radius: 18px;
+    font-size: 22px; line-height: 1.35; max-width: 600px;
+    word-wrap: break-word;
+    box-shadow: var(--shadow-1);
+  }
+  .chat-row.them .bubble { background: var(--bubble-them); border-bottom-left-radius: 4px; color: var(--ink); border: 1px solid var(--line); }
+  .chat-row.me .bubble   { background: var(--bubble-me); color: #fff; border-bottom-right-radius: 4px; }
+  .chat-row.them-right .bubble { background: var(--bubble-them); border-bottom-right-radius: 4px; color: var(--ink); border: 1px solid var(--line); }
+  .bubble.angry { background: #fff2f0; border: 1px solid rgba(192,50,43,.25); color: #7a1812; }
+  .bubble.angry::after { content: ' 😤'; }
+  .bubble.calm  { background: #ecfff5; border: 1px solid rgba(10,138,91,.25); color: #0a4a30; }
+  .bubble small { display: block; font-size: 12px; color: var(--muted); margin-top: 6px; letter-spacing: .04em; }
+
+  .chat-system {
+    align-self: center; max-width: 720px; text-align: center;
+    background: rgba(14,14,16,.06); border-radius: 999px;
+    padding: 8px 18px; font-size: 14px; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: .04em;
+  }
+  .typing {
+    display: inline-flex; gap: 4px; padding: 16px 20px;
+    background: var(--bubble-them); border: 1px solid var(--line);
+    border-radius: 18px; border-bottom-left-radius: 4px; box-shadow: var(--shadow-1);
+  }
+  .typing span {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--muted-2);
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: .15s; }
+  .typing span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+    30%           { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* ---------- Set / scenery ---------- */
+  .set-bus, .set-stop, .set-office {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+
+  /* Scene 1 — intro */
+  .intro-wrap { padding: 0 120px; display: flex; align-items: center; gap: 80px; height: 100%; }
+  .intro-text { flex: 1; }
+  .intro-art { flex-shrink: 0; position: relative; }
+  .intro-art .glow {
+    position: absolute; inset: -40px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(110,19,239,.18) 0%, transparent 70%);
+    filter: blur(20px); z-index: 0;
+  }
+  .intro-art .avatar { position: relative; z-index: 1; }
+  .float { animation: float 5s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+  /* Scene 2 — morning ₹500 */
+  .morning-wrap { padding: 60px 120px 70px; display: flex; flex-direction: column; gap: 28px; height: 100%; }
+  .morning-top {
+    display: flex; gap: 56px; align-items: center;
+  }
+  .morning-bus-art {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: 980px;
+  }
+  .morning-bus-art img {
+    width: 100%; height: auto; display: block;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(40,30,10,.22), 0 4px 12px rgba(40,30,10,.10);
+  }
+  .morning-text-top {
+    flex: 0 0 460px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .morning-text-top .eyebrow { font-size: 14px; opacity: .85; }
+  .morning-text-top .headline {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 44px; letter-spacing: -0.015em; line-height: 1.15;
+    color: var(--ink-2);
+  }
+  .note-500 {
+    width: 720px; height: 320px; position: relative;
+    background: linear-gradient(135deg, #f8e9b8 0%, #e8d29a 100%);
+    border-radius: 14px; box-shadow: var(--shadow-3);
+    border: 2px solid #c9a96e;
+    overflow: hidden;
+    transform: rotate(-4deg);
+  }
+  .note-500::before {
+    content: ''; position: absolute; inset: 12px; border-radius: 8px;
+    border: 1.5px dashed rgba(0,0,0,.12);
+  }
+  .note-500 .denom { position: absolute; top: 30px; right: 40px; font-family: 'Fraunces', serif; font-weight: 700; font-size: 110px; color: #5a3e0f; letter-spacing: -0.02em; }
+  .note-500 .label { position: absolute; bottom: 30px; left: 40px; font-family: 'JetBrains Mono', monospace; font-size: 16px; letter-spacing: .2em; color: rgba(90,62,15,.7); text-transform: uppercase; }
+  .note-500 .gandhi { position: absolute; left: 40px; top: 50%; transform: translateY(-50%); width: 130px; height: 160px; background: rgba(90,62,15,.18); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 60px; }
+
+  /* Scene 3 — bus chat (background bus interior hint) */
+  .bus-bg {
+    position: absolute; inset: 0; opacity: .35;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 100%),
+      repeating-linear-gradient(0deg, transparent 0 60px, rgba(110,19,239,.06) 60px 62px);
+    pointer-events: none;
+  }
+
+  /* Scene 4 — bus stop */
+  .stop-wrap { padding: 90px 120px; display: flex; gap: 60px; align-items: center; height: 100%; }
+  .stop-art {
+    width: 760px; max-height: 820px; position: relative; flex-shrink: 0;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(40,30,10,.18), 0 4px 12px rgba(40,30,10,.10);
+  }
+  .stop-art img {
+    width: 100%; height: 100%; display: block; object-fit: cover;
+  }
+  .stop-bench {
+    position: absolute; bottom: 100px; left: 60px; right: 60px;
+    height: 80px; background: linear-gradient(180deg,#7a4a2d,#5b341d);
+    border-radius: 6px; box-shadow: 0 8px 14px rgba(0,0,0,.15);
+  }
+  .stop-bench::before {
+    content:''; position: absolute; left: 30px; right: 30px; top: -120px; height: 120px;
+    background: linear-gradient(180deg,#7a4a2d,#5b341d);
+    border-radius: 6px;
+  }
+  .stop-pole {
+    position: absolute; bottom: 100px; right: 80px; width: 14px; height: 380px;
+    background: linear-gradient(180deg,#9b9b9b,#777);
+    border-radius: 4px;
+  }
+  .stop-sign {
+    position: absolute; top: 0; right: 30px; width: 220px; height: 100px;
+    background: var(--accent); color: #fff; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600;
+    box-shadow: var(--shadow-2);
+    transform: rotate(-3deg);
+  }
+  .stop-sun { position: absolute; top: 60px; left: 80px; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, #ffd166 0%, #f59e0b 100%); box-shadow: 0 0 60px rgba(245,158,11,.4); }
+  .stop-rithika { position: absolute; bottom: 180px; left: 200px; }
+  .stop-uncle  { position: absolute; bottom: 180px; right: 220px; }
+  .clock-bubble {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow-2);
+    padding: 22px 28px; font-family: 'JetBrains Mono', monospace; font-size: 22px; letter-spacing: .04em;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .clock-bubble.bad { color: var(--danger); border-color: rgba(192,50,43,.3); background: #fff5f4; }
+  .clock-bubble.good { color: var(--good); border-color: rgba(10,138,91,.3); background: #f0fff7; }
+
+  /* Scene 5 — office */
+  .office-wrap { padding: 90px 120px; display: flex; gap: 80px; align-items: center; height: 100%; }
+  .office-art {
+    width: 760px; max-height: 820px; position: relative; flex-shrink: 0;
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(40,30,10,.18), 0 4px 12px rgba(40,30,10,.10);
+  }
+  .office-art img {
+    width: 100%; height: 100%; display: block; object-fit: cover;
+  }
+  .office-art .desk {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 140px;
+    background: linear-gradient(180deg,#3a4256, #232838);
+  }
+  .office-art .monitor {
+    position: absolute; bottom: 140px; left: 80px; width: 280px; height: 200px;
+    background: #1a1f2c; border-radius: 8px; border: 6px solid #444b5c;
+    display: flex; align-items: center; justify-content: center;
+    color: #6E13EF; font-family: 'JetBrains Mono', monospace; font-size: 16px;
+  }
+  .office-art .clock {
+    position: absolute; top: 50px; right: 80px;
+    width: 130px; height: 130px; border-radius: 50%;
+    background: #fff; border: 8px solid var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px;
+    box-shadow: var(--shadow-2);
+  }
+  .office-art .boss { position: absolute; bottom: 150px; right: 60px; }
+  .office-art .rithika-late { position: absolute; bottom: 150px; left: 260px; }
+
+  /* Scene 6 — reflect (thought bubbles) */
+  .reflect-wrap { padding: 90px 120px; display: flex; gap: 80px; align-items: center; height: 100%; }
+  .reflect-rithika { position: relative; flex-shrink: 0; }
+  .reflect-rithika .reflect-img {
+    width: 560px; max-height: 760px; height: auto;
+    display: block; object-fit: cover;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(40,30,10,.18), 0 4px 12px rgba(40,30,10,.10);
+  }
+  .thought-cluster { display: flex; flex-direction: column; gap: 28px; flex: 1; }
+  .thought {
+    position: relative;
+    background: #fff; border: 1px solid var(--line); border-radius: 28px;
+    padding: 28px 36px; box-shadow: var(--shadow-2);
+    font-family: 'Fraunces', serif; font-size: 38px; font-weight: 400; line-height: 1.3;
+    color: var(--ink-2); max-width: 900px;
+  }
+  .thought::before, .thought::after {
+    content:''; position: absolute; left: -14px; border-radius: 50%;
+    background: #fff; border: 1px solid var(--line);
+  }
+  .thought::before { width: 22px; height: 22px; bottom: -10px; }
+  .thought::after  { width: 12px; height: 12px; bottom: -28px; left: -28px; }
+  .thought em { color: var(--accent); font-style: italic; font-weight: 500; }
+
+  /* Scene 7 — pivot */
+  .pivot-wrap { padding: 0 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; height: 100%; text-align: center; }
+  .pivot-wrap .brand {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; letter-spacing: .04em;
+    color: #c9a8ff;
+  }
+
+  /* Scene 8 — market */
+  .market-wrap { padding: 56px 120px; display: flex; flex-direction: column; gap: 22px; height: 100%; }
+  .market-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .market-photo {
+    width: 100%; max-width: 1100px;
+    margin: 0 auto;
+    align-self: center;
+    display: flex; justify-content: center;
+  }
+  .market-photo img {
+    width: auto; height: auto; max-width: 100%; max-height: 380px;
+    display: block;
+    background: transparent;
+    border-radius: 28px;
+  }
+  .market-sub {
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.3;
+    color: var(--ink-2);
+  }
+  .market-sub strong { color: var(--accent); font-weight: 700; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 44px 40px;
+    box-shadow: var(--shadow-1); display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content:''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent);
+  }
+  .stat-card.danger::before { background: var(--danger); }
+  .stat-card .stat-label {
+    font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 600;
+  }
+  .stat-card .stat-value {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 88px; letter-spacing: -0.03em; color: var(--ink); line-height: 1;
+  }
+  .stat-card .stat-value .unit { font-size: 36px; color: var(--muted); margin-left: 8px; font-weight: 400; }
+  .stat-card .stat-sub { font-size: 18px; color: var(--ink-2); }
+  .stat-card.danger .stat-value { color: var(--danger); }
+
+  /* Scene 9 — solution */
+  .sol-wrap { padding: 80px 120px; display: flex; gap: 60px; align-items: stretch; height: 100%; }
+  .phone {
+    width: 360px; height: 760px; flex-shrink: 0;
+    background: #0e0e10; border-radius: 50px; padding: 14px;
+    box-shadow: var(--shadow-3); position: relative;
+  }
+  .phone::after {
+    content:''; position: absolute; top: 26px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 24px; background: #0e0e10; border-radius: 14px; z-index: 5;
+  }
+  .phone-screen {
+    width: 100%; height: 100%; border-radius: 38px; background: linear-gradient(180deg, #f7f7f5, #fff);
+    overflow: hidden; padding: 56px 18px 18px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .phone-screen .ph-head { display: flex; align-items: center; gap: 8px; padding: 6px 8px; }
+  .phone-screen .ph-head .logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+  .phone-screen .ph-head .name { font-weight: 700; font-size: 14px; }
+  .ph-card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px;
+    box-shadow: var(--shadow-1);
+  }
+  .ph-card.success { border-color: rgba(10,138,91,.3); background: linear-gradient(180deg, #f0fff7, #fff); }
+  .ph-card .ph-label { font-size: 11px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; font-weight: 600; }
+  .ph-card .ph-amt { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 600; color: var(--good); }
+  .ph-card .ph-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-2); }
+  .ph-card .ph-line.big { font-size: 16px; font-weight: 600; }
+  .ph-bus { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line-2); }
+  .ph-bus .bnum { width: 36px; height: 36px; border-radius: 8px; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; }
+  .ph-bus .binfo { flex: 1; }
+  .ph-bus .binfo .b1 { font-size: 13px; font-weight: 600; }
+  .ph-bus .binfo .b2 { font-size: 11px; color: var(--muted); }
+  .ph-bus .eta { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--good); font-weight: 600; }
+
+  .sol-bullets { flex: 1; display: flex; flex-direction: column; gap: 22px; justify-content: center; }
+  .sol-row { display: flex; gap: 22px; align-items: flex-start; }
+  .sol-row .step {
+    width: 56px; height: 56px; border-radius: 16px; background: var(--accent);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 26px; flex-shrink: 0;
+    box-shadow: var(--shadow-1);
+  }
+  .sol-row .body h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 36px; line-height: 1.15; color: var(--ink); }
+  .sol-row .body p  { font-size: 22px; color: var(--ink-2); margin-top: 6px; line-height: 1.4; }
+
+  /* Scene 10 — traction */
+  .trac-wrap { padding: 96px 120px; display: flex; flex-direction: column; gap: 50px; height: 100%; }
+  .trac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .trac-grid .stat-card .stat-value { font-size: 72px; }
+  .trac-arrow {
+    display: flex; align-items: center; gap: 24px;
+    background: linear-gradient(90deg, var(--accent-soft), transparent);
+    border-left: 4px solid var(--accent); border-radius: 0 12px 12px 0;
+    padding: 24px 28px;
+  }
+  .trac-arrow .from { font-family: 'JetBrains Mono', monospace; color: var(--muted); font-size: 18px; letter-spacing: .08em; }
+  .trac-arrow .to {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 38px;
+    color: var(--accent-deep); letter-spacing: -0.01em;
+  }
+  .trac-arrow .arrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 32px; color: var(--accent); margin: 0 8px;
+  }
+
+  /* Scene 11 — close */
+  .close-wrap { padding: 0 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; height: 100%; text-align: center; }
+  .close-wrap .signature { font-family: 'JetBrains Mono', monospace; color: rgba(255,255,255,.6); letter-spacing: .14em; font-size: 16px; text-transform: uppercase; }
+  .close-wrap .strike { color: rgba(255,255,255,.5); text-decoration: line-through; text-decoration-thickness: 4px; }
+
+  .close-links {
+    position: absolute;
+    bottom: 56px; left: 0; right: 0;
+    display: flex; justify-content: center; gap: 24px;
+    z-index: 60;
+  }
+  .close-links a {
+    pointer-events: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: rgba(255,255,255,.55);
+    padding: 10px 18px;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    background: rgba(255,255,255,.04);
+    transition: color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .close-links a:hover {
+    color: rgba(255,255,255,.95);
+    border-color: rgba(255,255,255,.4);
+    background: rgba(255,255,255,.10);
+  }
+  .close-links a .arrow { opacity: .55; margin-left: 6px; transition: transform .2s ease; display: inline-block; }
+  .close-links a:hover .arrow { transform: translateX(2px); opacity: 1; }
+
+  /* Decoration: stars/sparkles */
+  .sparkle { position: absolute; width: 4px; height: 4px; background: rgba(255,255,255,.5); border-radius: 50%; }
+
+  /* ---------- Scene 3 — Comic-style conversation ---------- */
+  .scene.s-bus { display: flex; flex-direction: column; }
+  .convo-head {
+    padding: 50px 120px 0 120px;
+    display: flex; flex-direction: column; gap: 6px;
+    flex-shrink: 0;
+  }
+  .convo-stage {
+    flex: 1; min-height: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 80px;
+    gap: 40px;
+    position: relative;
+  }
+  .convo-foot {
+    padding: 12px 120px 50px;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100px;
+    flex-shrink: 0;
+  }
+  .convo-system {
+    background: rgba(192,50,43,.10);
+    border: 1px solid rgba(192,50,43,.28);
+    color: #8a1a14;
+    border-radius: 999px;
+    padding: 14px 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    letter-spacing: .04em;
+    box-shadow: var(--shadow-1);
+  }
+  .convo-system::before { content: '⟶  '; opacity: .5; }
+
+  .figure {
+    position: relative;
+    width: 480px;
+    height: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-end;
+    padding-top: 0;
+    gap: 10px;
+  }
+  .figure .char-svg {
+    width: 220px; height: auto; flex-shrink: 0;
+    filter: drop-shadow(0 8px 20px rgba(40,30,10,.18));
+  }
+  .figure .char-svg svg { width: 100%; height: auto; display: block; }
+  /* Image-based character frame inside scene 3 figure */
+  .figure .char-frame {
+    width: 320px;
+    height: 524px;   /* matches strip aspect (0.61) → ~one full pose visible */
+    filter: drop-shadow(0 8px 20px rgba(40,30,10,.20));
+    background: transparent;
+  }
+  .figure .char-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: rgba(255,255,255,.7);
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+
+  .bubble-cloud {
+    position: absolute;
+    top: 0;
+    left: 50%; transform: translateX(-50%);
+    width: 100%;
+    height: 240px;
+    display: flex; flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    pointer-events: none;
+    padding-bottom: 18px;
+  }
+
+  .speech {
+    background: #d8c9b8;
+    color: #2a2a2a;
+    border-radius: 24px;
+    padding: 12px 22px;
+    font-size: 19px; line-height: 1.3;
+    max-width: 360px;
+    position: relative;
+    box-shadow: 0 6px 18px rgba(40,30,10,.10), 0 1px 2px rgba(40,30,10,.06);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    text-align: center;
+  }
+  .speech strong { color: #1a1a1a; font-weight: 800; }
+  .speech-angry { background: #f4b8b3; color: #5a1818; border: 1px solid rgba(160,40,40,.2); }
+  .speech-angry strong { color: #3a0a0a; }
+  .speech-soft  { background: #d6dcec; color: #1a2540; border: 1px solid rgba(80,90,140,.18); }
+  .speech-soft strong { color: var(--accent); }
+
+  /* Tail — round droplets pointing down to the speaker */
+  .speech::before, .speech::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+  }
+  .cloud-left .speech::before  { width: 18px; height: 18px; right: 36px; bottom: -8px; }
+  .cloud-left .speech::after   { width: 9px;  height: 9px;  right: 22px; bottom: -22px; }
+  .cloud-right .speech::before { width: 18px; height: 18px; left: 36px;  bottom: -8px; }
+  .cloud-right .speech::after  { width: 9px;  height: 9px;  left: 22px;  bottom: -22px; }
+
+  /* gentle entry animation */
+  [data-show].speech { transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.3,1.3); }
+  [data-show].speech[data-anim="pop"] { transform: scale(.4) translateY(20px); transform-origin: bottom center; }
+  [data-show].speech[data-anim="pop"].in { opacity: 1; transform: scale(1) translateY(0); }
+
+  /* (Floor shadow removed — single illustration carries its own shadow) */
+
+  /* ---------- Single conversation illustration ---------- */
+  .convo-scene {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-self: center;
+    transform-origin: center;
+  }
+  .convo-scene-img {
+    width: 100%; height: auto;
+    display: block;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(40,30,10,.20), 0 4px 12px rgba(40,30,10,.10);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* Bubble overlay sits in the gap BETWEEN the two characters.
+     Layout context: Rithika on the LEFT, Conductor on the RIGHT.
+     Tail direction tells you who is talking. */
+  .bubble-overlay {
+    position: absolute;
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column;
+    gap: 14px;
+    z-index: 5;
+    pointer-events: none;
+    width: 36%;
+    max-width: 480px;
+  }
+  .bubble-overlay .speech {
+    max-width: 100%;
+    margin: 0;
+    text-align: left;
+  }
+
+  /* Tail pointing RIGHT → toward the conductor (right side of scene) */
+  .bubble-overlay .speech.tail-right {
+    align-self: flex-end;
+    margin-right: 22px;
+  }
+  .bubble-overlay .speech.tail-right::before {
+    right: -10px; bottom: 14px; left: auto; top: auto;
+    width: 16px; height: 16px;
+  }
+  .bubble-overlay .speech.tail-right::after {
+    right: -24px; bottom: 4px; left: auto; top: auto;
+    width: 8px; height: 8px;
+  }
+
+  /* Tail pointing LEFT → toward Rithika (left side of scene) */
+  .bubble-overlay .speech.tail-left {
+    align-self: flex-start;
+    margin-left: 22px;
+  }
+  .bubble-overlay .speech.tail-left::before {
+    left: -10px; bottom: 14px; right: auto; top: auto;
+    width: 16px; height: 16px;
+  }
+  .bubble-overlay .speech.tail-left::after {
+    left: -24px; bottom: 4px; right: auto; top: auto;
+    width: 8px; height: 8px;
+  }
+
+  /* ---------- Character image sprite system ----------
+     Source images are 3-pose horizontal strips (~2816 x 1536):
+       pose-1 = standing full body
+       pose-2 = action / talking
+       pose-3 = close-up portrait
+     Each strip aspect ≈ 1.83. Each pose aspect ≈ 0.61 (w:h).
+  */
+  .char-frame {
+    position: relative; overflow: hidden;
+    flex-shrink: 0;
+    border-radius: 8px;
+  }
+  .char-frame img {
+    position: absolute; top: 0; left: 0;
+    width: 300%; height: auto;
+    display: block;
+    transition: transform .5s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+    user-select: none;
+  }
+  .char-frame.pose-1 img { transform: translateX(0%); }
+  .char-frame.pose-2 img { transform: translateX(-33.333%); }
+  .char-frame.pose-3 img { transform: translateX(-66.667%); }
+
+  /* Mirror horizontally so characters can face each other */
+  .char-frame.flip img { transform: translateX(0%) scaleX(-1); transform-origin: center; }
+  .char-frame.flip.pose-1 img { transform: translateX(0%)        scaleX(-1); }
+  .char-frame.flip.pose-2 img { transform: translateX( 33.333%)  scaleX(-1); }
+  .char-frame.flip.pose-3 img { transform: translateX( 66.667%)  scaleX(-1); }
+
+  /* Circle close-up avatar: shows pose-3 (portrait) cropped to face area */
+  .char-portrait-img {
+    width: 100%; height: 100%;
+    background-size: 320% auto;
+    background-position: 100% 22%;
+    background-repeat: no-repeat;
+    background-color: var(--surface-2);
+  }
+  /* Optional fine-tune per character — tweak Y % if face is too low/high */
+  .char-portrait-img.por-rithika   { background-position: 100% 18%; }
+  .char-portrait-img.por-conductor { background-position: 100% 22%; }
+
+  /* ---------- Mobile gate ---------- */
+  .mobile-notice { display: none; }
+  @media (max-width: 900px), (orientation: portrait) and (max-width: 1100px) {
+    .stage { display: none !important; }
+    .mobile-notice {
+      display: flex;
+      position: fixed; inset: 0;
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 28px;
+      background: radial-gradient(ellipse at 70% 20%, #1f0a44 0%, #0a0a0a 70%);
+      color: #fff;
+      text-align: center;
+      z-index: 1000;
+    }
+    .mobile-notice .mn-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .22em;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .mobile-notice .mn-brand .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent);
+    }
+    .mobile-notice .mn-icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .mobile-notice .mn-icon svg { width: 32px; height: 32px; stroke: #fff; }
+    .mobile-notice h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      font-size: clamp(26px, 7vw, 36px);
+      line-height: 1.15;
+      letter-spacing: -.01em;
+      margin-bottom: 14px;
+      max-width: 22ch;
+    }
+    .mobile-notice p {
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(255,255,255,.7);
+      max-width: 32ch;
+      margin-bottom: 28px;
+    }
+    .mobile-notice .mn-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .18em;
+      color: rgba(255,255,255,.4);
+      text-transform: uppercase;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      width: 200px;
+    }
+  }
+
+</style>
+</head>
+<body>
+<div class="mobile-notice" role="alertdialog" aria-labelledby="mn-title">
+  <div class="mn-brand"><span class="dot"></span><span>allrides · elevator pitch</span></div>
+  <div class="mn-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="12" rx="2"/>
+      <path d="M8 20h8M12 16v4"/>
+    </svg>
+  </div>
+  <h1 id="mn-title">This pitch is best viewed on a desktop.</h1>
+  <p>The deck is built for a 1920×1080 stage with story & transitions. Please open this link on a laptop or desktop browser.</p>
+  <div class="mn-hint">Open on desktop →</div>
+</div>
+<div class="stage" id="stage">
+  <div class="deck" id="deck">
+
+    <div class="hud-brand"><span class="dot"></span><span class="name">allrides · elevator pitch</span></div>
+    <div class="hud-counter" id="counter">01 / 11</div>
+    <div class="hud-hint" id="hint">Click anywhere · or press →</div>
+    <div class="hud-progress"><div class="bar" id="progress"></div></div>
+
+    <!-- ============ SCENE 1 — INTRO ============ -->
+    <section class="scene s-intro" data-scene="0" data-stages="2">
+      <div class="intro-wrap">
+        <div class="intro-text col">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">A morning in Kochi</div>
+          <h1 class="h-display" data-show data-stage="0" data-delay="120">Meet <em>Rithika.</em></h1>
+          <p class="lede-lg" data-show data-stage="1" data-delay="0">She works at a tech company in Kochi.</p>
+          <p class="lede-lg" data-show data-stage="1" data-delay="0">Every morning, she takes public transport to office.</p>
+          <div class="row" style="gap:14px; margin-top:16px;" data-show data-stage="1" data-delay="0">
+            <span class="pill"><span class="dot"></span>26 · Software engineer</span>
+            <span class="pill"><span class="dot" style="background:var(--good);"></span>Daily commuter</span>
+            <span class="pill"><span class="dot" style="background:var(--warn);"></span>No car. By choice.</span>
+          </div>
+        </div>
+        <div class="intro-art">
+          <div class="glow" data-show data-stage="0" data-anim="fade"></div>
+          <div class="avatar xl float" data-show data-stage="0" data-anim="pop" data-delay="200">
+            <img src="rithika-passport.png" alt="Rithika" class="avatar-img"/>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 2 — TUESDAY MORNING ============ -->
+    <section class="scene s-morning" data-scene="1" data-stages="3">
+      <div class="morning-wrap">
+
+        <div class="morning-top">
+          <div class="morning-bus-art" data-show data-stage="0" data-anim="pop" data-delay="0">
+            <img src="rithika-onbarding-bus.png" alt="Rithika boarding the bus"/>
+          </div>
+          <div class="morning-text-top">
+            <div class="eyebrow" data-show data-stage="0" data-anim="fade" data-delay="180">Tuesday · 7:52 am</div>
+            <div class="headline" data-show data-stage="0" data-anim="fade" data-delay="240">She rushes out, hops on her usual bus, and realizes —</div>
+          </div>
+        </div>
+
+        <div class="row" style="gap: 60px; align-items: center; margin-top: 20px;">
+          <h2 class="h-2" data-show data-stage="1" data-delay="0" style="max-width: 760px;">she <em style="color:var(--danger);font-style:normal;">forgot to take her wallet.</em></h2>
+
+          <div class="col" data-show data-stage="2" data-anim="pop" data-delay="200">
+            <div class="note-500">
+              <div class="gandhi">🪙</div>
+              <div class="denom">₹500</div>
+              <div class="label">Reserve Bank of India</div>
+            </div>
+            <div class="pill" style="align-self:flex-end; margin-top:14px;"><span class="dot" style="background:var(--warn);"></span>The only note in her wallet</div>
+          </div>
+        </div>
+
+        <p class="lede" data-show data-stage="2" data-delay="380" style="margin-top:auto;">Everywhere else — even the chai shop — accepts UPI. She didn't think twice.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 3 — THE CONVERSATION ============ -->
+    <section class="scene s-bus" data-scene="2" data-stages="6">
+
+      <div class="convo-head">
+        <div class="eyebrow" data-show data-stage="0" data-anim="fade">On Bus 45 · 8:14 AM</div>
+        <h2 class="h-2" data-show data-stage="0" data-delay="100">She hands him ₹500. And then —</h2>
+      </div>
+
+      <div class="convo-stage">
+
+        <div class="convo-scene" data-show data-stage="0" data-anim="pop">
+          <img src="rithika-and-conductor-conversation.png" alt="Rithika and the bus conductor in conversation" class="convo-scene-img"/>
+
+          <!-- Bubbles sit between the characters. tail-right → conductor (right). tail-left → Rithika (left). -->
+          <div class="bubble-overlay">
+            <div class="speech speech-angry tail-right" data-show data-stage="1" data-anim="pop">
+              Where will I get change at <strong>8 in the morning?!</strong>
+            </div>
+            <div class="speech speech-angry tail-right" data-show data-stage="2" data-anim="pop">
+              Don't you know you have to <strong>carry change?</strong>
+            </div>
+            <div class="speech speech-soft tail-left" data-show data-stage="3" data-anim="pop">
+              Sir… <strong>can I pay by UPI?</strong>
+            </div>
+            <div class="speech speech-angry tail-right" data-show data-stage="4" data-anim="pop">
+              I don't have <strong>time to waste.</strong><br/>Please get down.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="convo-foot">
+        <div class="convo-system" data-show data-stage="5" data-anim="fade">She is forced to step off — at a stop she doesn't recognise.</div>
+      </div>
+
+    </section>
+
+    <!-- ============ SCENE 4 — BUS STOP ============ -->
+    <section class="scene s-stop" data-scene="3" data-stages="4">
+      <div class="stop-wrap">
+        <div class="stop-art" data-show data-stage="0" data-anim="pop">
+          <img src="rithika-bus-stop.png" alt="Rithika stranded at the bus stop"/>
+        </div>
+
+        <div class="col" style="gap: 28px; flex: 1;">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">Stranded</div>
+          <h2 class="h-1" data-show data-stage="0" data-delay="100">Embarrassed.<br/>Anxious.<br/><em>Alone.</em></h2>
+          <p class="lede" data-show data-stage="1" data-delay="0">Standing at a stop she doesn't know — no idea when the next bus is coming.</p>
+
+          <div class="chat-row them-right" data-show data-stage="2" data-delay="100" style="max-width: 100%;">
+            <div class="avatar bubble-avatar lg" data-portrait="uncle"></div>
+            <div class="bubble">Mole, bus will come every 5 minutes 👍</div>
+          </div>
+
+          <h3 class="h-3" data-show data-stage="3" data-delay="200" style="color: var(--danger); font-weight: 700; max-width: 720px;">
+            But the bus came after <em style="font-style: normal;">45 minutes.</em>
+          </h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 5 — OFFICE ============ -->
+    <section class="scene s-office" data-scene="4" data-stages="3">
+      <div class="office-wrap">
+        <div class="office-art" data-show data-stage="0" data-anim="pop">
+          <img src="rithika-at-office.png" alt="Rithika at the office, getting scolded by her boss"/>
+        </div>
+
+        <div class="col" style="gap: 28px; flex: 1;">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">9:42 AM · 42 mins late</div>
+          <h2 class="h-1" data-show data-stage="0" data-delay="100">She walks in.<br/>Boss walks over.</h2>
+
+          <div class="chat-row them" data-show data-stage="1" data-delay="100" style="max-width: 100%;">
+            <div class="avatar bubble-avatar" data-portrait="boss"></div>
+            <div class="bubble angry">Meeting started 40 minutes ago. Again?</div>
+          </div>
+
+          <h2 class="h-2" data-show data-stage="2" data-delay="100" style="margin-top:14px;">Her whole day — <em style="color:var(--danger);font-style:normal;">ruined.</em></h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 6 — REFLECTION ============ -->
+    <section class="scene s-reflect" data-scene="5" data-stages="3">
+      <div class="reflect-wrap">
+        <div class="reflect-rithika" data-show data-stage="0" data-anim="pop">
+          <img src="rithika-thinking.png" alt="Rithika thinking back on her morning" class="reflect-img"/>
+          <div style="text-align:center; margin-top:18px;">
+            <div class="pill"><span class="dot"></span>Rithika · later that day</div>
+          </div>
+        </div>
+
+        <div class="thought-cluster">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">She kept thinking…</div>
+
+          <div class="thought" data-show data-stage="1" data-anim="pop" data-delay="100">
+            "If I could just <em>pay by UPI</em>, I wouldn't have been thrown off and embarrassed."
+          </div>
+          <div class="thought" data-show data-stage="2" data-anim="pop" data-delay="100">
+            "If I knew the bus was running <em>45 minutes late</em>, I'd have just booked an auto."
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 7 — THAT'S THE PROBLEM (PIVOT) ============ -->
+    <section class="scene s-pivot" data-scene="6" data-stages="2">
+      <div class="pivot-wrap">
+        <div class="eyebrow" data-show data-stage="0" data-anim="fade">That's the problem we're solving</div>
+        <h1 class="h-display" data-show data-stage="0" data-delay="120" style="font-size:180px;">at <em>allrides.</em></h1>
+        <p class="lede-lg" data-show data-stage="1" data-delay="0" style="text-align:center; max-width:1200px;">Building the <strong>India's digital infrastructure</strong> for public mobility.</p>
+        <div class="brand" data-show data-stage="1" data-delay="200">Urbanfolks Mobility · Pvt. Ltd.</div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 8 — MARKET ============ -->
+    <section class="scene s-market" data-scene="7" data-stages="5">
+      <div class="market-wrap">
+
+        <div class="col" style="gap: 6px; align-items: center;">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">The market hiding in plain sight</div>
+          <h2 class="h-1" data-show data-stage="0" data-delay="100" style="text-align: center;">Rithika is <em>not alone.</em></h2>
+        </div>
+
+        <div class="market-photo" data-show data-stage="1" data-anim="pop">
+          <img src="rithika-not-alone.png" alt="Crowds of Indians using public transport"/>
+        </div>
+
+        <p class="market-sub" data-show data-stage="2" data-delay="100">
+          She is <strong>one in 36 million</strong> Indians using public transit <em>daily.</em>
+        </p>
+
+        <div class="market-grid">
+          <div class="stat-card" data-show data-stage="3" data-delay="0">
+            <div class="stat-label">Of which the majority ride —</div>
+            <div class="stat-value">Buses</div>
+            <div class="stat-sub"><strong>Stage carriage buses</strong> carry the bulk of this load.</div>
+          </div>
+          <div class="stat-card danger" data-show data-stage="4" data-delay="0">
+            <div class="stat-label">…and of those buses</div>
+            <div class="stat-value">90%</div>
+            <div class="stat-sub">are <strong>still offline</strong> — no UPI, no live tracking, no digital infrastructure.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ SCENE 9 — SOLUTION ============ -->
+    <section class="scene s-solution" data-scene="8" data-stages="4">
+      <div class="sol-wrap">
+        <div class="phone" data-show data-stage="0" data-anim="pop">
+          <div class="phone-screen">
+            <div class="ph-head"><span class="logo-dot"></span><span class="name">allrides</span></div>
+
+            <div class="ph-card success">
+              <div class="ph-label">Payment successful</div>
+              <div class="ph-amt">₹15.00</div>
+              <div class="ph-line"><span>Bus 45 · Kakkanad</span><span style="color:var(--good);">✓ 2.1s</span></div>
+              <div class="ph-line"><span style="color:var(--muted);">UPI · Ref 8312…</span><span style="color:var(--muted);">8:14 AM</span></div>
+            </div>
+
+            <div class="ph-card">
+              <div class="ph-label">Live · Buses near you</div>
+              <div class="col" style="gap:8px; margin-top:8px;">
+                <div class="ph-bus"><div class="bnum">45</div><div class="binfo"><div class="b1">→ Kakkanad InfoPark</div><div class="b2">On time</div></div><div class="eta">2 min</div></div>
+                <div class="ph-bus"><div class="bnum">12</div><div class="binfo"><div class="b1">→ Edappally</div><div class="b2">Crowded</div></div><div class="eta">7 min</div></div>
+                <div class="ph-bus"><div class="bnum">88</div><div class="binfo"><div class="b1">→ Vyttila Hub</div><div class="b2">On time</div></div><div class="eta">12 min</div></div>
+              </div>
+            </div>
+
+            <div class="ph-card">
+              <div class="ph-line big"><span>This week</span><span style="color:var(--accent);">12 rides · ₹184</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sol-bullets">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">A different morning</div>
+          <h2 class="h-2" data-show data-stage="0" data-delay="100" style="margin-bottom: 20px;">Now — Rithika just <em>scans.</em></h2>
+
+          <div class="sol-row" data-show data-stage="1" data-anim="left" data-delay="0">
+            <div class="step">1</div>
+            <div class="body"><h4>QR scan, ₹15, two seconds.</h4><p>No change. No conductor argument. No friction.</p></div>
+          </div>
+          <div class="sol-row" data-show data-stage="2" data-anim="left" data-delay="100">
+            <div class="step">2</div>
+            <div class="body"><h4>Live timings on her phone.</h4><p>Knows exactly when her bus arrives — switches to an auto if it's late.</p></div>
+          </div>
+          <div class="sol-row" data-show data-stage="3" data-anim="left" data-delay="100">
+            <div class="step">3</div>
+            <div class="body"><h4>Operator keeps the rider.</h4><p>The conductor stops fighting passengers. The owner stops losing customers to lack of digital infra.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 10 — TRACTION ============ -->
+    <section class="scene s-traction" data-scene="9" data-stages="3">
+      <div class="trac-wrap">
+        <div class="col" style="gap:8px;">
+          <div class="eyebrow" data-show data-stage="0" data-anim="fade">Already moving</div>
+          <h2 class="h-1" data-show data-stage="0" data-delay="100">12 buses in.<br/>Pipeline filling on <em>word of mouth alone.</em></h2>
+        </div>
+
+        <div class="trac-grid" data-show data-stage="1" data-delay="0">
+          <div class="stat-card">
+            <div class="stat-label">Buses onboarded</div>
+            <div class="stat-value">12</div>
+            <div class="stat-sub">Live in Kochi · scaling weekly</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Daily GMV flowing through us</div>
+            <div class="stat-value">₹1<span class="unit">lakh</span></div>
+            <div class="stat-sub">Every. Single. Day.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Acquisition cost so far</div>
+            <div class="stat-value">₹0</div>
+            <div class="stat-sub">Operator-to-operator referrals only.</div>
+          </div>
+        </div>
+
+        <div class="trac-arrow" data-show data-stage="2" data-anim="left" data-delay="0">
+          <div class="from">Today &nbsp;·&nbsp; 12 buses</div>
+          <div class="arrow">→</div>
+          <div class="to">3,450 buses · ₹25 Cr ARR by Year 3</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 11 — CLOSE ============ -->
+    <section class="scene s-close" data-scene="10" data-stages="3">
+      <div class="close-wrap">
+        <div class="signature" data-show data-stage="0" data-anim="fade">For Rithika · and 50 million like her</div>
+        <h1 class="h-display" data-show data-stage="0" data-delay="120" style="font-size:120px;">
+          We're <span class="strike">digitising buses.</span>
+        </h1>
+        <h1 class="h-display" data-show data-stage="1" data-delay="0" style="font-size:130px;">
+          We're making sure people like <em>Rithika</em><br/>never face this again.
+        </h1>
+        <div class="signature" data-show data-stage="2" data-anim="fade" data-delay="200">allrides &nbsp;·&nbsp; Urbanfolks Mobility Pvt. Ltd.</div>
+      </div>
+
+      <div class="close-links" data-show data-stage="2" data-anim="fade" data-delay="320">
+        <a href="seedfund-pitch-slide.html" onclick="event.stopPropagation();">Detailed pitch deck<span class="arrow">→</span></a>
+        <a href="financials.html" onclick="event.stopPropagation();">Financial projection<span class="arrow">→</span></a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============ SVG PORTRAIT TEMPLATES ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+
+    <!-- Rithika (default, smiling) -->
+    <symbol id="por-rithika" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#fbf2ff"/>
+      <!-- shoulders / shirt -->
+      <path d="M5 100 Q 10 70 30 65 L 70 65 Q 90 70 95 100 Z" fill="#6E13EF"/>
+      <path d="M30 65 Q 50 75 70 65 L 70 70 Q 50 80 30 70 Z" fill="#4a0aa8"/>
+      <!-- neck -->
+      <rect x="42" y="56" width="16" height="14" fill="#e3b58a"/>
+      <!-- face -->
+      <ellipse cx="50" cy="42" rx="22" ry="26" fill="#f0c9a0"/>
+      <!-- hair back -->
+      <path d="M28 44 Q 25 18 50 14 Q 75 18 72 44 Q 75 30 70 22 L 30 22 Q 25 30 28 44 Z" fill="#1f1410"/>
+      <!-- hair side bun -->
+      <ellipse cx="74" cy="36" rx="6" ry="7" fill="#1f1410"/>
+      <!-- bangs -->
+      <path d="M30 30 Q 50 22 70 30 Q 65 36 50 35 Q 35 36 30 30 Z" fill="#1f1410"/>
+      <!-- eyes -->
+      <ellipse cx="42" cy="44" rx="2.2" ry="2.6" fill="#1f1410"/>
+      <ellipse cx="58" cy="44" rx="2.2" ry="2.6" fill="#1f1410"/>
+      <!-- brows -->
+      <path d="M37 38 Q 42 36 47 38" stroke="#1f1410" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M53 38 Q 58 36 63 38" stroke="#1f1410" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <!-- nose -->
+      <path d="M50 46 Q 49 51 51 53" stroke="#b48867" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <!-- mouth -->
+      <path d="M45 56 Q 50 60 55 56" stroke="#7a3030" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- cheeks -->
+      <circle cx="38" cy="52" r="2.5" fill="#f5a3a3" opacity=".5"/>
+      <circle cx="62" cy="52" r="2.5" fill="#f5a3a3" opacity=".5"/>
+      <!-- earring -->
+      <circle cx="28" cy="48" r="1.5" fill="#d4af37"/>
+    </symbol>
+
+    <!-- Rithika sad / worried -->
+    <symbol id="por-rithika-sad" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#f5edff"/>
+      <path d="M5 100 Q 10 70 30 65 L 70 65 Q 90 70 95 100 Z" fill="#6E13EF"/>
+      <path d="M30 65 Q 50 75 70 65 L 70 70 Q 50 80 30 70 Z" fill="#4a0aa8"/>
+      <rect x="42" y="56" width="16" height="14" fill="#e3b58a"/>
+      <ellipse cx="50" cy="42" rx="22" ry="26" fill="#f0c9a0"/>
+      <path d="M28 44 Q 25 18 50 14 Q 75 18 72 44 Q 75 30 70 22 L 30 22 Q 25 30 28 44 Z" fill="#1f1410"/>
+      <ellipse cx="74" cy="36" rx="6" ry="7" fill="#1f1410"/>
+      <path d="M30 30 Q 50 22 70 30 Q 65 36 50 35 Q 35 36 30 30 Z" fill="#1f1410"/>
+      <ellipse cx="42" cy="45" rx="2.2" ry="2.2" fill="#1f1410"/>
+      <ellipse cx="58" cy="45" rx="2.2" ry="2.2" fill="#1f1410"/>
+      <!-- worried brows -->
+      <path d="M37 38 Q 42 41 47 38" stroke="#1f1410" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M53 38 Q 58 41 63 38" stroke="#1f1410" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+      <path d="M50 46 Q 49 51 51 53" stroke="#b48867" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <!-- frown -->
+      <path d="M45 60 Q 50 56 55 60" stroke="#7a3030" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- tear -->
+      <path d="M40 50 Q 39 54 41 55 Q 43 54 42 50 Z" fill="#7cb6e8" opacity=".7"/>
+    </symbol>
+
+    <!-- Conductor — angry, mustache, khaki -->
+    <symbol id="por-conductor" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#f4ede0"/>
+      <!-- shirt khaki -->
+      <path d="M5 100 Q 10 70 30 65 L 70 65 Q 90 70 95 100 Z" fill="#a08454"/>
+      <!-- collar -->
+      <path d="M40 65 L 50 75 L 60 65 L 58 70 L 50 78 L 42 70 Z" fill="#7d6840"/>
+      <!-- ticket pouch strap -->
+      <rect x="5" y="80" width="90" height="6" fill="#5b4422"/>
+      <!-- neck -->
+      <rect x="42" y="56" width="16" height="14" fill="#c98e6b"/>
+      <!-- face -->
+      <ellipse cx="50" cy="42" rx="22" ry="26" fill="#d99c75"/>
+      <!-- cap -->
+      <path d="M22 28 Q 50 12 78 28 L 78 36 Q 50 30 22 36 Z" fill="#3d3424"/>
+      <path d="M20 36 Q 50 32 80 36 L 80 40 L 20 40 Z" fill="#28210f"/>
+      <!-- eyes angry -->
+      <path d="M36 44 L 44 41" stroke="#1f1410" stroke-width="2" stroke-linecap="round"/>
+      <path d="M64 41 L 56 44" stroke="#1f1410" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="40" cy="46" rx="2" ry="2.2" fill="#1f1410"/>
+      <ellipse cx="60" cy="46" rx="2" ry="2.2" fill="#1f1410"/>
+      <!-- furrow -->
+      <path d="M44 38 L 50 42 L 56 38" stroke="#1f1410" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- nose -->
+      <path d="M50 46 Q 48 53 52 55" stroke="#925f43" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      <!-- mustache -->
+      <path d="M40 58 Q 50 62 60 58 Q 56 56 50 56 Q 44 56 40 58 Z" fill="#1f1410"/>
+      <!-- frown mouth -->
+      <path d="M44 64 Q 50 60 56 64" stroke="#5a1818" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Boss — shirt + tie, frustrated -->
+    <symbol id="por-boss" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#eef0f5"/>
+      <!-- shirt -->
+      <path d="M5 100 Q 10 70 30 65 L 70 65 Q 90 70 95 100 Z" fill="#dadfe7"/>
+      <!-- collar -->
+      <path d="M40 65 L 50 76 L 60 65 L 56 65 L 50 73 L 44 65 Z" fill="#fff"/>
+      <!-- tie -->
+      <path d="M48 65 L 52 65 L 54 80 L 50 95 L 46 80 Z" fill="#c0322b"/>
+      <!-- neck -->
+      <rect x="42" y="56" width="16" height="14" fill="#ddb38c"/>
+      <!-- face -->
+      <ellipse cx="50" cy="42" rx="22" ry="26" fill="#e8c19a"/>
+      <!-- hair receding -->
+      <path d="M30 28 Q 50 18 70 28 L 70 34 Q 50 28 30 34 Z" fill="#3a2a1a"/>
+      <path d="M28 42 Q 25 30 30 26 L 30 36 Q 28 40 28 42 Z" fill="#3a2a1a"/>
+      <path d="M72 42 Q 75 30 70 26 L 70 36 Q 72 40 72 42 Z" fill="#3a2a1a"/>
+      <!-- glasses -->
+      <circle cx="40" cy="44" r="6" stroke="#1f1410" stroke-width="1.5" fill="rgba(255,255,255,.3)"/>
+      <circle cx="60" cy="44" r="6" stroke="#1f1410" stroke-width="1.5" fill="rgba(255,255,255,.3)"/>
+      <line x1="46" y1="44" x2="54" y2="44" stroke="#1f1410" stroke-width="1.5"/>
+      <ellipse cx="40" cy="45" rx="1.6" ry="1.8" fill="#1f1410"/>
+      <ellipse cx="60" cy="45" rx="1.6" ry="1.8" fill="#1f1410"/>
+      <!-- frown brows -->
+      <path d="M34 36 L 44 38" stroke="#1f1410" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M56 38 L 66 36" stroke="#1f1410" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- mouth flat-frown -->
+      <path d="M42 60 Q 50 56 58 60" stroke="#5a1818" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    </symbol>
+
+    <!-- Friendly Uncle — glasses, smile -->
+    <symbol id="por-uncle" viewBox="0 0 100 100">
+      <rect width="100" height="100" fill="#fff4e1"/>
+      <!-- shirt off-white -->
+      <path d="M5 100 Q 10 70 30 65 L 70 65 Q 90 70 95 100 Z" fill="#f0e6d2"/>
+      <!-- shawl -->
+      <path d="M28 70 Q 50 80 72 70 L 70 90 Q 50 95 30 90 Z" fill="#c9a96e" opacity=".7"/>
+      <rect x="42" y="56" width="16" height="14" fill="#c98e6b"/>
+      <ellipse cx="50" cy="42" rx="22" ry="26" fill="#d99c75"/>
+      <!-- white hair -->
+      <path d="M28 36 Q 25 18 50 16 Q 75 18 72 36 Q 70 26 65 22 L 35 22 Q 30 26 28 36 Z" fill="#e8e4dc"/>
+      <!-- glasses -->
+      <circle cx="40" cy="44" r="6" stroke="#1f1410" stroke-width="1.5" fill="rgba(255,255,255,.3)"/>
+      <circle cx="60" cy="44" r="6" stroke="#1f1410" stroke-width="1.5" fill="rgba(255,255,255,.3)"/>
+      <line x1="46" y1="44" x2="54" y2="44" stroke="#1f1410" stroke-width="1.5"/>
+      <!-- friendly eyes -->
+      <path d="M37 44 Q 40 46 43 44" stroke="#1f1410" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M57 44 Q 60 46 63 44" stroke="#1f1410" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- nose -->
+      <path d="M50 48 Q 48 54 52 56" stroke="#925f43" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <!-- smile -->
+      <path d="M40 60 Q 50 68 60 60" stroke="#5a1818" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- mustache (white) -->
+      <path d="M40 58 Q 50 60 60 58 Q 56 56 50 56 Q 44 56 40 58 Z" fill="#bdb6a8"/>
+    </symbol>
+
+  </defs>
+</svg>
+
+<script>
+  // -------- portrait injection
+  // Rithika & conductor use the character strip images (close-up = pose 3).
+  // Boss & uncle still use the inline SVG symbols.
+  const PORTRAIT_IMG = {
+    'rithika':     { src: 'rithika.png',    cls: 'por-rithika' },
+    'rithika-sad': { src: 'rithika.png',    cls: 'por-rithika' },
+    'conductor':   { src: 'conductor.png',  cls: 'por-conductor' },
+  };
+  document.querySelectorAll('[data-portrait]').forEach(el => {
+    const id = el.getAttribute('data-portrait');
+    const img = PORTRAIT_IMG[id];
+    if (img) {
+      el.innerHTML = `<div class="char-portrait-img ${img.cls}" style="background-image: url('${img.src}');"></div>`;
+    } else {
+      el.innerHTML = `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"><use href="#por-${id}"/></svg>`;
+    }
+  });
+
+  // -------- scene state machine
+  const scenes = Array.from(document.querySelectorAll('.scene'));
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const hint = document.getElementById('hint');
+
+  let sceneIdx = 0;
+  let stageIdx = 0;
+
+  function totalStages(scene) {
+    return parseInt(scene.getAttribute('data-stages') || '1', 10);
+  }
+
+  function applyStage(scene, stage) {
+    scene.querySelectorAll('[data-show]').forEach(el => {
+      const need = parseInt(el.getAttribute('data-stage') || '0', 10);
+      const delay = parseInt(el.getAttribute('data-delay') || '0', 10);
+      if (stage >= need) {
+        if (!el.classList.contains('in')) {
+          setTimeout(() => el.classList.add('in'), delay);
+        }
+      } else {
+        el.classList.remove('in');
+      }
+    });
+  }
+
+  function setActive(idx, stage = 0) {
+    scenes.forEach((s, i) => {
+      if (i === idx) {
+        s.classList.add('active');
+      } else {
+        s.classList.remove('active');
+        // reset reveals so re-entering replays nicely
+        s.querySelectorAll('[data-show]').forEach(el => el.classList.remove('in'));
+      }
+    });
+    sceneIdx = idx;
+    stageIdx = stage;
+    applyStage(scenes[idx], stage);
+    counter.textContent = String(idx + 1).padStart(2, '0') + ' / ' + String(scenes.length).padStart(2, '0');
+    const total = scenes.reduce((a, s) => a + totalStages(s), 0);
+    let done = 0;
+    for (let i = 0; i < idx; i++) done += totalStages(scenes[i]);
+    done += stage + 1;
+    progress.style.width = Math.min(100, (done / total) * 100) + '%';
+
+    // hide hint after scene 0 stage 1
+    if (idx === 0 && stage === 0) hint.style.opacity = '.7';
+    else hint.style.opacity = '.4';
+    if (idx === scenes.length - 1 && stage === totalStages(scenes[idx]) - 1) {
+      hint.textContent = '— end —';
+    } else {
+      hint.textContent = 'Click anywhere · or press →';
+    }
+  }
+
+  function next() {
+    const cur = scenes[sceneIdx];
+    const max = totalStages(cur) - 1;
+    if (stageIdx < max) {
+      stageIdx += 1;
+      applyStage(cur, stageIdx);
+      const total = scenes.reduce((a, s) => a + totalStages(s), 0);
+      let done = 0;
+      for (let i = 0; i < sceneIdx; i++) done += totalStages(scenes[i]);
+      done += stageIdx + 1;
+      progress.style.width = Math.min(100, (done / total) * 100) + '%';
+    } else if (sceneIdx < scenes.length - 1) {
+      setActive(sceneIdx + 1, 0);
+    }
+  }
+
+  function prev() {
+    if (stageIdx > 0) {
+      stageIdx -= 1;
+      // hard reset and re-apply to allow reverse
+      scenes[sceneIdx].querySelectorAll('[data-show]').forEach(el => el.classList.remove('in'));
+      applyStage(scenes[sceneIdx], stageIdx);
+    } else if (sceneIdx > 0) {
+      const newIdx = sceneIdx - 1;
+      setActive(newIdx, totalStages(scenes[newIdx]) - 1);
+    }
+  }
+
+  // boot
+  setActive(0, 0);
+
+  // input
+  document.getElementById('deck').addEventListener('click', next);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'Enter') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { setActive(0, 0); }
+    else if (e.key === 'End') { setActive(scenes.length - 1, totalStages(scenes[scenes.length - 1]) - 1); }
+  });
+</script>
+</body>
+</html>

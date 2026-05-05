@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>allrides · SISFS Pitch Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/chart.js@4.4.1/dist/chart.umd.min.js'"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  }
+  :root {
+    --bg:        #f7f7f5;
+    --surface:   #ffffff;
+    --surface-2: #fbfbf9;
+    --ink:       #0e0e10;
+    --ink-2:     #2b2b30;
+    --muted:     #6b6b75;
+    --muted-2:   #9b9ba5;
+    --line:      rgba(14, 14, 16, 0.08);
+    --line-2:    rgba(14, 14, 16, 0.04);
+    --accent:    #6E13EF;
+    --accent-soft: rgba(110, 19, 239, 0.08);
+    --accent-2:  #0a8a5b;
+    --warn:      #d97706;
+    --danger:    #c0322b;
+    --shadow-1:  0 1px 2px rgba(14,14,16,.04), 0 4px 16px rgba(14,14,16,.04);
+    --shadow-2:  0 8px 30px rgba(14,14,16,.08), 0 2px 6px rgba(14,14,16,.04);
+    --radius:    18px;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink); background: #0a0a0a;
+    line-height: 1.5;
+  }
+
+  /* ---------- Stage / Canvas scaler ---------- */
+  .stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: #0a0a0a;
+  }
+  .deck {
+    width: 1920px; height: 1080px;
+    position: relative; flex-shrink: 0;
+    background: var(--bg);
+    transform: scale(min(calc(100vw / 1920), calc(100vh / 1080)));
+    transform-origin: center;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .slide {
+    position: absolute; inset: 0;
+    width: 1920px; height: 1080px;
+    padding: 80px 96px 80px 96px;
+    display: none;
+    flex-direction: column;
+    gap: 28px;
+    background: var(--bg);
+  }
+  .slide.active { display: flex; }
+  .slide-num {
+    position: absolute; top: 36px; right: 48px;
+    font-family: 'JetBrains Mono', monospace; font-size: 16px;
+    color: var(--muted-2); letter-spacing: .12em; font-weight: 500;
+  }
+  .slide-foot {
+    position: absolute; bottom: 32px; left: 96px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--muted-2); letter-spacing: .08em;
+  }
+  .slide-eyebrow {
+    font-size: 16px; letter-spacing: .16em; color: var(--accent); text-transform: uppercase; font-weight: 600;
+  }
+  .slide-title {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 64px; letter-spacing: -0.02em; line-height: 1.05;
+    margin-top: 4px;
+  }
+  .slide-lede {
+    color: var(--muted); margin-top: 10px; max-width: 1100px; font-size: 22px;
+  }
+
+  /* ---------- Reusable atoms ---------- */
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow-1); padding: 28px 32px;
+  }
+  .card-tight { padding: 22px 26px; }
+  .card-flush { padding: 0; }
+  .card h3 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 26px; letter-spacing: -0.01em; }
+  .card p { color: var(--ink-2); font-size: 18px; }
+  .label { font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; }
+  .grid-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--line);
+    padding: 10px 18px; border-radius: 999px; font-size: 16px;
+  }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .tag {
+    display: inline-block; font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px;
+    font-weight: 600;
+  }
+  .tag.accent { color: var(--accent); border-color: rgba(110,19,239,.25); background: var(--accent-soft); }
+  .tag.good { color: var(--accent-2); border-color: rgba(10,138,91,.25); background: rgba(10,138,91,.08); }
+  .tag.warn { color: var(--warn); border-color: rgba(217,119,6,.25); background: rgba(217,119,6,.08); }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Tables */
+  table.fin {
+    width: 100%; border-collapse: separate; border-spacing: 0; font-size: 17px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.fin th, table.fin td {
+    padding: 14px 18px; text-align: right; border-bottom: 1px solid var(--line-2);
+    white-space: nowrap;
+  }
+  table.fin th:first-child, table.fin td:first-child { text-align: left; }
+  table.fin thead th {
+    background: var(--surface-2); font-weight: 600; font-size: 13.5px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; border-bottom: 1px solid var(--line);
+  }
+  table.fin tr.total-row td {
+    background: #f0ecfb; color: var(--ink); font-weight: 700;
+    border-top: 1px solid rgba(110,19,239,.18); border-bottom: 1px solid rgba(110,19,239,.18);
+  }
+  table.fin tr.summary td { background: var(--surface-2); font-weight: 600; }
+  table.fin .num-pos { color: var(--accent-2); }
+  table.fin .num-neg { color: var(--danger); }
+
+  .kpi {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px 26px; box-shadow: var(--shadow-1);
+  }
+  .kpi.accent { background: linear-gradient(135deg, #fbf7ff 0%, #fff 100%); border-color: rgba(110,19,239,.16); }
+  .kpi-label { font-size: 13.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .kpi-value {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 42px; letter-spacing: -0.02em;
+    margin-top: 8px; line-height: 1.0;
+  }
+  .kpi-unit { font-size: 15px; color: var(--muted); margin-top: 6px; }
+
+  /* ---------- Slide 1 (Cover) ---------- */
+  .cover {
+    align-items: center; justify-content: center; text-align: center;
+    background: radial-gradient(ellipse at center, #fbf7ff 0%, var(--bg) 70%);
+  }
+  .cover-logo {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 200px; letter-spacing: -0.05em; line-height: 1.0;
+  }
+  .cover-logo em { font-style: italic; color: var(--accent); }
+  .cover-company { font-size: 26px; color: var(--muted); margin-top: 18px; }
+  .cover-tagline {
+    font-family: 'Fraunces', serif; font-weight: 400; font-style: italic; font-size: 32px;
+    color: var(--ink-2); margin: 64px auto 0; max-width: 1240px; line-height: 1.45;
+  }
+  .cover-meta {
+    margin-top: 80px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px;
+    font-size: 18px; color: var(--muted);
+  }
+  .cover-meta b { color: var(--ink-2); font-weight: 500; }
+
+  /* ---------- Problem (Slide 2) ---------- */
+  .stat-headline {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 86px; letter-spacing: -0.025em; line-height: 1.02;
+  }
+  .stat-headline em { font-style: italic; color: var(--accent); }
+  .pain-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .pain-item {
+    border-left: 3px solid var(--accent); background: var(--surface-2); padding: 14px 18px;
+    border-radius: 0 12px 12px 0; font-size: 17px;
+  }
+  .pain-item.warn { border-left-color: var(--warn); }
+  .pain-item b { color: var(--ink); }
+
+  .compare-strip {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+    background: var(--surface);
+  }
+  .compare-strip > div { padding: 22px 28px; }
+  .compare-strip .from { background: var(--surface-2); }
+  .compare-strip .to { background: var(--surface); border-left: 1px solid var(--line); }
+  .compare-row { font-size: 17px; }
+  .compare-row + .compare-row { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line-2); }
+  .compare-strip .label { font-size: 13.5px; letter-spacing: .12em; }
+  .compare-strip .from .label { color: var(--muted); }
+  .compare-strip .to .label { color: var(--accent); }
+
+  /* ---------- Product surfaces (Slide 4) ---------- */
+  .quad-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .quad {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 20px 22px; box-shadow: var(--shadow-1);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .quad h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 19px; letter-spacing: -0.01em; }
+  .quad .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .quad p { color: var(--ink-2); font-size: 14px; line-height: 1.4; }
+
+  /* ---------- Why this matters (Slide 4) ---------- */
+  .matters-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+    flex: 1; min-height: 0;
+  }
+  .matter-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 18px; padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 12px;
+    box-shadow: var(--shadow-1);
+  }
+  .matter-head { display: flex; align-items: center; gap: 14px; }
+  .matter-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .matter-icon svg { width: 28px; height: 28px; }
+  .matter-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: .14em; color: var(--accent); font-weight: 600;
+    text-transform: uppercase;
+  }
+  .matter-h {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 26px;
+    letter-spacing: -.015em; line-height: 1.15; color: var(--ink);
+  }
+  .matter-card p { font-size: 14.5px; color: var(--ink-2); line-height: 1.55; }
+  .matter-pull {
+    margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line-2);
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .matter-pull-num {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px;
+    letter-spacing: -.015em; color: var(--accent); line-height: 1;
+  }
+  .matter-pull-lbl {
+    font-size: 12.5px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .12em; font-weight: 600;
+  }
+
+  /* ---------- Technology capability tiles (legacy / unused) ---------- */
+  .tech-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .tech-tile {
+    background: linear-gradient(135deg, #fbf7ff 0%, var(--surface) 100%);
+    border: 1px solid rgba(110,19,239,.18); border-radius: var(--radius);
+    padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 10px;
+    box-shadow: var(--shadow-1);
+  }
+  .tech-icon-box {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tech-icon-box svg { width: 22px; height: 22px; }
+  .tech-name {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 18px;
+    letter-spacing: -0.005em; color: var(--ink);
+  }
+  .tech-tile p { color: var(--ink-2); font-size: 14px; line-height: 1.45; }
+
+  .arch {
+    display: flex; align-items: center; justify-content: center; gap: 14px; padding: 8px;
+  }
+  .arch-node {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 22px; min-width: 160px; text-align: center;
+    box-shadow: var(--shadow-1); font-weight: 500; font-size: 16px;
+  }
+  .arch-node .node-sub { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 400; }
+  .arch-arrow { color: var(--accent); font-size: 22px; font-weight: 700; }
+
+  /* ---------- Business model (Slide 4) ---------- */
+  .stream-col {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px 30px; display: flex; flex-direction: column; gap: 12px;
+    box-shadow: var(--shadow-1);
+  }
+  .stream-col.featured { border-color: rgba(110,19,239,.3); box-shadow: 0 0 0 4px var(--accent-soft), var(--shadow-1); }
+  .stream-name { font-family: 'Fraunces', serif; font-size: 28px; letter-spacing: -.01em; font-weight: 500; }
+  .stream-mech { color: var(--muted); font-size: 16px; }
+  .stream-amount {
+    font-family: 'Fraunces', serif; font-size: 52px; letter-spacing: -.02em; font-weight: 500;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+    color: var(--accent); line-height: 1.0;
+  }
+  .stream-amount-sub { font-size: 14px; color: var(--muted); }
+
+  /* ---------- Funnel (Slide 5) ---------- */
+  .funnel { display: flex; flex-direction: column; gap: 10px; }
+  .funnel-step {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .funnel-step.highlight {
+    border-color: rgba(110,19,239,.3); background: linear-gradient(135deg, #fbf7ff 0%, #fff 100%);
+  }
+  .funnel-step .stage-label {
+    font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600;
+  }
+  .funnel-step .name { font-size: 16.5px; color: var(--ink-2); }
+  .funnel-step .num { font-family: 'Fraunces', serif; font-size: 32px; letter-spacing: -.01em; }
+  .funnel-step.highlight .num { color: var(--accent); }
+
+  /* ---------- GTM phases (Slide 6) ---------- */
+  .phase-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .phase {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px 28px; box-shadow: var(--shadow-1);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .phase .phase-num {
+    font-family: 'Fraunces', serif; font-size: 48px; letter-spacing: -.02em; font-weight: 500;
+    color: var(--accent); line-height: 1.0;
+  }
+  .phase h4 { font-family: 'Fraunces', serif; font-weight: 500; font-size: 22px; letter-spacing: -.01em; }
+  .phase ul { list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 16px; color: var(--ink-2); }
+  .phase ul li::before { content: '·'; color: var(--accent); margin-right: 8px; font-weight: 700; }
+  .phase .target {
+    background: var(--surface-2); border-radius: 10px; padding: 10px 14px;
+    font-size: 15px; color: var(--ink); font-weight: 500; margin-top: auto;
+  }
+  .phase .target b { color: var(--accent); }
+
+  .insight {
+    border-left: 4px solid var(--accent); background: var(--surface);
+    padding: 18px 26px; border-radius: 0 var(--radius) var(--radius) 0;
+    font-size: 17.5px; color: var(--ink-2);
+  }
+  .insight b { color: var(--accent); }
+
+  /* ---------- Traction (Slide 7) ---------- */
+  .timeline {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .timeline-row {
+    display: grid; grid-template-columns: 130px 1fr; gap: 18px;
+    padding: 14px 24px; border-bottom: 1px solid var(--line-2);
+    font-size: 16px;
+  }
+  .timeline-row:last-child { border-bottom: none; }
+  .timeline-month { color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: .04em; }
+  .timeline-event b { color: var(--ink); }
+  .photo-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+  .photo-tile {
+    aspect-ratio: 4/3; border-radius: 12px; overflow: hidden;
+    position: relative; background: var(--surface-2);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-1);
+  }
+  .photo-tile img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .photo-tile .caption {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 10px 14px; font-size: 12.5px; color: #fff; font-weight: 500;
+    background: linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 70%, transparent 100%);
+    letter-spacing: .02em;
+  }
+  .honest {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 26px; font-size: 17px; color: var(--ink-2); font-style: italic;
+  }
+
+  /* ---------- Competition map (Slide 8) ---------- */
+  .map-wrap {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 28px; box-shadow: var(--shadow-1);
+  }
+  .map-2x2 {
+    position: relative; aspect-ratio: 1.4 / 1; max-width: 100%;
+    background:
+      linear-gradient(to right, transparent 49.6%, var(--line) 49.6%, var(--line) 50.4%, transparent 50.4%),
+      linear-gradient(to bottom, transparent 49.6%, var(--line) 49.6%, var(--line) 50.4%, transparent 50.4%),
+      var(--surface-2);
+    border: 1px solid var(--line); border-radius: 12px;
+  }
+  .map-2x2 .axis-label {
+    position: absolute; font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted-2); font-weight: 600;
+  }
+  .map-2x2 .axis-x-l { bottom: 10px; left: 16px; }
+  .map-2x2 .axis-x-r { bottom: 10px; right: 16px; text-align: right; }
+  .map-2x2 .axis-y-t { top: 10px; left: 50%; transform: translateX(-50%); }
+  .map-2x2 .axis-y-b { bottom: 10px; left: 50%; transform: translateX(-50%); }
+  .map-pin {
+    position: absolute; transform: translate(-50%, -50%);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 16px; font-size: 15px; font-weight: 500;
+    box-shadow: var(--shadow-1); white-space: nowrap;
+  }
+  .map-pin.us {
+    background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600;
+  }
+  .map-pin.us::before {
+    content: ''; position: absolute; inset: -8px; border-radius: 999px;
+    border: 2px solid var(--accent); opacity: 0.3;
+  }
+
+  /* Competitive capability matrix (Slide 9) */
+  .comp-matrix {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px 24px; box-shadow: var(--shadow-1);
+    display: flex; flex-direction: column;
+  }
+  .comp-matrix-table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .comp-matrix-table th, .comp-matrix-table td {
+    padding: 12px 10px; text-align: center; border-bottom: 1px solid var(--line-2);
+    font-size: 14px;
+  }
+  .comp-matrix-table thead th {
+    font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    padding-top: 6px; padding-bottom: 12px;
+  }
+  .comp-matrix-table th.cap {
+    text-align: left; font-weight: 500; color: var(--ink-2);
+    font-size: 14px; text-transform: none; letter-spacing: 0;
+  }
+  .comp-matrix-table thead th.us-col {
+    color: var(--accent); background: var(--accent-soft); border-radius: 10px 10px 0 0;
+  }
+  .comp-matrix-table tbody td.us-col {
+    background: rgba(110,19,239,0.06);
+  }
+  .comp-matrix-table tbody tr:last-child td.us-col {
+    border-radius: 0 0 10px 10px;
+  }
+  .cell-yes, .cell-no, .cell-partial {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; line-height: 1;
+  }
+  .cell-yes { background: rgba(10,138,91,.12); color: var(--accent-2); }
+  .cell-yes.us { background: var(--accent); color: #fff; }
+  .cell-no { background: var(--surface-2); color: var(--muted-2); font-size: 16px; }
+  .cell-partial { background: rgba(217,119,6,.12); color: var(--warn); font-size: 18px; }
+
+  /* ---------- OpEx bar (Slide 9) ---------- */
+  .opex-bar { display: flex; flex-direction: column; gap: 10px; }
+  .opex-row {
+    display: grid; grid-template-columns: 220px 1fr 130px; gap: 16px; align-items: center;
+    font-size: 15.5px;
+  }
+  .opex-row .opex-track {
+    height: 10px; background: var(--surface-2); border-radius: 999px; overflow: hidden;
+  }
+  .opex-row .opex-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+  .opex-row .opex-amt { text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 14.5px; }
+
+  /* ---------- Funding (Slide 10) ---------- */
+  .runway {
+    background: linear-gradient(135deg, #f0ecfb 0%, #fbf7ff 100%);
+    border: 1px solid rgba(110,19,239,.18); border-radius: var(--radius);
+    padding: 22px 28px;
+  }
+
+  /* ---------- Team (Slide 11) ---------- */
+  .team-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .team-tile {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 22px; box-shadow: var(--shadow-1);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .team-photo {
+    aspect-ratio: 1; background: linear-gradient(135deg, #f0ecfb, var(--surface-2));
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 38px; color: var(--accent); font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .team-name { font-weight: 600; font-size: 18px; }
+  .team-role { font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .team-bio { font-size: 14px; color: var(--ink-2); line-height: 1.5; flex: 1; }
+  .team-equity {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);
+    padding-top: 10px; border-top: 1px solid var(--line-2);
+  }
+
+  /* ---------- Exit (Slide 13) ---------- */
+  .exit-col {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; display: flex; flex-direction: column; gap: 12px;
+    box-shadow: var(--shadow-1);
+  }
+  .exit-col h4 { font-family: 'Fraunces', serif; font-size: 22px; letter-spacing: -.01em; font-weight: 500; }
+  .exit-col .acquirers {
+    display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0;
+  }
+  .exit-col .acquirers span {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px; font-size: 14px; color: var(--ink-2); font-weight: 500;
+  }
+
+  /* ---------- Problem two-column hero (Slide 2) ---------- */
+  .problem-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    flex: 1; min-height: 0;
+  }
+  .problem-col {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 18px; padding: 30px 36px;
+    display: flex; flex-direction: column; gap: 14px;
+    box-shadow: var(--shadow-1);
+    position: relative; overflow: hidden;
+  }
+  .problem-col.operator {
+    background: linear-gradient(135deg, #fff8ef 0%, var(--surface) 65%);
+    border-color: rgba(217,119,6,.18);
+  }
+  .problem-col.rider {
+    background: linear-gradient(135deg, #fbf7ff 0%, var(--surface) 65%);
+    border-color: rgba(110,19,239,.18);
+  }
+  .problem-icon {
+    width: 72px; height: 72px; border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .problem-col.operator .problem-icon { background: rgba(217,119,6,.1); color: var(--warn); }
+  .problem-col.rider    .problem-icon { background: var(--accent-soft);   color: var(--accent); }
+  .problem-icon svg { width: 40px; height: 40px; }
+  .problem-h {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 34px;
+    letter-spacing: -.02em; line-height: 1.12; color: var(--ink);
+  }
+  .problem-detail {
+    display: flex; flex-direction: column; gap: 14px;
+    margin-top: 14px; padding-top: 28px; border-top: 1px solid var(--line-2);
+  }
+  .problem-pt {
+    display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: baseline;
+  }
+  .pt-num {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 26px;
+    letter-spacing: -.02em; line-height: 1.0; color: var(--ink); white-space: nowrap;
+  }
+  .problem-col.operator .pt-num { color: var(--warn); }
+  .problem-col.rider    .pt-num { color: var(--accent); }
+  .pt-text { font-size: 14.5px; color: var(--muted); line-height: 1.5; }
+
+  /* Bottom industry-scale strip */
+  .scale-strip {
+    display: flex; justify-content: center; align-items: baseline; gap: 22px;
+    padding: 16px 28px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  }
+  .scale-item { display: flex; align-items: baseline; gap: 10px; }
+  .scale-num {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 28px;
+    letter-spacing: -.02em; line-height: 1.0; color: var(--ink);
+  }
+  .scale-item.accent .scale-num { color: var(--accent); }
+  .scale-lbl {
+    font-size: 12.5px; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .14em; font-weight: 600;
+  }
+  .scale-sep { font-family: 'Fraunces', serif; font-size: 22px; color: var(--muted-2); font-weight: 300; }
+
+  /* ---------- How it works (Slide 3) ---------- */
+  .hiw-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 30px 32px; box-shadow: var(--shadow-1);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .hiw-icon {
+    width: 100px; height: 100px; border-radius: 24px;
+    background: linear-gradient(135deg, #f0ecfb, #fbf7ff);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .hiw-icon svg { width: 60px; height: 60px; }
+  .hiw-title {
+    font-family: 'Fraunces', serif; font-weight: 500; font-size: 28px; letter-spacing: -.01em;
+  }
+  .hiw-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+  .hiw-step {
+    display: flex; align-items: flex-start; gap: 14px; font-size: 17px; color: var(--ink-2);
+    line-height: 1.45;
+  }
+  .hiw-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--accent-soft);
+    color: var(--accent); display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; flex-shrink: 0; margin-top: 1px;
+  }
+  .hiw-benefits {
+    margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line-2);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .hiw-benefit {
+    display: flex; align-items: center; gap: 10px; font-size: 15.5px; color: var(--ink-2);
+  }
+  .hiw-benefit::before {
+    content: '✓'; color: var(--accent-2); font-weight: 700; font-size: 15px;
+    display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center;
+    background: rgba(10,138,91,.1); border-radius: 50%; flex-shrink: 0;
+  }
+  .hiw-mode {
+    background: var(--surface-2); border: 1px solid var(--line-2);
+    border-radius: 12px; padding: 12px 14px;
+  }
+  .hiw-mode + .hiw-mode { margin-top: 8px; }
+  .hiw-mode-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 8px;
+  }
+  .hiw-mode-tag::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  }
+  .hiw-mode .hiw-steps { gap: 7px; margin-top: 0; }
+  .hiw-mode .hiw-step { font-size: 14.5px; line-height: 1.35; }
+  .hiw-mode .hiw-num { width: 22px; height: 22px; font-size: 12px; margin-top: 0; }
+
+  /* ---------- Charts ---------- */
+  .chart-box { position: relative; width: 100%; height: 320px; }
+
+  /* ---------- Nav / floating buttons ---------- */
+  .nav-btn {
+    position: fixed; top: 50%; transform: translateY(-50%); z-index: 60;
+    width: 56px; height: 56px; border-radius: 999px; border: 1px solid rgba(255,255,255,.15);
+    background: rgba(20,20,22,.7); color: #fff; font-size: 22px;
+    backdrop-filter: blur(10px); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .nav-btn:hover { background: rgba(110,19,239,.85); border-color: var(--accent); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-prev { left: 24px; }
+  .nav-next { right: 24px; }
+
+  /* Floating menu */
+  .menu-btn {
+    position: fixed; right: 28px; bottom: 28px; z-index: 70;
+    width: 56px; height: 56px; border-radius: 999px;
+    background: var(--accent); color: #fff; border: none;
+    box-shadow: 0 12px 32px rgba(110,19,239,.4), 0 4px 12px rgba(0,0,0,.2);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: transform .2s ease;
+  }
+  .menu-btn:hover { transform: scale(1.05); }
+  .menu-btn svg { width: 22px; height: 22px; }
+  .menu-btn.open { transform: rotate(90deg); }
+
+  .menu-panel {
+    position: fixed; right: 28px; bottom: 96px; z-index: 70;
+    width: 360px; max-height: 70vh; overflow-y: auto;
+    background: rgba(255,255,255,.98); backdrop-filter: blur(14px);
+    border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25), 0 4px 12px rgba(0,0,0,.08);
+    padding: 14px;
+    transform: translateY(8px) scale(0.96); opacity: 0; pointer-events: none;
+    transform-origin: bottom right;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  .menu-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: auto; }
+  .menu-panel h4 {
+    font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500; padding: 6px 10px 10px;
+    letter-spacing: -.01em; border-bottom: 1px solid var(--line-2); margin-bottom: 6px;
+  }
+  .menu-panel a {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border-radius: 8px; cursor: pointer; color: var(--ink-2); font-size: 14px;
+    text-decoration: none; transition: background .12s ease;
+  }
+  .menu-panel a:hover { background: var(--surface-2); color: var(--ink); }
+  .menu-panel a.active { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+  .menu-panel a .num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: var(--muted-2); width: 24px; flex-shrink: 0;
+  }
+  .menu-panel a.active .num { color: var(--accent); }
+  .menu-panel .divider { height: 1px; background: var(--line-2); margin: 8px 0; }
+  .menu-panel .ext-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-radius: 8px; color: var(--ink-2); font-size: 14px;
+  }
+  .menu-panel .ext-link:hover { background: var(--surface-2); }
+  .menu-panel .ext-link .arr { color: var(--muted-2); }
+
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="deck" id="deck">
+
+    <!-- ======================== SLIDE 1 — COVER ======================== -->
+    <section class="slide cover" data-slide="1">
+      <div class="slide-num">01 / 11</div>
+      <div style="display:flex; flex-direction:column; align-items:center;">
+        <div class="cover-logo">all<em>rides</em></div>
+        <div class="cover-company">by Urbanfolks Mobility Private Limited</div>
+        <div class="cover-tagline">"Digital infrastructure for 36 Million daily commuters of India"</div>
+        <div class="cover-meta">
+          <span><b>Kerala</b></span>
+          <span>·</span>
+          <span><b>contact@urbanfolksmobility.in</b></span>
+          <span>·</span>
+          <span><b>+91-90747-23247</b></span>
+          <span>·</span>
+          <span><b>www.bus.allrides.in</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== SLIDE 2 — PROBLEM ======================== -->
+    <section class="slide" data-slide="2">
+      <div class="slide-num">02 / 11</div>
+      <div>
+        <div class="slide-eyebrow">The problem</div>
+        <h2 class="slide-title">Cash makes everyone smaller.</h2>
+        <p class="slide-lede">On every bus, every trip — operator and rider both lose to a system that runs on small change.</p>
+      </div>
+
+      <div class="scale-strip">
+        <div class="scale-item">
+          <span class="scale-num">1,80,000</span>
+          <span class="scale-lbl">private SC buses</span>
+        </div>
+        <span class="scale-sep">×</span>
+        <div class="scale-item">
+          <span class="scale-num">₹54,000 cr</span>
+          <span class="scale-lbl">annual fares</span>
+        </div>
+        <span class="scale-sep">·</span>
+        <div class="scale-item accent">
+          <span class="scale-num">90%</span>
+          <span class="scale-lbl">still Offline</span>
+        </div>
+      </div>
+
+      <div class="problem-cols">
+
+        <!-- The Rider panel (now on left) -->
+        <div class="problem-col rider">
+          <div class="problem-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="32" cy="17" r="7"/>
+              <path d="M32 24 v14"/>
+              <path d="M32 38 l-9 18 M32 38 l9 18"/>
+              <path d="M32 30 l11 -3 M32 30 l-11 -3"/>
+              <circle cx="14" cy="26" r="2.5"/>
+              <path d="M14 21 v-2 M14 30 v-1 M11 26 h-2 M16 26 h2"/>
+            </svg>
+          </div>
+          <div class="tag accent">The Rider</div>
+          <h3 class="problem-h">Waits long. Pays cash. Plans nothing.</h3>
+          <div class="problem-detail">
+            <div class="problem-pt">
+              <div class="pt-num">~80 hrs/yr</div>
+              <div class="pt-text">Lost waiting at the bus stop — that's two working weeks gone. Schedules are patchy and inaccessible; no live tracking, no certainty when choosing between transit options.</div>
+            </div>
+            <div class="problem-pt">
+              <div class="pt-num">₹1–2/ride</div>
+              <div class="pt-text">Silently lost to "no change" — exact-change fumbling at the door, daily disputes, minutes wasted on every trip.</div>
+            </div>
+            <div class="problem-pt">
+              <div class="pt-num">No pass</div>
+              <div class="pt-text">Daily struggle— no monthly bundle for daily routes, no predictable transit spend, no loyalty.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Operator panel (now on right) -->
+        <div class="problem-col operator">
+          <div class="problem-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="13" width="46" height="32" rx="4"/>
+              <path d="M13 22 h38"/>
+              <path d="M21 28 v12 M32 28 v12 M43 28 v12"/>
+              <circle cx="20" cy="50" r="3.5"/>
+              <circle cx="44" cy="50" r="3.5"/>
+              <path d="M9 31 h-3 M55 31 h3"/>
+            </svg>
+          </div>
+          <div class="tag warn">The Operator</div>
+          <h3 class="problem-h">Loses 1 in 5 rupees.<br/>Has no profile to fix it.</h3>
+          <div class="problem-detail">
+            <div class="problem-pt">
+              <div class="pt-num">15–25%</div>
+              <div class="pt-text">Revenue leakage to undeclared cash. No audit trail, no recovery — just quiet loss, every single day.</div>
+            </div>
+            <div class="problem-pt">
+              <div class="pt-num">₹0 record</div>
+              <div class="pt-text">No financial track record means invisible to lenders. No working capital, no vehicle loans, no way to grow the fleet.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="slide-foot">allrides · the problem</div>
+    </section>
+
+    <!-- ======================== SLIDE 3 — HOW IT WORKS ======================== -->
+    <section class="slide" data-slide="3">
+      <div class="slide-num">03 / 11</div>
+      <div>
+        <div class="slide-eyebrow">How it works</div>
+        <h2 class="slide-title">One ride. Three wins.</h2>
+        <p class="slide-lede">A commuter taps a QR. The platform settles the fare instantly — and changes how the conductor, owner, and rider experience the same trip.</p>
+      </div>
+
+      <div class="grid-3" style="flex:1">
+
+        <!-- The Commuter -->
+        <div class="hiw-card">
+          <div class="hiw-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="22" cy="13" r="6"/>
+              <path d="M22 21 v12"/>
+              <path d="M22 33 l-6 16 M22 33 l5 16"/>
+              <path d="M22 25 l8 -2"/>
+              <rect x="38" y="20" width="16" height="22" rx="2.5"/>
+              <rect x="41" y="24" width="10" height="11" rx="1"/>
+              <circle cx="46" cy="39" r="0.8" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="tag accent">The Commuter</div>
+          <h3 class="hiw-title">Scan, ride, done.</h3>
+          <div class="hiw-steps">
+            <div class="hiw-step"><span class="hiw-num">1</span><div>Open phone, scan the bus QR</div></div>
+            <div class="hiw-step"><span class="hiw-num">2</span><div>Pay the fare via UPI in 2 seconds</div></div>
+            <div class="hiw-step"><span class="hiw-num">3</span><div>Or scan a pre-bought monthly pass</div></div>
+          </div>
+          <div class="hiw-benefits">
+            <div class="hiw-benefit">No exact change to carry</div>
+            <div class="hiw-benefit">Daily-route monthly pass option</div>
+            <div class="hiw-benefit">Schedule data &amp; live bus tracking (approx.)</div>
+            <div class="hiw-benefit">Receipts &amp; ride history saved</div>
+          </div>
+        </div>
+
+        <!-- The Conductor -->
+        <div class="hiw-card">
+          <div class="hiw-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="22" cy="13" r="6"/>
+              <path d="M22 21 v10"/>
+              <path d="M22 31 l-6 16 M22 31 l5 16"/>
+              <path d="M22 24 l8 -1"/>
+              <rect x="34" y="18" width="18" height="24" rx="2.5"/>
+              <path d="M38 25 h10 M38 30 h7"/>
+              <circle cx="43" cy="36" r="2.5"/>
+              <path d="M42 36 l1 1 l2 -2.5"/>
+            </svg>
+          </div>
+          <div class="tag accent">The Conductor</div>
+          <h3 class="hiw-title">Confirm and move on.</h3>
+          <div class="hiw-mode">
+            <div class="hiw-mode-tag">QR mode</div>
+            <div class="hiw-steps">
+              <div class="hiw-step"><span class="hiw-num">1</span><div>Phone shows live trip dashboard</div></div>
+              <div class="hiw-step"><span class="hiw-num">2</span><div>Confirm each digital payment ping</div></div>
+            </div>
+          </div>
+          <div class="hiw-mode">
+            <div class="hiw-mode-tag">POS mode</div>
+            <div class="hiw-steps">
+              <div class="hiw-step"><span class="hiw-num">1</span><div>Tickets in one tap — rider already entered destination + passenger count and paid; conductor only prints</div></div>
+              <div class="hiw-step"><span class="hiw-num">2</span><div>No switching between phone and POS</div></div>
+              <div class="hiw-step"><span class="hiw-num">3</span><div>End-of-day report auto-generated</div></div>
+            </div>
+          </div>
+          <div class="hiw-benefits">
+            <div class="hiw-benefit">Reduced cash hassle</div>
+            <div class="hiw-benefit">Pass scans confirm without re-fare</div>
+            <div class="hiw-benefit">Clean handover at trip end</div>
+          </div>
+        </div>
+
+        <!-- The Owner -->
+        <div class="hiw-card">
+          <div class="hiw-icon">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="13" width="46" height="34" rx="3"/>
+              <path d="M17 39 v-7 M25 39 v-13 M33 39 v-19 M41 39 v-10 M49 39 v-15"/>
+              <path d="M13 43 h38"/>
+              <path d="M17 50 h30"/>
+            </svg>
+          </div>
+          <div class="tag accent">The Owner</div>
+          <h3 class="hiw-title">See every rupee, every route.</h3>
+          <div class="hiw-steps">
+            <div class="hiw-step"><span class="hiw-num">1</span><div>Open the dashboard at any time</div></div>
+            <div class="hiw-step"><span class="hiw-num">2</span><div>See live revenue per bus, per route</div></div>
+            <div class="hiw-step"><span class="hiw-num">3</span><div>Live-track every bus on the map</div></div>
+            <div class="hiw-step"><span class="hiw-num">4</span><div>T+1 settlement direct to bank</div></div>
+          </div>
+          <div class="hiw-benefits">
+            <div class="hiw-benefit">Enables accepting e-payments (UPI, cards, passes)</div>
+            <div class="hiw-benefit">15–25% revenue leakage closed</div>
+            <div class="hiw-benefit">Detailed reports auto-delivered via WhatsApp + app</div>
+           
+            <div class="hiw-benefit">Lending-ready financial profile</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="slide-foot">allrides · how it works</div>
+    </section>
+
+    <!-- ======================== SLIDE 4 — WHY THIS MATTERS ======================== -->
+    <section class="slide" data-slide="4">
+      <div class="slide-num">04 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Why this matters</div>
+        <h2 class="slide-title">Each digital fare moves four things forward.</h2>
+        <p class="slide-lede">Beyond the bus, every transaction adds a rupee to India's digital rail, makes an MSME lendable, brings a commuter to public transit, and formalizes a town into the economy.</p>
+      </div>
+
+      <div class="matters-grid">
+
+        <!-- Pillar 01: Digital economy -->
+        <div class="matter-card">
+          <div class="matter-head">
+            <div class="matter-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="6" y="2" width="12" height="20" rx="2"/>
+                <line x1="10" y1="19" x2="14" y2="19"/>
+                <path d="M9 7 h6 M9 10 h4 M11 10 c2 0 3 2 0 2 l-2 0 M13 12 l3 4"/>
+              </svg>
+            </div>
+            <div class="matter-eyebrow">01 · Digital economy</div>
+          </div>
+          <h3 class="matter-h">₹54,000 cr/yr — moved into the digital rail.</h3>
+          <p>India's largest un-digitised retail flow lives at bus stops. Every digital fare moves a rupee from informal cash into UPI — fueling the e-payments flywheel from a segment that's never been touched.</p>
+          <div class="matter-pull">
+            <span class="matter-pull-num">~₹14 cr/day</span>
+            <span class="matter-pull-lbl">Potential GMV — cash → digital</span>
+          </div>
+        </div>
+
+        <!-- Pillar 02: Mobility &amp; climate -->
+        <div class="matter-card">
+          <div class="matter-head">
+            <div class="matter-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="6" width="13" height="11" rx="2"/>
+                <line x1="4" y1="9" x2="13" y2="9"/>
+                <circle cx="5" cy="19" r="1.5"/>
+                <circle cx="12" cy="19" r="1.5"/>
+                <path d="M19 4 c2.5 0 3.5 2.5 3.5 5 c-2.5 0 -5 -1 -5 -4.5 z"/>
+                <path d="M19.5 12 q-1.5 -3 3 -8"/>
+              </svg>
+            </div>
+            <div class="matter-eyebrow">02 · Mobility &amp; climate</div>
+          </div>
+          <h3 class="matter-h">Buses people actually choose.</h3>
+          <p>When transit becomes predictable — live tracking, monthly passes, scan-and-go fares — commuters shift from cars and autos. Lower congestion. Lower emissions. Less PM2.5 in the air. A bus moves ~50× the passenger-km per litre that a car does.</p>
+          <div class="matter-pull">
+            <span class="matter-pull-num">~50×</span>
+            <span class="matter-pull-lbl">Passenger-km per litre vs a car</span>
+          </div>
+        </div>
+
+        <!-- Pillar 03: MSME credit access -->
+        <div class="matter-card">
+          <div class="matter-head">
+            <div class="matter-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 9 l9 -5 l9 5"/>
+                <path d="M5 9 v9 M9 9 v9 M15 9 v9 M19 9 v9"/>
+                <line x1="2" y1="20" x2="22" y2="20"/>
+              </svg>
+            </div>
+            <div class="matter-eyebrow">03 · MSME credit access</div>
+          </div>
+          <h3 class="matter-h">Invisible operators become lendable MSMEs.</h3>
+          <p>Most small bus operators have no CIBIL, no GST trail, no online transaction data — invisible to banks, locked out of working capital and vehicle loans. allrides builds a verifiable financial profile from day one. Daily ops get easier; fleet expansion becomes financeable.</p>
+          <div class="matter-pull">
+            <span class="matter-pull-num">~1.8 lakh</span>
+            <span class="matter-pull-lbl">Operators outside underwriting today</span>
+          </div>
+        </div>
+
+        <!-- Pillar 04: Bharat first -->
+        <div class="matter-card">
+          <div class="matter-head">
+            <div class="matter-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 2 c4 0 7 3 7 7 c0 6 -7 13 -7 13 c0 0 -7 -7 -7 -13 c0 -4 3 -7 7 -7z"/>
+                <circle cx="12" cy="9" r="2.5"/>
+              </svg>
+            </div>
+            <div class="matter-eyebrow">04 · Bharat-first formalization</div>
+          </div>
+          <h3 class="matter-h">Not built for the top 1%</h3>
+          <p>Stage carriage isn't Bangalore-Hyderabad intercity — it's the 5-bus operator running between two towns in UP. By building India-first for that operator, we formalize 1.8 lakh MSMEs, broaden the GST base, and create field-rep jobs in the Tier 2/3 cities that need them most.</p>
+          <div class="matter-pull">
+            <span class="matter-pull-num">~70%</span>
+            <span class="matter-pull-lbl">Of TAM in Tier 2/3-heavy states</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="slide-foot">allrides · why this matters</div>
+    </section>
+
+    <!-- ======================== SLIDE 5 — BUSINESS MODEL ======================== -->
+    <section class="slide" data-slide="5">
+      <div class="slide-num">05 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Business model</div>
+        <h2 class="slide-title">Four streams. Riders engage. Operators get free infrastructure.</h2>
+      </div>
+
+      <div class="grid-4" style="flex:1; gap:16px">
+        <div class="stream-col" style="padding:22px 24px; gap:10px">
+          <div class="tag">Stream 01</div>
+          <div class="stream-name" style="font-size:24px">Ticket convenience fee</div>
+          <div class="stream-mech">3% on every digital fare · L ≥ 5</div>
+          <div class="stream-amount" style="font-size:42px">₹2,835<span class="stream-amount-sub"> /bus/mo</span></div>
+          <p style="color:var(--muted); font-size:14px">Charged to the rider at point of payment. Scales with digital adoption — every fare counts from day one.</p>
+        </div>
+        <div class="stream-col featured" style="padding:22px 24px; gap:10px">
+          <div class="tag accent">Stream 02 · core</div>
+          <div class="stream-name" style="font-size:24px">Ad revenue</div>
+          <div class="stream-mech">In-app banner + native + interstitial · L ≥ 7</div>
+          <div class="stream-amount" style="font-size:42px">₹2,977<span class="stream-amount-sub"> /bus/mo</span></div>
+          <p style="color:var(--muted); font-size:14px">90% of digital users see ads — ~150 impressions/user/month at ~₹70 eCPM. Activates after 6-month rider awareness build.</p>
+        </div>
+        <div class="stream-col" style="padding:22px 24px; gap:10px">
+          <div class="tag">Stream 03</div>
+          <div class="stream-name" style="font-size:24px">Ad-free pass</div>
+          <div class="stream-mech">₹49/month · 10% conversion · L ≥ 7</div>
+          <div class="stream-amount" style="font-size:42px">₹1,544<span class="stream-amount-sub"> /bus/mo</span></div>
+          <p style="color:var(--muted); font-size:14px">10% of digital users upgrade. Sub-₹50 impulse-tier pricing. Operator stays whole — pass doesn't bundle trips.</p>
+        </div>
+        <div class="stream-col" style="padding:22px 24px; gap:10px">
+          <div class="tag">Stream 04</div>
+          <div class="stream-name" style="font-size:24px">Operator subscription</div>
+          <div class="stream-mech">₹1,000/bus/month from Year 3 (post-EMI)</div>
+          <div class="stream-amount" style="font-size:42px">₹1,000<span class="stream-amount-sub"> /bus/mo</span></div>
+          <p style="color:var(--muted); font-size:14px">SaaS layer (dashboard, exports, lending data) — kicks in after the 24-month hardware EMI ends.</p>
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="kpi accent">
+          <div class="kpi-label">Steady-state ARPU</div>
+          <div class="kpi-value">₹7,355</div>
+          <div class="kpi-unit">Per bus / month (pre-sub)</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">GMV per bus</div>
+          <div class="kpi-value">₹96,044</div>
+          <div class="kpi-unit">Per month flowing through platform</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Take rate</div>
+          <div class="kpi-value">7.7%</div>
+          <div class="kpi-unit">Effective platform take</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">36-month LTV</div>
+          <div class="kpi-value">₹2,76,780</div>
+          <div class="kpi-unit">Per bus (sub kicks in Y3)</div>
+        </div>
+      </div>
+      <div class="slide-foot">allrides · business model</div>
+    </section>
+
+    <!-- ======================== SLIDE 5 — MARKET ======================== -->
+    <section class="slide" data-slide="6">
+      <div class="slide-num">06 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Market opportunity</div>
+        <h2 class="slide-title">1.8 lakh-bus TAM. ₹2,025 cr/yr revenue potential.</h2>
+      </div>
+
+      <div class="card card-tight" style="flex:1; display:flex; flex-direction:column">
+        <div class="label">Market sizing waterfall</div>
+        <div class="funnel" style="margin-top:14px; flex:1; justify-content:center">
+          <div class="funnel-step">
+            <div>
+              <div class="stage-label">TAM</div>
+              <div class="name">All registered buses · India · MoRTH 2022</div>
+            </div>
+            <div class="num">21,00,000</div>
+          </div>
+          <div class="funnel-step">
+            <div>
+              <div class="stage-label">SAM</div>
+              <div class="name">Private sector buses (~92%)</div>
+            </div>
+            <div class="num">19,50,000</div>
+          </div>
+          <div class="funnel-step highlight">
+            <div>
+              <div class="stage-label">Addressable</div>
+              <div class="name">Private stage carriage permits</div>
+            </div>
+            <div class="num">1,80,000</div>
+          </div>
+          <div class="funnel-step">
+            <div>
+              <div class="stage-label">Y3 SOM</div>
+              <div class="name">allrides target — 1.92% penetration</div>
+            </div>
+            <div class="num" style="color:var(--accent-2)">3,450</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="kpi accent">
+          <div class="kpi-label">Revenue potential</div>
+          <div class="kpi-value">₹1,589 cr/yr</div>
+          <div class="kpi-unit">1.8L buses × ₹7,355/mo × 12</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Industry GMV</div>
+          <div class="kpi-value">₹54,000 cr/yr</div>
+          <div class="kpi-unit">Total fare flow across the segment</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Y3 ARR target</div>
+          <div class="kpi-value">₹25 cr</div>
+          <div class="kpi-unit">3,450 buses · 1.6% of revenue TAM</div>
+        </div>
+      </div>
+      <div class="slide-foot">allrides · market</div>
+    </section>
+
+    <!-- ======================== SLIDE 6 — GTM ======================== -->
+    <section class="slide" data-slide="7">
+      <div class="slide-num">07 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Go-to-market</div>
+        <h2 class="slide-title">QR-first. Then POS. Then scale.</h2>
+        <p class="slide-lede">Most competitors lead with hardware. We lead with a 30-second yes — and earn the right to upgrade.</p>
+      </div>
+
+      <div class="phase-row" style="flex:1">
+        <div class="phase">
+          <div class="tag">Phase 1 · M0–M3</div>
+          <div class="phase-num">01</div>
+          <h4>QR-First Aggressive Onboarding</h4>
+          <ul>
+            <li>QR-only mode — zero hardware, zero CapEx for the operator</li>
+            <li>Geographic focus — 1–2 cities for route density</li>
+            <li>5 cofounders + 1–2 field reps · direct sales + installs</li>
+            <li>QR mode = a yes in one conversation</li>
+          </ul>
+          <div class="target">Target · <b>150 buses live by M3</b></div>
+        </div>
+        <div class="phase">
+          <div class="tag">Phase 2 · M3–M6</div>
+          <div class="phase-num">02</div>
+          <h4>POS Upsell + Revenue Validation</h4>
+          <ul>
+            <li>Convert 30–40% of QR users to POS for fraud control + deeper data</li>
+            <li>Bank EMI for POS — operator pays nothing upfront</li>
+            <li>Pass program launches on highest-density routes</li>
+          </ul>
+          <div class="target">Target · <b>350 buses · 50–60 on POS · ₹5 L MRR by M6</b></div>
+        </div>
+        <div class="phase">
+          <div class="tag">Phase 3 · M6–M12</div>
+          <div class="phase-num">03</div>
+          <h4>Geographic Scale + Seed Raise</h4>
+          <ul>
+            <li>Multi-state expansion using a validated playbook</li>
+            <li>Use real cohort data to raise ₹3 cr Seed at M7–M8</li>
+            <li>Build the lending-data flywheel</li>
+          </ul>
+          <div class="target">Target · <b>750 buses · 3 states · ₹30 L MRR by M12</b></div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <b>The strategic insight ·</b> Most competitors lead with POS hardware — making the first conversation about a ₹10K device. We lead with QR (a 30-second yes) and earn the right to upgrade them later. By the time we ask for hardware, we've already proven revenue uplift.
+      </div>
+      <div class="slide-foot">allrides · go-to-market</div>
+    </section>
+
+    <!-- ======================== SLIDE 7 — TRACTION ======================== -->
+    <section class="slide" data-slide="8">
+      <div class="slide-num">08 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Current traction</div>
+        <h2 class="slide-title">12 buses live. ₹1 L+ daily POS flow. Pipeline already stacking up.</h2>
+      </div>
+
+      <div class="grid-2" style="flex:1">
+        <div class="timeline">
+          <div class="timeline-row"><div class="timeline-month">2022</div><div class="timeline-event">Founders received <b>₹1 lakh grant from KDISC</b> (Kerala Development &amp; Innovation Strategic Council) for early prototype</div></div>
+          <div class="timeline-row"><div class="timeline-month">December 2024</div><div class="timeline-event"><b>Urbanfolks Mobility Private Limited</b> incorporated</div></div>
+          <div class="timeline-row"><div class="timeline-month">September 2025</div><div class="timeline-event">First operator pilot — <b>12 buses onboarded</b></div></div>
+          <div class="timeline-row"><div class="timeline-month">January 2026</div><div class="timeline-event">Crossed <b>₹1 lakh+ daily POS volume</b></div></div>
+          <div class="timeline-row"><div class="timeline-month">Ongoing</div><div class="timeline-event">Deveoping E-payments and B2C app. </b></div></div>
+        </div>
+        <div class="grid-2" style="grid-template-columns:1fr 1fr; gap:14px">
+          <div class="kpi accent">
+            <div class="kpi-label">Buses live</div>
+            <div class="kpi-value">12</div>
+            <div class="kpi-unit">First operator pilot · cash mode</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Daily POS volume</div>
+            <div class="kpi-value">₹1 L+</div>
+            <div class="kpi-unit">Through allrides POS.</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Operator pipeline</div>
+            <div class="kpi-value">Inbound</div>
+            <div class="kpi-unit">Pending requests via word of mouth</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Online flow</div>
+            <div class="kpi-value">In build</div>
+            <div class="kpi-unit">UPI / pass / dashboard layer</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="photo-grid">
+        <div class="photo-tile">
+          <img src="pos%20with%20conductor.jpeg" alt="Conductor using allrides POS on a live bus" />
+          <div class="caption">Conductor on the allrides POS — live trip</div>
+        </div>
+        <div class="photo-tile">
+          <img src="pos%20UX.jpeg" alt="allrides POS interface" />
+          <div class="caption">POS UX — one-tap ticket print</div>
+        </div>
+        <div class="photo-tile">
+          <img src="user-discussion.jpeg" alt="Field interviews with riders" />
+          <div class="caption">Rider field interviews · Tier 2/3 routes</div>
+        </div>
+        <div class="photo-tile">
+          <img src="receiving%20grant.jpeg" alt="Founders receiving KDISC grant" />
+          <div class="caption">Receiving ₹1 L KDISC grant · 2020</div>
+        </div>
+      </div>
+
+      <div class="honest">Live pilot in cash mode is already moving ₹1 L+/day through one operator. Online (UPI + pass + dashboard) ships next. Word-of-mouth is filling the operator pipeline ahead of capacity — SISFS unlocks the field team and the online stack to convert that demand.</div>
+      <div class="slide-foot">allrides · traction</div>
+    </section>
+
+    <!-- ======================== SLIDE 8 — COMPETITION ======================== -->
+    <section class="slide" data-slide="9">
+      <div class="slide-num">09 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Competitive landscape</div>
+        <h2 class="slide-title">The empty quadrant.</h2>
+        <p class="slide-lede">Stage carriage + full operations stack — nobody is here. Booking serves intercity. Government apps serve STUs. Cash serves everyone else.</p>
+      </div>
+
+      <div class="grid-2" style="flex:1">
+        <div class="comp-matrix">
+          <div class="label" style="margin-bottom:14px">Capability map</div>
+          <table class="comp-matrix-table">
+            <thead>
+              <tr>
+                <th class="cap"></th>
+                <th class="us-col">allrides</th>
+                <th>Chalo</th>
+                <th>RedBus</th>
+                <th>STU apps</th>
+                <th>Cash</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="cap">Stage-carriage / urban routes</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-partial">~</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-yes">✓</span></td>
+                <td><span class="cell-yes">✓</span></td>
+              </tr>
+              <tr>
+                <th class="cap">Private operator coverage</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-partial">~</span></td>
+                <td><span class="cell-yes">✓</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-yes">✓</span></td>
+              </tr>
+              <tr>
+                <th class="cap">Zero-hardware QR onboarding</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-yes">✓</span></td>
+              </tr>
+              <tr>
+                <th class="cap">Bank-financed POS upsell</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+              </tr>
+              <tr>
+                <th class="cap">Commuter pass / app subscription</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-partial">~</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-partial">~</span></td>
+                <td><span class="cell-no">—</span></td>
+              </tr>
+              <tr>
+                <th class="cap">Operator dashboard &amp; GST</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-yes">✓</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-partial">~</span></td>
+                <td><span class="cell-no">—</span></td>
+              </tr>
+              <tr>
+                <th class="cap">Lending-grade data layer</th>
+                <td class="us-col"><span class="cell-yes us">✓</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+                <td><span class="cell-no">—</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="display:flex; justify-content:flex-end; gap:14px; margin-top:14px; font-size:11.5px; color:var(--muted); letter-spacing:.06em">
+            <span><span class="cell-yes" style="width:14px; height:14px; font-size:9px; vertical-align:middle">✓</span> &nbsp;has it</span>
+            <span><span class="cell-partial" style="width:14px; height:14px; font-size:11px; vertical-align:middle">~</span> &nbsp;partial</span>
+            <span><span class="cell-no" style="width:14px; height:14px; font-size:9px; vertical-align:middle">—</span> &nbsp;absent</span>
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:18px">
+          <div class="card card-tight">
+            <div class="label">Why we win</div>
+            <div class="pain-list" style="margin-top:10px">
+              <div class="pain-item"><b>QR-first onboarding</b> removes adoption friction (zero hardware, zero CapEx).</div>
+              <div class="pain-item"><b>Bank-financed POS path</b> — our deeper product is also free at point of adoption.</div>
+              <div class="pain-item"><b>Pass-margin economics</b> — no competitor has built this for stage carriage.</div>
+              <div class="pain-item"><b>Data flywheel for operator lending</b> — moat compounds with every transaction.</div>
+            </div>
+          </div>
+          <div class="card card-tight" style="font-size:16px; color:var(--ink-2)">
+            <div class="label" style="margin-bottom:10px">Who they are</div>
+            <p style="margin-bottom:6px"><b>Chalo, RedBus</b> · Built for intercity booking. Different unit economics, different operator profile.</p>
+            <p style="margin-bottom:6px"><b>State STU apps (BMTC, MTC)</b> · Government-only. No private operator coverage.</p>
+            <p><b>Manual / cash</b> · The actual incumbent for 95% of stage-carriage. Our real competitor.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot">allrides · competition</div>
+    </section>
+
+    <!-- ======================== SLIDE 9 — FINANCIALS ======================== -->
+    <section class="slide" data-slide="10">
+      <div class="slide-num">10 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Financials</div>
+        <h2 class="slide-title">Break-even by Month 21. ₹25 cr ARR exit Y3.</h2>
+      </div>
+
+      <div class="card card-flush">
+        <table class="fin">
+          <thead><tr><th>Metric</th><th>Year 1</th><th>Year 2</th><th>Year 3</th></tr></thead>
+          <tbody>
+            <tr><td>Buses live (end of year)</td><td class="mono">750</td><td class="mono">1,950</td><td class="mono">3,450</td></tr>
+            <tr><td>Revenue</td><td class="mono">₹0.95 cr</td><td class="mono">₹7.71 cr</td><td class="mono">₹18.95 cr</td></tr>
+            <tr><td>Operating expenses</td><td class="mono">₹1.83 cr</td><td class="mono">₹5.74 cr</td><td class="mono">₹12.03 cr</td></tr>
+            <tr class="summary"><td>EBITDA</td><td class="mono num-neg">(₹0.88 cr)</td><td class="mono num-pos">₹1.97 cr</td><td class="mono num-pos">₹6.91 cr</td></tr>
+            <tr><td>EBITDA margin</td><td class="mono num-neg">(93%)</td><td class="mono num-pos">26%</td><td class="mono num-pos">37%</td></tr>
+            <tr class="total-row"><td>GMV processed</td><td class="mono">₹17.9 cr</td><td class="mono">₹117.5 cr</td><td class="mono">₹226.2 cr</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-tight">
+          <div class="label">CapEx / OpEx · Year 1</div>
+          <h3 style="margin-top:6px">₹1.83 cr operating spend</h3>
+          <p style="color:var(--muted); font-size:14px; margin:6px 0 14px">CapEx is light — office, laptops, tools at ~₹3–4 L. POS hardware is on operator EMI books, not allrides'.</p>
+          <div class="opex-bar">
+            <div class="opex-row"><div>Salaries (5 cof. + 6)</div><div class="opex-track"><div class="opex-fill" style="width:27%"></div></div><div class="opex-amt">₹49 L · 27%</div></div>
+            <div class="opex-row"><div>Marketing</div><div class="opex-track"><div class="opex-fill" style="width:19%"></div></div><div class="opex-amt">₹34 L · 19%</div></div>
+            <div class="opex-row"><div>Field deployment</div><div class="opex-track"><div class="opex-fill" style="width:16%"></div></div><div class="opex-amt">₹30 L · 16%</div></div>
+            <div class="opex-row"><div>Payment gateway</div><div class="opex-track"><div class="opex-fill" style="width:15%"></div></div><div class="opex-amt">₹27 L · 15%</div></div>
+            <div class="opex-row"><div>Office / legal / misc</div><div class="opex-track"><div class="opex-fill" style="width:13%"></div></div><div class="opex-amt">₹23 L · 13%</div></div>
+            <div class="opex-row"><div>Tech / cloud</div><div class="opex-track"><div class="opex-fill" style="width:7%"></div></div><div class="opex-amt">₹13 L · 7%</div></div>
+            <div class="opex-row"><div>Hardware reserve</div><div class="opex-track"><div class="opex-fill" style="width:4%"></div></div><div class="opex-amt">₹8 L · 4%</div></div>
+          </div>
+        </div>
+        <div class="card card-tight">
+          <div class="label">Unit economics · steady state</div>
+          <table class="fin" style="margin-top:6px">
+            <tbody>
+              <tr><td>Revenue per bus / month</td><td class="mono">₹7,355</td></tr>
+              <tr><td>GMV per bus / month</td><td class="mono">₹96,044</td></tr>
+              <tr><td>Take rate</td><td class="mono">7.7%</td></tr>
+              <tr><td>36-month LTV per bus</td><td class="mono">₹2,76,780</td></tr>
+              <tr class="total-row"><td>Cumulative break-even</td><td class="mono">Month 21</td></tr>
+            </tbody>
+          </table>
+          <p style="color:var(--muted); font-size:13px; margin-top:14px">Reference points · M5 first revenue · M12 monthly EBITDA breakeven · M21 cumulative breakeven.</p>
+        </div>
+      </div>
+      <div class="slide-foot">allrides · financials</div>
+    </section>
+
+    <!-- ======================== SLIDE 11 — EXIT ======================== -->
+    <section class="slide" data-slide="11">
+      <div class="slide-num">11 / 11</div>
+      <div>
+        <div class="slide-eyebrow">Exit options</div>
+        <h2 class="slide-title">Three plausible pathways. Y4–Y5 strategic acquisition most likely.</h2>
+      </div>
+
+      <div class="grid-3" style="flex:1">
+        <div class="exit-col">
+          <div class="tag accent">Pathway 01</div>
+          <h4>Strategic acquisition · payments incumbent</h4>
+          <div class="acquirers">
+            <span>PhonePe</span><span>Razorpay</span><span>Cred</span><span>Pine Labs</span>
+          </div>
+          <p style="font-size:15px; color:var(--ink-2)"><b>Why they'd buy:</b> B2B distribution into 1.8L bus operators = direct merchant base + lending data flywheel.</p>
+          <p style="font-size:13.5px; color:var(--muted)"><b>Comparable:</b> Razorpay's TERA Finlabs / IZealiant; PhonePe's Indus Appstore distribution play.</p>
+        </div>
+        <div class="exit-col">
+          <div class="tag accent">Pathway 02</div>
+          <h4>Strategic acquisition · mobility super-app</h4>
+          <div class="acquirers">
+            <span>Google</span><span>Chalo</span><span>RedBus</span><span>Ola</span><span>Rapido</span>
+          </div>
+          <p style="font-size:15px; color:var(--ink-2)"><b>Why they'd buy:</b> Stage-carriage operator network closes the segment gap intercity players don't serve. For Google specifically — live private-bus data feeding Maps + Google Pay distribution into 1.8L transit merchants is a textbook Next-Billion-Users move.</p>
+          <p style="font-size:13.5px; color:var(--muted)"><b>Comparable:</b> Google's acquisition of <b>"Where is my Train"</b> (Sigmoid Labs, 2018) — same playbook applied to private buses. RedBus's Buupass (Africa); Chalo's mobility consolidation thesis.</p>
+        </div>
+        <div class="exit-col">
+          <div class="tag accent">Pathway 03</div>
+          <h4>Independent · secondary at Series B/C</h4>
+          <div class="acquirers"><span>IPO horizon · 7–10 yrs</span></div>
+          <p style="font-size:15px; color:var(--ink-2)"><b>Continue building toward IPO.</b> Earlier liquidity for SISFS-stage investors via secondary at Series B or C.</p>
+          <p style="font-size:13.5px; color:var(--muted)"><b>Comparable:</b> KhataBook funding trajectory; BharatPe valuation milestones.</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="kpi accent">
+          <div class="kpi-label">Exit window</div>
+          <div class="kpi-value">Y4–Y5</div>
+          <div class="kpi-unit">Most likely strategic acquisition</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Exit valuation range</div>
+          <div class="kpi-value">₹500–1,000 cr</div>
+          <div class="kpi-unit">8–12× ARR · Indian B2B fintech</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Y5 anchor</div>
+          <div class="kpi-value">₹800 cr</div>
+          <div class="kpi-unit">₹100 cr ARR × 8× = ₹800 cr exit</div>
+        </div>
+      </div>
+      <div class="slide-foot">allrides · thank you · founder@allrides.in</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ===================== NAV BUTTONS ===================== -->
+<button class="nav-btn nav-prev" id="navPrev" aria-label="Previous slide">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+<button class="nav-btn nav-next" id="navNext" aria-label="Next slide">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>
+
+<!-- ===================== FLOATING MENU ===================== -->
+<button class="menu-btn" id="menuBtn" aria-label="Quick links">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+</button>
+<div class="menu-panel" id="menuPanel">
+  <h4>Quick links</h4>
+  <a data-target="1"><span class="num">01</span>Cover</a>
+  <a data-target="2"><span class="num">02</span>The problem</a>
+  <a data-target="3"><span class="num">03</span>How it works</a>
+  <a data-target="4"><span class="num">04</span>Why this matters</a>
+  <a data-target="5"><span class="num">05</span>Business model</a>
+  <a data-target="6"><span class="num">06</span>Market opportunity</a>
+  <a data-target="7"><span class="num">07</span>Go-to-market</a>
+  <a data-target="8"><span class="num">08</span>Current traction</a>
+  <a data-target="9"><span class="num">09</span>Competitive landscape</a>
+  <a data-target="10"><span class="num">10</span>Financials</a>
+  <a data-target="11"><span class="num">11</span>Exit options</a>
+  <div class="divider"></div>
+  <a class="ext-link" href="financials.html"><span>Financial model ↗</span><span class="arr">↗</span></a>
+  <a class="ext-link" href="seedfund-pitch.html"><span>Scrollable deck ↗</span><span class="arr">↗</span></a>
+</div>
+
+<script>
+/* ============================================================
+   SLIDE NAVIGATION
+============================================================ */
+const TOTAL = 11;
+let current = 1;
+const slideEls = Array.from(document.querySelectorAll('.slide[data-slide]'));
+const prevBtn = document.getElementById('navPrev');
+const nextBtn = document.getElementById('navNext');
+const menuPanel = document.getElementById('menuPanel');
+const menuBtn = document.getElementById('menuBtn');
+
+function showSlide(n) {
+  current = Math.max(1, Math.min(TOTAL, n));
+  slideEls.forEach(s => s.classList.toggle('active', +s.dataset.slide === current));
+  document.querySelectorAll('#menuPanel a[data-target]').forEach(a => {
+    a.classList.toggle('active', +a.dataset.target === current);
+  });
+  prevBtn.disabled = current === 1;
+  nextBtn.disabled = current === TOTAL;
+}
+function goTo(n) { showSlide(n); }
+function next()  { showSlide(current + 1); }
+function prev()  { showSlide(current - 1); }
+
+prevBtn.addEventListener('click', prev);
+nextBtn.addEventListener('click', next);
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft'  || e.key === 'PageUp')                    { e.preventDefault(); prev(); }
+  if (e.key === 'Home')   { e.preventDefault(); goTo(1); }
+  if (e.key === 'End')    { e.preventDefault(); goTo(TOTAL); }
+  if (e.key === 'Escape') { menuPanel.classList.remove('open'); menuBtn.classList.remove('open'); }
+});
+
+/* Floating menu */
+menuBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  menuPanel.classList.toggle('open');
+  menuBtn.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!menuPanel.contains(e.target) && !menuBtn.contains(e.target)) {
+    menuPanel.classList.remove('open');
+    menuBtn.classList.remove('open');
+  }
+});
+document.querySelectorAll('#menuPanel a[data-target]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    goTo(+a.dataset.target);
+    menuPanel.classList.remove('open');
+    menuBtn.classList.remove('open');
+  });
+});
+
+/* ============================================================
+   CHARTS
+============================================================ */
+function gridOpts() {
+  return {
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: '#0e0e10', titleColor:'#fff', bodyColor:'#fff', padding:10, cornerRadius:8 }
+    },
+    responsive: true, maintainAspectRatio: false,
+  };
+}
+
+function chartStates() {
+  const el = document.getElementById('chartStates');
+  if (!el || typeof Chart === 'undefined') return;
+  const states = [
+    { name: 'Uttar Pradesh',    buses: 50000 },
+    { name: 'Maharashtra',      buses: 25000 },
+    { name: 'Madhya Pradesh',   buses: 16000 },
+    { name: 'Bihar',            buses: 16000 },
+    { name: 'Kerala',           buses: 13000 },
+    { name: 'West Bengal',      buses: 13000 },
+    { name: 'Punjab',           buses: 8000  },
+    { name: 'Gujarat',          buses: 7000  },
+    { name: 'Other states',     buses: 32000 },
+  ];
+  new Chart(el, {
+    type: 'bar',
+    data: {
+      labels: states.map(s => s.name),
+      datasets: [{ data: states.map(s => s.buses), backgroundColor: '#6E13EF', borderRadius: 4 }]
+    },
+    options: {
+      indexAxis: 'y',
+      ...gridOpts(),
+      scales: {
+        x: { grid: { color: 'rgba(14,14,16,.05)' }, ticks: { color: '#6b6b75', font: { size: 12 }, callback: v => (v/1000)+'K' } },
+        y: { grid: { display: false }, ticks: { color: '#2b2b30', font: { size: 13, weight: '500' } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { backgroundColor: '#0e0e10', callbacks: { label: ctx => ctx.parsed.x.toLocaleString('en-IN') + ' buses' } }
+      }
+    }
+  });
+}
+
+function _safe(label, fn) { try { fn(); } catch (e) { console.error('[' + label + ']', e); } }
+
+function init() {
+  showSlide(1);
+  _safe('chart states',   chartStates);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
