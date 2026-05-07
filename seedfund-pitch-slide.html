@@ -695,9 +695,168 @@
   .menu-panel .ext-link:hover { background: var(--surface-2); }
   .menu-panel .ext-link .arr { color: var(--muted-2); }
 
+  /* ---------- Slide 5 · Stream info button + popover ---------- */
+  .stream-col { position: relative; }
+  .stream-col .info-btn { position: absolute; top: 18px; right: 18px; }
+  .info-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; padding: 0;
+    border-radius: 50%; border: 1px solid var(--line);
+    background: transparent; color: var(--muted);
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 18px; font-weight: 500;
+    cursor: pointer; line-height: 1;
+    transition: color .18s, border-color .18s, background .18s;
+  }
+  .info-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .info-btn.active { color: #fff; background: var(--accent); border-color: var(--accent); }
+
+  .info-backdrop {
+    position: absolute; inset: -80px -96px;
+    background: rgba(14,14,16,.40);
+    display: none; z-index: 50;
+  }
+  .info-backdrop.open { display: block; }
+
+  .info-popover {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 30px 80px rgba(0,0,0,.25), 0 8px 24px rgba(0,0,0,.12);
+    width: 780px; max-height: 880px; overflow: auto;
+    padding: 36px 40px; z-index: 51;
+    display: none;
+  }
+  .info-popover.open { display: block; }
+  .info-popover .ip-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 999px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    color: var(--muted); font-size: 22px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .info-popover .ip-close:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .info-popover h4 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 36px; letter-spacing: -0.01em; line-height: 1.1;
+    margin-right: 60px; color: var(--ink);
+  }
+  .info-popover .ip-sub {
+    color: var(--muted); font-size: 18px;
+    margin-top: 10px; margin-bottom: 22px;
+  }
+  .info-popover .ip-formula {
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px; line-height: 1.6;
+    color: var(--ink-2); white-space: pre-wrap; word-break: break-word;
+    margin-bottom: 18px;
+  }
+  .info-popover .ip-rows { margin-bottom: 18px; }
+  .info-popover .ip-row {
+    display: flex; justify-content: space-between; gap: 20px;
+    padding: 10px 0; border-bottom: 1px dashed var(--line-2);
+    font-size: 17px;
+  }
+  .info-popover .ip-row:last-child { border-bottom: none; }
+  .info-popover .ip-row .k { color: var(--muted); }
+  .info-popover .ip-row .v {
+    font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--ink);
+  }
+  .info-popover .ip-result {
+    background: var(--accent-soft); color: var(--accent);
+    padding: 14px 20px; border-radius: 12px;
+    font-weight: 500; font-size: 19px;
+    border: 1px solid rgba(110, 19, 239, 0.18);
+  }
+  .info-popover .ip-cohort {
+    margin-top: 14px; font-size: 16px; color: var(--muted);
+    line-height: 1.55; font-style: italic;
+  }
+
+  /* ---------- Mobile gate ---------- */
+  .mobile-notice { display: none; }
+  @media (max-width: 900px), (orientation: portrait) and (max-width: 1100px) {
+    .stage { display: none !important; }
+    .mobile-notice {
+      display: flex;
+      position: fixed; inset: 0;
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 28px;
+      background: radial-gradient(ellipse at 70% 20%, #1f0a44 0%, #0a0a0a 70%);
+      color: #fff;
+      text-align: center;
+      z-index: 1000;
+    }
+    .mobile-notice .mn-brand {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .22em;
+      color: rgba(255,255,255,.55);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .mobile-notice .mn-brand .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent);
+    }
+    .mobile-notice .mn-icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+    }
+    .mobile-notice .mn-icon svg { width: 32px; height: 32px; stroke: #fff; }
+    .mobile-notice h1 {
+      font-family: 'Fraunces', serif;
+      font-weight: 500;
+      font-size: clamp(26px, 7vw, 36px);
+      line-height: 1.15;
+      letter-spacing: -.01em;
+      margin-bottom: 14px;
+      max-width: 22ch;
+    }
+    .mobile-notice p {
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(255,255,255,.7);
+      max-width: 32ch;
+      margin-bottom: 28px;
+    }
+    .mobile-notice .mn-hint {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .18em;
+      color: rgba(255,255,255,.4);
+      text-transform: uppercase;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      width: 200px;
+    }
+  }
+
 </style>
 </head>
 <body>
+
+<div class="mobile-notice" role="alertdialog" aria-labelledby="mn-title">
+  <div class="mn-brand"><span class="dot"></span><span>allrides · seed pitch</span></div>
+  <div class="mn-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="12" rx="2"/>
+      <path d="M8 20h8M12 16v4"/>
+    </svg>
+  </div>
+  <h1 id="mn-title">This pitch is best viewed on a desktop.</h1>
+  <p>The deck is built for a 1920×1080 stage with cinematic transitions. Please open this link on a laptop or desktop browser.</p>
+  <div class="mn-hint">Open on desktop →</div>
+</div>
 
 <div class="stage">
   <div class="deck" id="deck">
@@ -1027,27 +1186,31 @@
 
       <div class="grid-4" style="flex:1; gap:16px">
         <div class="stream-col" style="padding:22px 24px; gap:10px">
+          <button type="button" class="info-btn" onclick="showStreamInfo(event,'ticket')" aria-label="How is this calculated?">i</button>
           <div class="tag">Stream 01</div>
           <div class="stream-name" style="font-size:24px">Ticket convenience fee</div>
           <div class="stream-mech">3% on every digital fare · L ≥ 5</div>
-          <div class="stream-amount" style="font-size:42px">₹2,835<span class="stream-amount-sub"> /bus/mo</span></div>
+          <div class="stream-amount" style="font-size:42px">₹2,430<span class="stream-amount-sub"> /bus/mo</span></div>
           <p style="color:var(--muted); font-size:14px">Charged to the rider at point of payment. Scales with digital adoption — every fare counts from day one.</p>
         </div>
         <div class="stream-col featured" style="padding:22px 24px; gap:10px">
+          <button type="button" class="info-btn" onclick="showStreamInfo(event,'ads')" aria-label="How is this calculated?">i</button>
           <div class="tag accent">Stream 02 · core</div>
           <div class="stream-name" style="font-size:24px">Ad revenue</div>
           <div class="stream-mech">In-app banner + native + interstitial · L ≥ 7</div>
-          <div class="stream-amount" style="font-size:42px">₹2,977<span class="stream-amount-sub"> /bus/mo</span></div>
+          <div class="stream-amount" style="font-size:42px">₹2,551<span class="stream-amount-sub"> /bus/mo</span></div>
           <p style="color:var(--muted); font-size:14px">90% of digital users see ads — ~150 impressions/user/month at ~₹70 eCPM. Activates after 6-month rider awareness build.</p>
         </div>
         <div class="stream-col" style="padding:22px 24px; gap:10px">
+          <button type="button" class="info-btn" onclick="showStreamInfo(event,'pass')" aria-label="How is this calculated?">i</button>
           <div class="tag">Stream 03</div>
           <div class="stream-name" style="font-size:24px">Ad-free pass</div>
           <div class="stream-mech">₹49/month · 10% conversion · L ≥ 7</div>
-          <div class="stream-amount" style="font-size:42px">₹1,544<span class="stream-amount-sub"> /bus/mo</span></div>
+          <div class="stream-amount" style="font-size:42px">₹1,323<span class="stream-amount-sub"> /bus/mo</span></div>
           <p style="color:var(--muted); font-size:14px">10% of digital users upgrade. Sub-₹50 impulse-tier pricing. Operator stays whole — pass doesn't bundle trips.</p>
         </div>
         <div class="stream-col" style="padding:22px 24px; gap:10px">
+          <button type="button" class="info-btn" onclick="showStreamInfo(event,'opSub')" aria-label="How is this calculated?">i</button>
           <div class="tag">Stream 04</div>
           <div class="stream-name" style="font-size:24px">Operator subscription</div>
           <div class="stream-mech">₹1,000/bus/month from Year 3 (post-EMI)</div>
@@ -1059,12 +1222,12 @@
       <div class="grid-4">
         <div class="kpi accent">
           <div class="kpi-label">Steady-state ARPU</div>
-          <div class="kpi-value">₹7,355</div>
+          <div class="kpi-value">₹6,304</div>
           <div class="kpi-unit">Per bus / month (pre-sub)</div>
         </div>
         <div class="kpi">
           <div class="kpi-label">GMV per bus</div>
-          <div class="kpi-value">₹96,044</div>
+          <div class="kpi-value">₹82,323</div>
           <div class="kpi-unit">Per month flowing through platform</div>
         </div>
         <div class="kpi">
@@ -1074,11 +1237,23 @@
         </div>
         <div class="kpi">
           <div class="kpi-label">36-month LTV</div>
-          <div class="kpi-value">₹2,76,780</div>
+          <div class="kpi-value">₹2,38,944</div>
           <div class="kpi-unit">Per bus (sub kicks in Y3)</div>
         </div>
       </div>
       <div class="slide-foot">allrides · business model</div>
+
+      <!-- Stream calculation popover -->
+      <div class="info-backdrop" id="streamBackdrop" onclick="hideStreamInfo()"></div>
+      <div class="info-popover" id="streamPopover" role="dialog" aria-modal="true" aria-labelledby="streamInfoTitle">
+        <button class="ip-close" type="button" onclick="hideStreamInfo()" aria-label="Close">×</button>
+        <h4 id="streamInfoTitle"></h4>
+        <div class="ip-sub" id="streamInfoSub"></div>
+        <div class="ip-formula" id="streamInfoFormula"></div>
+        <div class="ip-rows" id="streamInfoRows"></div>
+        <div class="ip-result" id="streamInfoResult"></div>
+        <div class="ip-cohort" id="streamInfoCohort"></div>
+      </div>
     </section>
 
     <!-- ======================== SLIDE 5 — MARKET ======================== -->
@@ -1126,8 +1301,8 @@
       <div class="grid-3">
         <div class="kpi accent">
           <div class="kpi-label">Revenue potential</div>
-          <div class="kpi-value">₹1,589 cr/yr</div>
-          <div class="kpi-unit">1.8L buses × ₹7,355/mo × 12</div>
+          <div class="kpi-value">₹1,362 cr/yr</div>
+          <div class="kpi-unit">1.8L buses × ₹6,304/mo × 12</div>
         </div>
         <div class="kpi">
           <div class="kpi-label">Industry GMV</div>
@@ -1385,7 +1560,7 @@
             <tr><td>Operating expenses</td><td class="mono">₹1.83 cr</td><td class="mono">₹5.74 cr</td><td class="mono">₹12.03 cr</td></tr>
             <tr class="summary"><td>EBITDA</td><td class="mono num-neg">(₹0.88 cr)</td><td class="mono num-pos">₹1.97 cr</td><td class="mono num-pos">₹6.91 cr</td></tr>
             <tr><td>EBITDA margin</td><td class="mono num-neg">(93%)</td><td class="mono num-pos">26%</td><td class="mono num-pos">37%</td></tr>
-            <tr class="total-row"><td>GMV processed</td><td class="mono">₹17.9 cr</td><td class="mono">₹117.5 cr</td><td class="mono">₹226.2 cr</td></tr>
+            <tr class="total-row"><td>GMV processed</td><td class="mono">₹17.8 cr</td><td class="mono">₹116.0 cr</td><td class="mono">₹261.4 cr</td></tr>
           </tbody>
         </table>
       </div>
@@ -1409,10 +1584,10 @@
           <div class="label">Unit economics · steady state</div>
           <table class="fin" style="margin-top:6px">
             <tbody>
-              <tr><td>Revenue per bus / month</td><td class="mono">₹7,355</td></tr>
-              <tr><td>GMV per bus / month</td><td class="mono">₹96,044</td></tr>
+              <tr><td>Revenue per bus / month</td><td class="mono">₹6,304</td></tr>
+              <tr><td>GMV per bus / month</td><td class="mono">₹82,323</td></tr>
               <tr><td>Take rate</td><td class="mono">7.7%</td></tr>
-              <tr><td>36-month LTV per bus</td><td class="mono">₹2,76,780</td></tr>
+              <tr><td>36-month LTV per bus</td><td class="mono">₹2,38,944</td></tr>
               <tr class="total-row"><td>Cumulative break-even</td><td class="mono">Month 21</td></tr>
             </tbody>
           </table>
@@ -1618,6 +1793,93 @@ function chartStates() {
 }
 
 function _safe(label, fn) { try { fn(); } catch (e) { console.error('[' + label + ']', e); } }
+
+/* ---------- Slide 5 · stream calculation popover ---------- */
+const STREAM_INFO = {
+  ticket: {
+    title: 'Ticket convenience fee',
+    sub: '3% platform fee on every digital fare',
+    formula: 'fee/bus/mo = (900 × 30% × 30 days) × ₹0.30\n           = 8,100 rides × ₹0.30',
+    rows: [
+      ['Daily ridership / bus',     '900'],
+      ['Digital adoption',          '30%'],
+      ['Operating days / month',    '30'],
+      ['Digital rides / bus / mo',  '8,100'],
+      ['Avg ticket price',          '₹10'],
+      ['Convenience fee',           '3%'],
+      ['Fee per ride',              '₹0.30'],
+    ],
+    result: '≈ ₹2,430 / bus / month at steady state',
+    cohort: 'Activates at life-month L ≥ 5, after a 4-month onboarding & training ramp. Charged to the rider at point of payment.',
+  },
+  ads: {
+    title: 'Ad revenue',
+    sub: 'In-app banner + native + interstitial impressions',
+    formula: 'ad rev/bus/mo ≈ ad-eligible riders × impressions × eCPM',
+    rows: [
+      ['Digital riders / bus / day',         '270'],
+      ['Pass adoption (steady state)',       '10%'],
+      ['Ad-eligible riders / bus / day',     '243'],
+      ['Avg impressions per rider',          '~150'],
+      ['eCPM (₹ per 1,000 impressions)',     '₹70'],
+    ],
+    result: '≈ ₹2,551 / bus / month at peak adoption',
+    cohort: 'Activates at L ≥ 7, after a 6-month rider awareness build. Inventory shrinks as pass adoption ramps L7 → L11 (2%, 4%, 6%, 8%, 10%).',
+  },
+  pass: {
+    title: 'Ad-free pass',
+    sub: '₹49 / month subscription that removes ads',
+    formula: 'pass rev/bus/mo = pass purchasers × ₹49',
+    rows: [
+      ['Digital riders / bus / day',         '270'],
+      ['Pass adoption (steady state)',       '10%'],
+      ['Avg rides per pass user / mo',       '30'],
+      ['Unique pass purchasers / bus / mo',  '~27'],
+      ['Pass price',                         '₹49'],
+    ],
+    result: '≈ ₹1,323 / bus / month at peak adoption',
+    cohort: 'Activates at L ≥ 7. Adoption ramps over 5 months (L7 → L11): 2%, 4%, 6%, 8%, 10% of digital users. Pass does not bundle trips — operator still gets paid per ride.',
+  },
+  opSub: {
+    title: 'Operator subscription',
+    sub: 'SaaS fee paid by the operator after hardware EMI ends',
+    formula: 'op sub = (buses live with L ≥ 25) × ₹1,000',
+    rows: [
+      ['Subscription start',     'Life-month L ≥ 25'],
+      ['Reason for delay',       '24-month hardware EMI ends'],
+      ['Fee per bus / month',    '₹1,000'],
+      ['Product',                'Dashboard, exports, lending data'],
+    ],
+    result: '₹1,000 / bus / month — eligible buses only',
+    cohort: 'Zero in Y1–Y2. Earliest cohorts cross L25 in M25, so this revenue ramps gradually through Y3 as more cohorts age past EMI.',
+  },
+};
+
+let activeStreamBtn = null;
+function showStreamInfo(ev, key) {
+  ev.stopPropagation();
+  const info = STREAM_INFO[key];
+  if (!info) return;
+  document.getElementById('streamInfoTitle').textContent   = info.title;
+  document.getElementById('streamInfoSub').textContent     = info.sub;
+  document.getElementById('streamInfoFormula').textContent = info.formula;
+  document.getElementById('streamInfoRows').innerHTML      = info.rows
+    .map(([k, v]) => `<div class="ip-row"><span class="k">${k}</span><span class="v">${v}</span></div>`)
+    .join('');
+  document.getElementById('streamInfoResult').textContent  = info.result;
+  document.getElementById('streamInfoCohort').textContent  = info.cohort;
+  document.getElementById('streamBackdrop').classList.add('open');
+  document.getElementById('streamPopover').classList.add('open');
+  if (activeStreamBtn) activeStreamBtn.classList.remove('active');
+  activeStreamBtn = ev.currentTarget;
+  activeStreamBtn.classList.add('active');
+}
+function hideStreamInfo() {
+  document.getElementById('streamBackdrop').classList.remove('open');
+  document.getElementById('streamPopover').classList.remove('open');
+  if (activeStreamBtn) { activeStreamBtn.classList.remove('active'); activeStreamBtn = null; }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideStreamInfo(); });
 
 function init() {
   showSlide(1);

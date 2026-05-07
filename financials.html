@@ -72,6 +72,53 @@
   nav.section-nav a:hover { background: var(--surface); text-decoration: none; }
   nav.section-nav a.active { background: var(--ink); color: #fff; }
 
+  /* ---------- Mobile nav toggle ---------- */
+  .nav-toggle {
+    display: none;
+    width: 40px; height: 40px; padding: 0;
+    background: transparent; border: 1px solid var(--line);
+    border-radius: 10px; cursor: pointer;
+    align-items: center; justify-content: center;
+    color: var(--ink-2); transition: background .15s, border-color .15s;
+  }
+  .nav-toggle:hover { background: var(--surface); border-color: var(--ink-2); }
+  .nav-toggle .nt-bars { display: inline-flex; flex-direction: column; gap: 4px; }
+  .nav-toggle .nt-bars span {
+    display: block; width: 18px; height: 2px;
+    background: currentColor; border-radius: 2px;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+  .nav-toggle[aria-expanded="true"] .nt-bars span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] .nt-bars span:nth-child(2) { opacity: 0; }
+  .nav-toggle[aria-expanded="true"] .nt-bars span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+  @media (max-width: 768px) {
+    .topbar-inner { padding: 12px 18px; gap: 12px; }
+    .brand-sub { display: none; }
+    .nav-toggle { display: inline-flex; }
+
+    nav.section-nav {
+      position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; gap: 2px; flex-wrap: nowrap;
+      background: rgba(247,247,245,.96);
+      backdrop-filter: saturate(180%) blur(14px);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 18px 14px;
+      max-height: 0; overflow: hidden;
+      opacity: 0; pointer-events: none;
+      transition: max-height .25s ease, opacity .2s ease, padding .2s ease;
+    }
+    nav.section-nav.open {
+      max-height: 70vh; opacity: 1; pointer-events: auto;
+    }
+    nav.section-nav a {
+      display: block; padding: 12px 14px; font-size: 15px;
+      border-radius: 10px;
+    }
+    nav.section-nav a:hover { background: var(--surface); }
+  }
+
   main { max-width: 1280px; margin: 0 auto; padding: 36px 28px 96px; }
 
   section { scroll-margin-top: 80px; padding: 28px 0 56px; }
@@ -314,6 +361,74 @@
   .modal-body { overflow: auto; padding: 24px 28px; }
   .modal-actions { display: flex; gap: 8px; }
 
+  /* ---------- Info popover (column-header tooltips) ---------- */
+  .info-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; padding: 0;
+    border-radius: 50%; border: 1px solid var(--line);
+    background: transparent; color: var(--muted);
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 11px; font-weight: 500;
+    cursor: pointer; vertical-align: middle; margin-left: 6px;
+    line-height: 1; transition: color .18s, border-color .18s, background .18s;
+  }
+  .info-btn:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .info-btn.active { color: #fff; background: var(--accent); border-color: var(--accent); }
+  th .info-btn { text-transform: none; letter-spacing: 0; }
+
+  .info-backdrop {
+    position: fixed; inset: 0; background: rgba(14,14,16,.18); z-index: 200;
+    display: none;
+  }
+  .info-backdrop.open { display: block; }
+  .info-popover {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; box-shadow: var(--shadow-3);
+    width: min(440px, 92vw); max-height: 86vh; overflow: auto;
+    padding: 22px 24px; z-index: 201;
+    display: none;
+  }
+  .info-popover.open { display: block; }
+  .info-popover .ip-close {
+    position: absolute; top: 12px; right: 14px;
+    width: 28px; height: 28px; border-radius: 999px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .info-popover .ip-close:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .info-popover h4 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 19px; letter-spacing: -0.005em; margin-right: 36px;
+  }
+  .info-popover .ip-sub { color: var(--muted); font-size: 13px; margin-top: 4px; margin-bottom: 16px; }
+  .info-popover .ip-formula {
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.65;
+    color: var(--ink-2); white-space: pre-wrap; word-break: break-word;
+    margin-bottom: 14px;
+  }
+  .info-popover .ip-rows { margin-bottom: 14px; }
+  .info-popover .ip-row {
+    display: flex; justify-content: space-between; gap: 16px;
+    padding: 7px 0; border-bottom: 1px dashed var(--line-2);
+    font-size: 13px;
+  }
+  .info-popover .ip-row:last-child { border-bottom: none; }
+  .info-popover .ip-row .k { color: var(--muted); }
+  .info-popover .ip-row .v { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: var(--ink); }
+  .info-popover .ip-result {
+    background: var(--accent-soft); color: var(--accent-deep);
+    padding: 11px 14px; border-radius: 10px;
+    font-weight: 500; font-size: 13.5px;
+    border: 1px solid rgba(110, 19, 239, 0.14);
+  }
+  .info-popover .ip-cohort {
+    margin-top: 12px; font-size: 12.5px; color: var(--muted);
+    line-height: 1.55; font-style: italic;
+  }
+
   /* sticky first column for very wide monthly table */
   table.detail th, table.detail td { white-space: nowrap; }
   table.detail thead th:first-child,
@@ -344,6 +459,9 @@
       <span class="brand-mark">allrides</span>
       <span class="brand-sub">Urbanfolks Mobility · Financial Model · 36 months</span>
     </div>
+    <button type="button" class="nav-toggle" id="navToggle" aria-controls="sectionNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="nt-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
     <nav class="section-nav" id="sectionNav">
       <a href="#overview">Overview</a>
       <a href="#revenue">Revenue</a>
@@ -361,8 +479,8 @@
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="overview">
   <div class="section-eyebrow">allrides · by Urbanfolks Mobility · India</div>
-  <h1>3 Year Financial Projection,<br/>break-even by <em>Month 20</em>.</h1>
-  <p class="lede">36-month projection across three revenue streams — ticket fees, pass margin, operator subscription — built up from monthly bus-onboarding cohorts. All figures in <span class="mono">₹ lakh</span> unless marked.</p>
+  <h1>3 Year Financial Projection,<br/>break-even by <em>Month 21</em>.</h1>
+  <p class="lede">36-month projection across four revenue streams — ticket fees, ad revenue, ad-free pass, operator subscription — built up from monthly bus-onboarding cohorts. All figures in <span class="mono">₹ lakh</span> unless marked.</p>
 
   <div class="meta-row">
     <div><dt>Company</dt><dd>Urbanfolks Mobility Pvt. Ltd.</dd></div>
@@ -407,7 +525,7 @@
     </div>
     <div class="callout">
       <div class="callout-label">GMV processed · Year 3</div>
-      <div class="callout-text"><b>₹22,624 L</b> (₹226.2 cr) flowing through the platform</div>
+      <div class="callout-text"><b>₹26,136 L</b> (₹261.4 cr) flowing through the platform</div>
     </div>
     <div class="callout warn">
       <div class="callout-label">Max cash trough</div>
@@ -420,7 +538,7 @@
 <section id="revenue">
   <div class="section-eyebrow">Revenue build</div>
   <h2 class="section-title">Four streams, cohort-aware</h2>
-  <p class="section-lede">Every cell sums across 36 cohorts. Ticket fees apply at life-month ≥ 5. Ads + ad-free pass introduced at L7 (after a 6-month rider awareness build) — pass adoption ramps L7–L11 (2%→10% of digital users at ₹49/mo); ad revenue covers the remaining users. Operator subscription kicks in at L ≥ 25, post-EMI.</p>
+  <p class="section-lede">Every cell sums across 36 cohorts. Ticket fees apply at life-month ≥ 5. Ads + ad-free pass introduced at L7 (after a 6-month rider awareness build) — pass adoption ramps L7–L11 (2%→10% of digital users at ₹49/mo); ad revenue covers the remaining users. Operator subscription kicks in at L ≥ 25, post-EMI. <b>Digital commuters / day</b> = new buses × 900 daily riders × <b>30% digital adoption</b> = 270 commuters per bus per day.</p>
 
   <div class="kpi-grid" style="margin-top:22px">
     <div class="kpi">
@@ -477,7 +595,15 @@
         <table class="fin" id="revenueQuarterTable">
           <thead>
             <tr>
-              <th>Quarter</th><th>Onboardings</th><th>Ticket fees</th><th>Ad revenue</th><th>Ad-free pass</th><th>Op subscription</th><th>Total revenue</th><th>QoQ growth</th>
+              <th>Quarter</th>
+              <th>Onboardings</th>
+              <th>Digital commuters / day <span style="font-weight:400;opacity:.6">(30%)</span><button type="button" class="info-btn" onclick="showInfo(event,'commuters')" aria-label="How is this calculated?">i</button></th>
+              <th>Ticket fees<button type="button" class="info-btn" onclick="showInfo(event,'ticket')" aria-label="How is this calculated?">i</button></th>
+              <th>Ad revenue<button type="button" class="info-btn" onclick="showInfo(event,'ads')" aria-label="How is this calculated?">i</button></th>
+              <th>Ad-free pass<button type="button" class="info-btn" onclick="showInfo(event,'pass')" aria-label="How is this calculated?">i</button></th>
+              <th>Op subscription<button type="button" class="info-btn" onclick="showInfo(event,'opSub')" aria-label="How is this calculated?">i</button></th>
+              <th>Total revenue<button type="button" class="info-btn" onclick="showInfo(event,'total')" aria-label="How is this calculated?">i</button></th>
+              <th>QoQ growth</th>
             </tr>
           </thead>
           <tbody id="revenueQuarterBody"></tbody>
@@ -548,7 +674,15 @@
         <table class="fin" id="expenseQuarterTable">
           <thead>
             <tr>
-              <th>Quarter</th><th>Salaries</th><th>Field</th><th>PG fees</th><th>HW reserve</th><th>Marketing</th><th>Cloud/tech</th><th>Office/legal</th><th>Total</th>
+              <th>Quarter</th>
+              <th>Salaries<button type="button" class="info-btn" onclick="showInfo(event,'salaries')" aria-label="How is this calculated?">i</button></th>
+              <th>Field<button type="button" class="info-btn" onclick="showInfo(event,'field')" aria-label="How is this calculated?">i</button></th>
+              <th>PG fees<button type="button" class="info-btn" onclick="showInfo(event,'pg')" aria-label="How is this calculated?">i</button></th>
+              <th>HW reserve<button type="button" class="info-btn" onclick="showInfo(event,'hw')" aria-label="How is this calculated?">i</button></th>
+              <th>Marketing<button type="button" class="info-btn" onclick="showInfo(event,'marketing')" aria-label="How is this calculated?">i</button></th>
+              <th>Cloud/tech<button type="button" class="info-btn" onclick="showInfo(event,'tech')" aria-label="How is this calculated?">i</button></th>
+              <th>Office/legal<button type="button" class="info-btn" onclick="showInfo(event,'office')" aria-label="How is this calculated?">i</button></th>
+              <th>Total<button type="button" class="info-btn" onclick="showInfo(event,'expTotal')" aria-label="How is this calculated?">i</button></th>
             </tr>
           </thead>
           <tbody id="expenseQuarterBody"></tbody>
@@ -672,17 +806,17 @@
               <tr><td>Daily riders</td><td class="mono">900</td><td style="text-align:left;color:var(--muted)">Tier 2/3 baseline</td></tr>
               <tr><td>Operating days</td><td class="mono">30</td><td style="text-align:left;color:var(--muted)">Days/month</td></tr>
               <tr><td>Total rider-trips/mo</td><td class="mono">27,000</td><td style="text-align:left;color:var(--muted)">900 × 30</td></tr>
-              <tr><td>Digital adoption</td><td class="mono">35%</td><td style="text-align:left;color:var(--muted)">Lower friction with free app</td></tr>
-              <tr><td>Digital trips/mo</td><td class="mono">9,450</td><td style="text-align:left;color:var(--muted)">Riders × digital%</td></tr>
-              <tr><td>Unique digital users/mo</td><td class="mono">315</td><td style="text-align:left;color:var(--muted)">9,450 ÷ 30 trips/user</td></tr>
-              <tr><td>Ad-free pass conversion</td><td class="mono">10%</td><td style="text-align:left;color:var(--muted)">31.5 paying users · ₹49/mo</td></tr>
-              <tr><td>Ad-supported users</td><td class="mono">283.5</td><td style="text-align:left;color:var(--muted)">Remaining 90%</td></tr>
-              <tr class="summary-row"><td>Ticket fees / bus / mo</td><td class="mono">₹2,835</td><td style="text-align:left;color:var(--muted)">9,450 × ₹0.30 · L ≥ 5</td></tr>
-              <tr class="summary-row"><td>Ad revenue / bus / mo</td><td class="mono">₹2,977</td><td style="text-align:left;color:var(--muted)">283.5 × 150 imp × ₹70 eCPM · L ≥ 7</td></tr>
-              <tr class="summary-row"><td>Ad-free pass / bus / mo</td><td class="mono">₹1,544</td><td style="text-align:left;color:var(--muted)">31.5 × ₹49 · L ≥ 7</td></tr>
+              <tr><td>Digital adoption</td><td class="mono">30%</td><td style="text-align:left;color:var(--muted)">KEY ASSUMPTION · biggest swing variable</td></tr>
+              <tr><td>Digital trips/mo</td><td class="mono">8,100</td><td style="text-align:left;color:var(--muted)">Riders × digital%</td></tr>
+              <tr><td>Unique digital users/mo</td><td class="mono">270</td><td style="text-align:left;color:var(--muted)">8,100 ÷ 30 trips/user</td></tr>
+              <tr><td>Ad-free pass conversion</td><td class="mono">10%</td><td style="text-align:left;color:var(--muted)">27 paying users · ₹49/mo</td></tr>
+              <tr><td>Ad-supported users</td><td class="mono">243</td><td style="text-align:left;color:var(--muted)">Remaining 90%</td></tr>
+              <tr class="summary-row"><td>Ticket fees / bus / mo</td><td class="mono">₹2,430</td><td style="text-align:left;color:var(--muted)">8,100 × ₹0.30 · L ≥ 5</td></tr>
+              <tr class="summary-row"><td>Ad revenue / bus / mo</td><td class="mono">₹2,551</td><td style="text-align:left;color:var(--muted)">243 × 150 imp × ₹70 eCPM · L ≥ 7</td></tr>
+              <tr class="summary-row"><td>Ad-free pass / bus / mo</td><td class="mono">₹1,323</td><td style="text-align:left;color:var(--muted)">27 × ₹49 · L ≥ 7</td></tr>
               <tr class="summary-row"><td>Subscription (post-EMI)</td><td class="mono">₹1,000</td><td style="text-align:left;color:var(--muted)">L ≥ 25</td></tr>
-              <tr class="total-row"><td>Pre-sub ARPU / bus / mo</td><td class="mono">₹7,355</td><td style="text-align:left;color:var(--muted)">Tickets + ads + pass</td></tr>
-              <tr class="total-row"><td>Post-sub ARPU / bus / mo</td><td class="mono">₹8,355</td><td style="text-align:left;color:var(--muted)">After Year 2</td></tr>
+              <tr class="total-row"><td>Pre-sub ARPU / bus / mo</td><td class="mono">₹6,304</td><td style="text-align:left;color:var(--muted)">Tickets + ads + pass</td></tr>
+              <tr class="total-row"><td>Post-sub ARPU / bus / mo</td><td class="mono">₹7,304</td><td style="text-align:left;color:var(--muted)">After Year 2</td></tr>
             </tbody>
           </table>
         </div>
@@ -696,13 +830,13 @@
           <table class="fin">
             <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
             <tbody>
-              <tr><td>Trip GMV / bus / mo</td><td class="mono">₹94,500</td><td style="text-align:left;color:var(--muted)">9,450 trips × ₹10</td></tr>
-              <tr><td>Pass purchases / bus / mo</td><td class="mono">₹1,544</td><td style="text-align:left;color:var(--muted)">31.5 × ₹49</td></tr>
-              <tr class="summary-row"><td>Total GMV / bus / mo</td><td class="mono">₹96,044</td><td style="text-align:left;color:var(--muted)">Trip + pass flow</td></tr>
+              <tr><td>Trip GMV / bus / mo</td><td class="mono">₹81,000</td><td style="text-align:left;color:var(--muted)">8,100 rides × ₹10</td></tr>
+              <tr><td>Pass purchases / bus / mo</td><td class="mono">₹1,323</td><td style="text-align:left;color:var(--muted)">27 × ₹49</td></tr>
+              <tr class="summary-row"><td>Total GMV / bus / mo</td><td class="mono">₹82,323</td><td style="text-align:left;color:var(--muted)">Trip + pass flow</td></tr>
               <tr class="summary-row"><td>Take rate</td><td class="mono">7.7%</td><td style="text-align:left;color:var(--muted)">Effective platform take</td></tr>
-              <tr><td>Steady-state revenue / bus / yr</td><td class="mono">₹88,260</td><td style="text-align:left;color:var(--muted)">Annualized</td></tr>
-              <tr><td>Bus 24-month LTV</td><td class="mono">₹1,76,520</td><td style="text-align:left;color:var(--muted)">2-year horizon</td></tr>
-              <tr class="total-row"><td>Bus 36-month LTV</td><td class="mono">₹2,76,780</td><td style="text-align:left;color:var(--muted)">3-yr · sub kicks in last 12 mo</td></tr>
+              <tr><td>Steady-state revenue / bus / yr</td><td class="mono">₹75,648</td><td style="text-align:left;color:var(--muted)">Annualized</td></tr>
+              <tr><td>Bus 24-month LTV</td><td class="mono">₹1,51,296</td><td style="text-align:left;color:var(--muted)">2-year horizon</td></tr>
+              <tr class="total-row"><td>Bus 36-month LTV</td><td class="mono">₹2,38,944</td><td style="text-align:left;color:var(--muted)">3-yr · sub kicks in last 12 mo</td></tr>
             </tbody>
           </table>
         </div>
@@ -792,6 +926,18 @@
   </div>
 </div>
 
+<!-- Info popover for revenue-stream column headers -->
+<div class="info-backdrop" id="infoBackdrop" onclick="hideInfo()"></div>
+<div class="info-popover" id="infoPopover" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <button class="ip-close" type="button" onclick="hideInfo()" aria-label="Close">×</button>
+  <h4 id="infoTitle"></h4>
+  <div class="ip-sub" id="infoSub"></div>
+  <div class="ip-formula" id="infoFormula"></div>
+  <div class="ip-rows" id="infoRows"></div>
+  <div class="ip-result" id="infoResult"></div>
+  <div class="ip-cohort" id="infoCohort"></div>
+</div>
+
 <script>
 /* ============================================================
    DATA — extracted from allrides_financial_model.xlsx
@@ -800,8 +946,11 @@
 const months = Array.from({length:36}, (_,i)=>'M'+(i+1));
 const busesLive = [50,100,150,200,250,300,375,450,525,600,675,750,850,950,1050,1150,1250,1350,1450,1550,1650,1750,1850,1950,2075,2200,2325,2450,2575,2700,2825,2950,3075,3200,3325,3450];
 const newBuses  = busesLive.map((v,i) => i === 0 ? v : v - busesLive[i-1]);
+const RIDERS_PER_BUS_PER_DAY = 900;       /* total daily ridership per bus — from assumptions */
+const DIGITAL_ADOPTION = 0.30;             /* % of riders who go digital · KEY ASSUMPTION */
+const DIGITAL_COMMUTERS_PER_BUS_PER_DAY = RIDERS_PER_BUS_PER_DAY * DIGITAL_ADOPTION; /* = 270/day */
 
-/* Rider monetization: 35% digital adoption · ads + ₹49 ad-free pass introduced at L7 (after 6 mo) · 10% pass conversion at full ramp */
+/* Rider monetization: 30% digital adoption · ads + ₹49 ad-free pass introduced at L7 (after 6 mo) · 10% pass conversion at full ramp */
 const revenue = {
   ticket:  [0,0,0,0,1.4175,2.835,4.2525,5.67,7.0875,8.505,10.6312,12.7575,14.8837,17.01,19.1363,21.2625,24.0975,26.9325,29.7675,32.6025,35.4375,38.2725,41.1075,43.9425,46.7775,49.6125,52.4475,55.2825,58.8263,62.37,65.9137,69.4575,73.0012,76.545,80.0888,83.6325],
   ads:     [0,0,0,0,0,0,1.6207,3.2083,4.7628,6.2843,7.7726,9.261,11.5597,13.8419,16.1075,18.3566,20.5892,22.8218,25.8647,28.891,31.9008,34.8941,37.8709,40.8476,43.8244,46.8011,49.7779,52.7546,55.7314,58.7081,62.4952,66.2658,70.0198,73.7572,77.4782,81.1991],
@@ -869,14 +1018,11 @@ const assumptions = [
     {name:'Average ticket price', value:'₹10', note:'Local route bus avg · range ₹10–₹500+'},
     {name:'Convenience fee on tickets', value:'3%', note:'Platform take per digital trip'},
   ]},
-  {group:'Pass economics', items:[
-    {name:'Pass price to rider', value:'₹400', note:'Monthly pass'},
-    {name:'Pass nominal trips', value:'30', note:'2 trips × 22 working days, rounded down'},
-    {name:'Operator share per ride', value:'₹10', note:'Settled at ₹10 per actual scan — same as cash'},
+  {group:'Pass economics (ad-free pass)', items:[
+    {name:'Pass price to rider', value:'₹49/mo', note:'Monthly ad-free pass · removes in-app ads'},
+    {name:'Pass replaces ticket payment?', value:'No', note:'Riders still pay per ride; pass only removes ads'},
+    {name:'Steady-state pass adoption %', value:'10%', note:'Of digital users · KEY ASSUMPTION'},
     {name:'Conv fee on pass purchase', value:'3%', note:'Same 3% applied at pass sale'},
-    {name:'Pass margin per pass', value:'₹100', note:'Pass price − (trips × operator share)'},
-    {name:'Conv fee on pass', value:'₹12', note:'Pass price × conv fee'},
-    {name:'Steady-state pass adoption %', value:'25%', note:'KEY ASSUMPTION'},
   ]},
   {group:'Operator subscription', items:[
     {name:'Subscription start (life-month)', value:'L25', note:'After 24-month hardware EMI ends'},
@@ -891,7 +1037,7 @@ const assumptions = [
   {group:'Revenue ramp-up per bus (life-stage)', items:[
     {name:'Ticket fees start at life-month', value:'L5', note:'After 4-month onboarding/training ramp'},
     {name:'Pass adoption start at life-month', value:'L7', note:'After 6-month rider awareness build'},
-    {name:'Pass adoption ramp duration', value:'5 mo', note:'L7–L11 → 5%, 10%, 15%, 20%, 25%'},
+    {name:'Pass adoption ramp duration', value:'5 mo', note:'L7–L11 → 2%, 4%, 6%, 8%, 10%'},
   ]},
   {group:'Cost assumptions', items:[
     {name:'Field deployment cost per bus', value:'₹4,000', note:'One-time: install, training, signage, support'},
@@ -973,11 +1119,13 @@ function buildRevenueQuarters() {
     const o = sumRange(revenue.opSub,  g.start, g.end);
     const tot = sumRange(revenue.total, g.start, g.end);
     const onboard = sumRange(newBuses, g.start, g.end);
+    const commuters = onboard * DIGITAL_COMMUTERS_PER_BUS_PER_DAY;
     const growth = prevTotal ? ((tot/prevTotal - 1)*100).toFixed(0)+'%' : '—';
     const growthClass = prevTotal && tot >= prevTotal ? 'num-pos' : 'num-neg';
     html += `<tr class="q-row" data-qi="${gi}" onclick="toggleQuarter('revenue',${gi})">
       <td><button class="q-toggle"><span class="chev">›</span> ${g.label} <span class="tag" style="margin-left:6px">${g.range}</span></button></td>
       <td class="mono">${onboard.toLocaleString('en-IN')}</td>
+      <td class="mono">${commuters.toLocaleString('en-IN')}</td>
       <td class="mono">${fmt(t)}</td>
       <td class="mono">${fmt(a)}</td>
       <td class="mono">${fmt(p)}</td>
@@ -989,6 +1137,7 @@ function buildRevenueQuarters() {
       html += `<tr class="month-row hidden" data-parent="revenue-${gi}">
         <td>${months[mi]}</td>
         <td class="mono">${newBuses[mi].toLocaleString('en-IN')}</td>
+        <td class="mono">${(newBuses[mi]*DIGITAL_COMMUTERS_PER_BUS_PER_DAY).toLocaleString('en-IN')}</td>
         <td class="mono">${fmt(revenue.ticket[mi])}</td>
         <td class="mono">${fmt(revenue.ads[mi])}</td>
         <td class="mono">${fmt(revenue.pass[mi])}</td>
@@ -1005,7 +1154,8 @@ function buildRevenueQuarters() {
   const tO = revenue.opSub.reduce((a,b)=>a+b,0);
   const tTot = revenue.total.reduce((a,b)=>a+b,0);
   const tOnb = newBuses.reduce((a,b)=>a+b,0);
-  html += `<tr class="total-row"><td>3-year total</td><td class="mono">${tOnb.toLocaleString('en-IN')}</td><td class="mono">${fmt(tT)}</td><td class="mono">${fmt(tA)}</td><td class="mono">${fmt(tP)}</td><td class="mono">${fmt(tO)}</td><td class="mono">${fmt(tTot)}</td><td>—</td></tr>`;
+  const tCom = tOnb * DIGITAL_COMMUTERS_PER_BUS_PER_DAY;
+  html += `<tr class="total-row"><td>3-year total</td><td class="mono">${tOnb.toLocaleString('en-IN')}</td><td class="mono">${tCom.toLocaleString('en-IN')}</td><td class="mono">${fmt(tT)}</td><td class="mono">${fmt(tA)}</td><td class="mono">${fmt(tP)}</td><td class="mono">${fmt(tO)}</td><td class="mono">${fmt(tTot)}</td><td>—</td></tr>`;
   tbody.innerHTML = html;
   updateTableHead('revenue');
 }
@@ -1194,6 +1344,234 @@ function collapseAll(kind) {
 }
 
 /* ============================================================
+   INFO POPOVER: per-column "how is this calculated"
+============================================================ */
+const REVENUE_INFO = {
+  commuters: {
+    title: 'Digital commuters / day',
+    sub: 'Daily ridership reachable through the platform',
+    formula: 'commuters/day = new buses × 900 daily riders × 30% digital adoption',
+    rows: [
+      ['Daily ridership / bus',           '900'],
+      ['Digital payment adoption',        '30%'],
+      ['Digital commuters / bus / day',   '270'],
+    ],
+    result: 'Each new bus onboarded ≈ 270 digital commuters / day reached',
+    cohort: 'Cell value = (new buses in period) × 270. The 3-year total of 3,450 buses gives ~9,31,500 digital commuters served daily by M36.',
+  },
+  ticket: {
+    title: 'Ticket fees',
+    sub: 'Convenience fee on every digital ride',
+    formula: 'fee/bus/mo = (900 × 30% × 30 days) × ₹0.30\n             = 8,100 rides × ₹0.30',
+    rows: [
+      ['Daily ridership / bus',     '900'],
+      ['Digital adoption',          '30%'],
+      ['Digital rides / bus / day', '270'],
+      ['Days / month',              '30'],
+      ['Rides / bus / month',       '8,100'],
+      ['Avg ticket price',          '₹10'],
+      ['Convenience fee',           '3%'],
+      ['Fee per ride',              '₹0.30'],
+    ],
+    result: '≈ ₹2,430 / bus / month at steady state',
+    cohort: 'Starts at life-month L ≥ 5 (after 4-month onboarding & training ramp). Cell value = sum across all 36 onboarding cohorts at their respective life-stages.',
+  },
+  ads: {
+    title: 'Ad revenue',
+    sub: 'In-app ads shown to digital riders without an ad-free pass',
+    formula: 'ad rev/bus/mo = ad-eligible rides × impressions × eCPM',
+    rows: [
+      ['Digital riders / bus / day',         '270'],
+      ['Pass adoption (steady state)',       '10%'],
+      ['Ad-eligible rides / bus / day',      '243'],
+      ['Avg ad impressions per ride',        '~150'],
+      ['eCPM (₹ per 1,000 impressions)',     '₹70'],
+    ],
+    result: '≈ ₹2,551 / bus / month at peak adoption',
+    cohort: 'Starts at life-month L ≥ 7 (after 6-month rider awareness build). Pass adoption ramps L7 → L11 at 2%, 4%, 6%, 8%, 10% — ad inventory shrinks proportionally.',
+  },
+  pass: {
+    title: 'Ad-free pass',
+    sub: '₹49 / month subscription that removes ads',
+    formula: 'pass rev/bus/mo = pass purchasers × ₹49',
+    rows: [
+      ['Rides / bus / mo',                       '8,100'],
+      ['Pass adoption (steady state)',           '10%'],
+      ['Rides taken on pass / bus / mo',         '810'],
+      ['Avg rides per pass user / mo',           '30'],
+      ['Unique pass purchasers / bus / mo',      '~27'],
+      ['Pass price',                             '₹49'],
+    ],
+    result: '≈ ₹1,323 / bus / month at peak adoption',
+    cohort: 'Starts at life-month L ≥ 7. Adoption ramps over 5 months (L7 → L11): 2%, 4%, 6%, 8%, 10% of digital users.',
+  },
+  opSub: {
+    title: 'Operator subscription',
+    sub: 'SaaS fee paid by the bus operator after their hardware EMI ends',
+    formula: 'op sub = (buses live with L ≥ 25) × ₹1,000',
+    rows: [
+      ['Subscription start',         'Life-month L ≥ 25'],
+      ['Reason for delay',           '24-month hardware EMI ends'],
+      ['Fee per bus per month',      '₹1,000'],
+    ],
+    result: '₹1,000 / bus / month — eligible buses only',
+    cohort: 'Zero in Y1–Y2. Earliest cohorts cross L25 in Q9 (M25), so subscription revenue ramps gradually through Y3 as more cohorts age past EMI.',
+  },
+  total: {
+    title: 'Total revenue',
+    sub: 'Sum of all four revenue streams in the period',
+    formula: 'total = ticket fees + ad revenue + ad-free pass + op subscription',
+    rows: [
+      ['Ticket fees',         'L ≥ 5'],
+      ['Ad revenue',          'L ≥ 7'],
+      ['Ad-free pass',        'L ≥ 7'],
+      ['Op subscription',     'L ≥ 25'],
+    ],
+    result: 'Y1: ₹95 L · Y2: ₹771 L · Y3: ₹1,895 L',
+    cohort: 'Each cell sums all four streams across 36 monthly onboarding cohorts at their respective life-stages. Period-over-period growth is shown in the rightmost column.',
+  },
+
+  /* ---------- Expense lines ---------- */
+  salaries: {
+    title: 'Salaries',
+    sub: 'Cofounder draw at start, then hires as the org scales',
+    formula: 'monthly salary = Σ (headcount × salary)',
+    rows: [
+      ['5 cofounders (M1+)',     '₹30,000/mo each'],
+      ['Field reps (Y1)',        '₹25,000/mo each'],
+      ['Senior dev',             '₹1,50,000/mo'],
+      ['Junior dev',             '₹60,000/mo'],
+      ['Finance (settlement)',   '₹50,000/mo'],
+      ['Customer support (Y2+)', '₹30,000/mo'],
+      ['Salary inflation Y2+',   '10% / yr'],
+    ],
+    result: 'Y1 ₹49 L · Y2 ₹134 L · Y3 ₹306 L',
+    cohort: 'Starts at ₹1.5 L/mo (5 cofounders only) and scales with hires. Largest expense line in Y1; overtaken by PG fees in Y2.',
+  },
+  field: {
+    title: 'Field deployment',
+    sub: 'Bus onboarding cost — install, training, signage, support',
+    formula: 'cost = new buses × ₹4,000 (one-time per bus)',
+    rows: [
+      ['Cost per new bus',          '₹4,000'],
+      ['M1–M6 (50 buses/mo)',       '~₹2 L / mo'],
+      ['M7–M12 (75 buses/mo)',      '~₹3 L / mo'],
+      ['Y2 (100 buses/mo)',         '~₹4 L / mo'],
+      ['Y3 (125 buses/mo)',         '~₹5 L / mo'],
+    ],
+    result: 'Y1 ₹30 L · Y2 ₹48 L · Y3 ₹60 L',
+    cohort: 'Scales with onboarding pace — not with cumulative buses. Each new bus is touched once; no recurring field cost after live.',
+  },
+  pg: {
+    title: 'Payment gateway fees',
+    sub: 'Razorpay / Cashfree fee on every digital fare flowing through the platform',
+    formula: 'PG fees = 1.5% × GMV',
+    rows: [
+      ['PG fee % of GMV',  '1.5%'],
+      ['Y1 GMV',           '₹17.8 cr'],
+      ['Y2 GMV',           '₹116.0 cr'],
+      ['Y3 GMV',           '₹261.4 cr'],
+      ['Provider rate',    'Volume-based · negotiable at scale'],
+    ],
+    result: 'Y1 ₹27 L · Y2 ₹174 L · Y3 ₹393 L',
+    cohort: 'Becomes the #1 expense line from Y2 onward as GMV scales. Direct pass-through cost — every digital fare carries this.',
+  },
+  hw: {
+    title: 'Hardware default reserve',
+    sub: 'FLDG / risk reserve against bank EMI defaults on POS hardware',
+    formula: 'reserve = 5% × (new buses × ₹20,000 hardware cost)',
+    rows: [
+      ['Hardware unit cost',     '₹20,000'],
+      ['Default reserve %',      '5%'],
+      ['Reserve per new bus',    '₹1,000'],
+      ['Funded by',              'Bank EMI to operator (24 mo)'],
+    ],
+    result: 'Y1 ₹7.5 L · Y2 ₹12 L · Y3 ₹15 L',
+    cohort: 'Small line — set aside per new bus onboarded. Protects against operator default during the 24-month hardware EMI window.',
+  },
+  marketing: {
+    title: 'Marketing',
+    sub: 'Rider awareness, operator acquisition, brand',
+    formula: 'monthly budget — discretionary lever',
+    rows: [
+      ['Channels',              'Local print, OOH, digital'],
+      ['Operator acquisition',  'Field-led, low cost'],
+      ['Rider awareness',       'Rises with bus base'],
+      ['Y1 monthly average',    '~₹2.8 L / mo'],
+      ['Y3 monthly average',    '~₹22 L / mo'],
+    ],
+    result: 'Y1 ₹34 L · Y2 ₹119 L · Y3 ₹264 L',
+    cohort: 'Largest discretionary lever — flexed up or down without breaking the model. Underpins the L7→L11 pass-adoption ramp.',
+  },
+  tech: {
+    title: 'Cloud & tech',
+    sub: 'AWS/GCP, observability, dev tooling, SaaS subscriptions',
+    formula: 'usage-based + fixed SaaS subscriptions',
+    rows: [
+      ['Y1 monthly average',    '~₹1.0 L / mo'],
+      ['Y2 monthly average',    '~₹2.7 L / mo'],
+      ['Y3 monthly average',    '~₹4.4 L / mo'],
+      ['Components',            'Compute, storage, observability, SaaS'],
+    ],
+    result: 'Y1 ₹12.5 L · Y2 ₹32.5 L · Y3 ₹52.5 L',
+    cohort: 'Scales sub-linearly with bus base — most cost is fixed observability and dev tooling, not per-bus compute.',
+  },
+  office: {
+    title: 'Office, legal & misc',
+    sub: 'Rent, GST/audit, legal, banking, miscellaneous',
+    formula: 'fixed + headcount-driven',
+    rows: [
+      ['Y1 monthly average',    '~₹1.9 L / mo'],
+      ['Y2 monthly average',    '~₹4.5 L / mo'],
+      ['Y3 monthly average',    '~₹9.5 L / mo'],
+      ['Components',            'Rent, GST/audit, legal, banking, settlement'],
+    ],
+    result: 'Y1 ₹23 L · Y2 ₹55 L · Y3 ₹114 L',
+    cohort: 'Scales with team size and entity complexity. Includes GST consulting, settlement reconciliation overhead, legal counsel.',
+  },
+  expTotal: {
+    title: 'Total expenses',
+    sub: 'Sum of all seven cost categories',
+    formula: 'total = salaries + field + PG + HW reserve + marketing + cloud + office',
+    rows: [
+      ['Salaries',         '~27% of Y1 total'],
+      ['PG fees',          '#1 line from Y2 onward'],
+      ['Marketing',        'Largest discretionary lever'],
+      ['Field deployment', 'Per-bus, one-time'],
+      ['HW / tech / office', 'Background lines'],
+    ],
+    result: 'Y1 ₹183 L · Y2 ₹574 L · Y3 ₹1,203 L · 3-yr ₹1,960 L',
+    cohort: 'Y3 EBITDA margin lands at 36.5% as revenue (₹1,895 L) outpaces expenses (₹1,203 L).',
+  },
+};
+
+let activeInfoBtn = null;
+function showInfo(ev, key) {
+  ev.stopPropagation();
+  const info = REVENUE_INFO[key];
+  if (!info) return;
+  document.getElementById('infoTitle').textContent   = info.title;
+  document.getElementById('infoSub').textContent     = info.sub;
+  document.getElementById('infoFormula').textContent = info.formula;
+  document.getElementById('infoRows').innerHTML      = info.rows
+    .map(([k, v]) => `<div class="ip-row"><span class="k">${k}</span><span class="v">${v}</span></div>`)
+    .join('');
+  document.getElementById('infoResult').textContent  = info.result;
+  document.getElementById('infoCohort').textContent  = info.cohort;
+  document.getElementById('infoBackdrop').classList.add('open');
+  document.getElementById('infoPopover').classList.add('open');
+  if (activeInfoBtn) activeInfoBtn.classList.remove('active');
+  activeInfoBtn = ev.currentTarget;
+  activeInfoBtn.classList.add('active');
+}
+function hideInfo() {
+  document.getElementById('infoBackdrop').classList.remove('open');
+  document.getElementById('infoPopover').classList.remove('open');
+  if (activeInfoBtn) { activeInfoBtn.classList.remove('active'); activeInfoBtn = null; }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') hideInfo(); });
+
+/* ============================================================
    MODAL: detailed monthly view
 ============================================================ */
 let currentModalKind = null;
@@ -1220,8 +1598,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 function renderDetailTable(kind) {
   if (kind === 'revenue') {
     let h = `<table class="fin detail"><thead><tr><th>Stream</th>${months.map(m=>`<th>${m}</th>`).join('')}<th>Total</th></tr></thead><tbody>`;
+    const commutersReached = busesLive.map(v => v * DIGITAL_COMMUTERS_PER_BUS_PER_DAY);
     const streams = [
       ['Buses live', busesLive, 0],
+      ['Digital commuters / day (30%)', commutersReached, 0],
       ['Ticket fees', revenue.ticket, 1],
       ['Ad revenue', revenue.ads, 1],
       ['Ad-free pass', revenue.pass, 1],
@@ -1230,9 +1610,9 @@ function renderDetailTable(kind) {
     ];
     for (const [name, arr, dec] of streams) {
       const total = arr.reduce((a,b)=>a+b,0);
-      const isBuses = name === 'Buses live';
+      const isCount = name === 'Buses live' || name === 'Commuters reached / day';
       const cls = name === 'GMV processed' ? 'summary-row' : '';
-      h += `<tr class="${cls}"><td>${name}</td>${arr.map(v=>`<td class="mono">${isBuses?v.toLocaleString('en-IN'):fmt(v,dec)}</td>`).join('')}<td class="mono"><b>${isBuses?'—':fmt(total,dec)}</b></td></tr>`;
+      h += `<tr class="${cls}"><td>${name}</td>${arr.map(v=>`<td class="mono">${isCount?v.toLocaleString('en-IN'):fmt(v,dec)}</td>`).join('')}<td class="mono"><b>${isCount?'—':fmt(total,dec)}</b></td></tr>`;
     }
     const total = revenue.total.reduce((a,b)=>a+b,0);
     h += `<tr class="total-row"><td>TOTAL REVENUE</td>${revenue.total.map(v=>`<td class="mono">${fmt(v,1)}</td>`).join('')}<td class="mono">${fmt(total,1)}</td></tr>`;
@@ -1513,6 +1893,27 @@ function setupNav() {
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
+
+  /* Mobile collapsible toggle */
+  const nav = document.getElementById('sectionNav');
+  const toggle = document.getElementById('navToggle');
+  if (toggle && nav) {
+    const closeNav = () => {
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    };
+    toggle.addEventListener('click', e => {
+      e.stopPropagation();
+      const willOpen = !nav.classList.contains('open');
+      nav.classList.toggle('open', willOpen);
+      toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+    links.forEach(l => l.addEventListener('click', closeNav));
+    document.addEventListener('click', e => {
+      if (!nav.contains(e.target) && !toggle.contains(e.target)) closeNav();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
+  }
 }
 
 /* ============================================================
