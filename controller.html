@@ -58,13 +58,35 @@
     background: var(--accent);
     box-shadow: 0 0 12px var(--accent);
   }
-  .brand .session { margin-left: auto; color: var(--muted-2); }
+  .brand .grow { flex: 1; }
+  .brand .session { color: var(--muted-2); }
   .brand .status-dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--muted-2); transition: background .3s;
   }
   .brand .status-dot.live    { background: var(--good); box-shadow: 0 0 10px var(--good); }
   .brand .status-dot.error   { background: var(--bad);  box-shadow: 0 0 10px var(--bad); }
+  .menu-btn {
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--line);
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .menu-btn svg { width: 18px; height: 18px; }
+
+  .deck-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(201,168,255,.1);
+    border: 1px solid rgba(201,168,255,.25);
+    padding: 5px 10px; border-radius: 999px;
+    margin-bottom: 10px;
+  }
 
   .now-label {
     font-family: 'JetBrains Mono', monospace;
@@ -73,13 +95,13 @@
   }
   .now-title {
     font-family: 'Fraunces', serif; font-weight: 500;
-    font-size: 38px; line-height: 1.1; letter-spacing: -0.02em;
+    font-size: 36px; line-height: 1.1; letter-spacing: -0.02em;
     color: #fff; margin-top: 4px;
   }
   .now-meta {
-    margin-top: 8px; display: flex; gap: 14px;
+    margin-top: 8px; display: flex; gap: 14px; align-items: center;
     font-family: 'JetBrains Mono', monospace; font-size: 13px;
-    color: var(--muted);
+    color: var(--muted); flex-wrap: wrap;
   }
   .now-meta .stage-dots { display: inline-flex; gap: 5px; align-items: center; }
   .now-meta .stage-dots .sd {
@@ -104,9 +126,7 @@
     font-size: 22px; color: #fff; margin-top: 2px;
     line-height: 1.2;
   }
-  .next-block .val.end {
-    color: var(--muted); font-style: italic;
-  }
+  .next-block .val.end { color: var(--muted); font-style: italic; }
 
   /* ---------- Big next button ---------- */
   .next-btn {
@@ -124,6 +144,7 @@
     position: relative; overflow: hidden;
     transition: transform .08s ease, box-shadow .2s ease;
     -webkit-tap-highlight-color: transparent;
+    min-height: 200px;
   }
   .next-btn:active {
     transform: scale(.98);
@@ -184,8 +205,7 @@
     max-width: 32ch; margin-bottom: 28px;
   }
   .setup .input-row {
-    width: 100%; max-width: 280px;
-    display: flex; gap: 8px;
+    width: 100%; max-width: 280px; display: flex; gap: 8px;
   }
   .setup input {
     flex: 1; padding: 16px 18px;
@@ -208,20 +228,147 @@
     font-size: 14px; letter-spacing: .14em; text-transform: uppercase;
     cursor: pointer;
   }
-
   .error-msg {
     margin-top: 14px;
     font-family: 'JetBrains Mono', monospace; font-size: 12px;
     color: var(--bad); letter-spacing: .04em;
   }
+
+  /* ---------- Menu overlay ---------- */
+  .menu-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(8,2,22,.92);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: flex; flex-direction: column;
+    padding: max(env(safe-area-inset-top), 16px) 16px max(env(safe-area-inset-bottom), 16px);
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .menu-overlay.open { transform: translateY(0); }
+  .menu-overlay .m-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 4px 4px 16px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .menu-overlay .m-head .m-title {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 24px; color: #fff; flex: 1;
+  }
+  .menu-overlay .m-close {
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--line);
+    color: #fff; width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  .menu-overlay .m-body {
+    flex: 1; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 24px;
+  }
+
+  .m-section { margin-bottom: 28px; }
+  .m-section h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  .deck-grid {
+    display: grid; grid-template-columns: 1fr; gap: 8px;
+  }
+  .deck-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 16px 18px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: #fff;
+    cursor: pointer;
+    transition: background .15s ease, transform .08s ease;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+  }
+  .deck-card:active { transform: scale(.98); background: rgba(255,255,255,.1); }
+  .deck-card.current {
+    border-color: rgba(201,168,255,.5);
+    background: rgba(201,168,255,.08);
+  }
+  .deck-card .di {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(201,168,255,.15);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent); flex-shrink: 0;
+  }
+  .deck-card .di svg { width: 18px; height: 18px; }
+  .deck-card .dc-text { flex: 1; }
+  .deck-card .dc-title {
+    font-weight: 600; font-size: 16px; color: #fff;
+    margin-bottom: 2px;
+  }
+  .deck-card .dc-sub {
+    font-size: 12px; color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: .04em;
+  }
+  .deck-card .dc-go {
+    color: var(--muted-2); font-size: 20px;
+  }
+
+  .jump-list {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .jump-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    transition: background .12s ease;
+  }
+  .jump-item:active { background: rgba(255,255,255,.08); }
+  .jump-item.current {
+    background: rgba(201,168,255,.12);
+    border-color: rgba(201,168,255,.4);
+  }
+  .jump-item .ji-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--muted-2);
+    letter-spacing: .1em;
+    min-width: 26px;
+  }
+  .jump-item.current .ji-num { color: var(--accent); }
+  .jump-item .ji-title { flex: 1; }
+  .jump-item .ji-mark {
+    color: var(--accent); font-size: 14px;
+  }
+
+  .sub-sheet {
+    position: fixed; inset: 0; z-index: 110;
+    background: rgba(8,2,22,.96);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    display: none; flex-direction: column;
+    padding: max(env(safe-area-inset-top), 16px) 16px max(env(safe-area-inset-bottom), 16px);
+  }
+  .sub-sheet.open { display: flex; }
 </style>
 </head>
 <body>
 
-<!-- ============ Setup screen (shown only when no session in URL) ============ -->
+<!-- ============ Setup screen (shown when no session in URL) ============ -->
 <div class="setup" id="setup" style="display:none;">
   <h1>Enter the <em>code</em><br/>from your laptop</h1>
-  <p>Open the deck on the laptop — a 4-letter code will appear on screen. Type it below.</p>
+  <p>Open the deck on the laptop and tap the small remote button on the cover. Then type the 4-letter code below.</p>
   <div class="input-row">
     <input id="codeInput" type="text" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="ABCD" />
     <button id="codeGo" type="button">Go</button>
@@ -229,20 +376,28 @@
   <div class="error-msg" id="setupError"></div>
 </div>
 
-<!-- ============ Remote (shown when a session is paired) ============ -->
+<!-- ============ Remote ============ -->
 <div id="remote" style="display:none; flex-direction:column; height:100%; width:100%;">
   <div class="top">
     <div class="brand">
       <span class="dot"></span>
       <span>allrides · remote</span>
       <span class="status-dot" id="statusDot"></span>
+      <span class="grow"></span>
       <span class="session" id="sessionCode">····</span>
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
     </div>
 
+    <div class="deck-tag" id="deckTag">DECK · …</div>
+
     <div class="now-label">Now</div>
-    <div class="now-title" id="nowTitle">…</div>
+    <div class="now-title" id="nowTitle">Waiting for laptop…</div>
     <div class="now-meta">
-      <span id="sceneMeta">Scene –/–</span>
+      <span id="sceneMeta">–</span>
       <span class="stage-dots" id="stageDots"></span>
     </div>
 
@@ -263,11 +418,88 @@
   </div>
 </div>
 
+<!-- ============ Menu overlay ============ -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="m-head">
+    <div class="m-title">Menu</div>
+    <button class="m-close" id="menuClose" type="button" aria-label="Close menu">×</button>
+  </div>
+  <div class="m-body">
+
+    <div class="m-section">
+      <h3>Open another deck</h3>
+      <div class="deck-grid" id="deckGrid"></div>
+    </div>
+
+    <div class="m-section">
+      <h3 id="jumpHeader">Jump to scene</h3>
+      <div class="jump-list" id="jumpList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ Slide picker sheet (for pitch deck) ============ -->
+<div class="sub-sheet" id="slidePickerSheet">
+  <div class="m-head">
+    <div class="m-title" id="slidePickerTitle">Pick a slide</div>
+    <button class="m-close" id="slidePickerClose" type="button" aria-label="Close">×</button>
+  </div>
+  <div class="m-body">
+    <div class="m-section">
+      <h3>Start from</h3>
+      <div class="jump-list" id="slidePickerList"></div>
+    </div>
+  </div>
+</div>
+
 <script src="firebase-config.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script>
 (function () {
+  // ---------- Known decks (URL + titles for the slide picker) ----------
+  // titles[] order must mirror the registered titles in each deck's HTML.
+  const DECKS = [
+    {
+      kind: 'elevator',
+      label: 'Elevator pitch',
+      sub: 'The Rithika story · 12 scenes',
+      url: 'elevatorv2.html',
+      titles: [
+        'Cover', 'Meet Rithika', 'Tuesday morning', 'On Bus 45', 'Stranded',
+        'Office', 'Reflection', "That's the problem", 'Market', 'Solution',
+        'Traction', 'Close',
+      ],
+      askStart: false,  // user hasn't asked for a picker on elevator
+    },
+    {
+      kind: 'pitch-deck',
+      label: 'Seed-fund pitch',
+      sub: 'Full investor deck · 11 slides',
+      url: 'seedfund-pitch-slide.html',
+      titles: [
+        'Cover', 'The problem', 'How it works', 'Why this matters',
+        'Business model', 'Market opportunity', 'Go-to-market',
+        'Current traction', 'Competitive landscape', 'Financials',
+        'Exit options',
+      ],
+      askStart: true,
+    },
+    {
+      kind: 'financials',
+      label: 'Financials',
+      sub: '3-year projection',
+      url: 'financials.html',
+      titles: [
+        'Overview', 'Revenue', 'Expenses', 'P&L',
+        'Unit economics', 'Market', 'Assumptions',
+      ],
+      askStart: false,
+    },
+  ];
+
+  // ---------- DOM refs ----------
   const setup     = document.getElementById('setup');
   const remote    = document.getElementById('remote');
   const codeInput = document.getElementById('codeInput');
@@ -276,6 +508,7 @@
 
   const sessionCodeEl = document.getElementById('sessionCode');
   const statusDot     = document.getElementById('statusDot');
+  const deckTagEl     = document.getElementById('deckTag');
   const nowTitleEl    = document.getElementById('nowTitle');
   const sceneMetaEl   = document.getElementById('sceneMeta');
   const stageDotsEl   = document.getElementById('stageDots');
@@ -284,16 +517,27 @@
   const prevBtn       = document.getElementById('prevBtn');
   const restartBtn    = document.getElementById('restartBtn');
 
+  const menuBtn       = document.getElementById('menuBtn');
+  const menuOverlay   = document.getElementById('menuOverlay');
+  const menuClose     = document.getElementById('menuClose');
+  const deckGrid      = document.getElementById('deckGrid');
+  const jumpList      = document.getElementById('jumpList');
+  const jumpHeader    = document.getElementById('jumpHeader');
+
+  const slidePickerSheet = document.getElementById('slidePickerSheet');
+  const slidePickerTitle = document.getElementById('slidePickerTitle');
+  const slidePickerList  = document.getElementById('slidePickerList');
+  const slidePickerClose = document.getElementById('slidePickerClose');
+
   function showSetup(msg) {
-    setup.style.display = 'flex';
+    setup.style.display  = 'flex';
     remote.style.display = 'none';
     if (msg) setupErr.textContent = msg;
     codeInput.focus();
   }
-
-  function goToCode(code) {
+  function goToCode(c) {
     const url = new URL(location.href);
-    url.searchParams.set('session', code);
+    url.searchParams.set('session', c);
     location.href = url.toString();
   }
   codeGo.addEventListener('click', () => {
@@ -303,40 +547,34 @@
   });
   codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') codeGo.click(); });
 
-  // Config required.
+  // ---------- Config + session check ----------
   const cfg = window.FIREBASE_CONFIG;
   if (!cfg || cfg.apiKey === 'REPLACE_ME') {
     showSetup('Remote not configured. Set firebase-config.js first.');
     return;
   }
-
   const url  = new URL(location.href);
   const code = (url.searchParams.get('session') || '').toUpperCase();
   if (!code) { showSetup(); return; }
 
-  // Paired view.
   setup.style.display  = 'none';
   remote.style.display = 'flex';
   sessionCodeEl.textContent = code;
 
   try { firebase.initializeApp(cfg); } catch (e) { /* already init */ }
-  const db = firebase.firestore();
+  const db  = firebase.firestore();
   const ref = db.collection('sessions').doc(code);
 
-  function vibrate(ms) {
-    if (navigator.vibrate) navigator.vibrate(ms);
-  }
+  function vibrate(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 
   function sendCmd(cmd, extra = {}) {
     vibrate(20);
     nextBtn.classList.remove('flash'); void nextBtn.offsetWidth; nextBtn.classList.add('flash');
     ref.set({
-      cmd,
-      cmdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      cmd, cmdAt: firebase.firestore.FieldValue.serverTimestamp(),
       ...extra,
     }, { merge: true }).catch(err => {
-      statusDot.classList.remove('live');
-      statusDot.classList.add('error');
+      statusDot.classList.remove('live'); statusDot.classList.add('error');
       console.error(err);
     });
   }
@@ -344,52 +582,224 @@
   nextBtn.addEventListener('click', () => sendCmd('next'));
   prevBtn.addEventListener('click', () => sendCmd('prev'));
   restartBtn.addEventListener('click', () => {
-    if (confirm('Restart from the beginning?')) sendCmd('home');
+    if (confirm('Restart from the beginning of the current deck?')) sendCmd('home');
   });
 
-  // Subscribe to mirror state.
+  // ---------- Menu open/close ----------
+  menuBtn.addEventListener('click', () => menuOverlay.classList.add('open'));
+  menuClose.addEventListener('click', () => menuOverlay.classList.remove('open'));
+  slidePickerClose.addEventListener('click', () => slidePickerSheet.classList.remove('open'));
+
+  // Latest state for rendering decisions
+  let lastData = null;
+
+  // ---------- Render deck switcher ----------
+  function renderDeckGrid() {
+    deckGrid.innerHTML = '';
+    DECKS.forEach(d => {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'deck-card' + (lastData && lastData.kind === d.kind ? ' current' : '');
+      card.innerHTML = `
+        <div class="di">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            ${d.kind === 'pitch-deck'
+              ? '<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/>'
+              : d.kind === 'financials'
+              ? '<path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 4-6"/>'
+              : '<path d="M4 6h16M4 12h16M4 18h10"/>'}
+          </svg>
+        </div>
+        <div class="dc-text">
+          <div class="dc-title">${d.label}</div>
+          <div class="dc-sub">${d.sub}</div>
+        </div>
+        <div class="dc-go">→</div>
+      `;
+      card.addEventListener('click', () => onDeckPicked(d));
+      deckGrid.appendChild(card);
+    });
+  }
+
+  function isCurrentDeck(deck) {
+    return lastData && lastData.kind === deck.kind;
+  }
+
+  // Picking a deck card:
+  //   - If it's a different deck → openDeck (laptop navigates)
+  //   - If it's the SAME deck and has a slide picker → still open the picker
+  //     (so user can jump to a specific slide in-place via `goto`)
+  //   - If it's the same deck and has no picker → just close the menu (no-op)
+  function onDeckPicked(deck) {
+    if (deck.askStart) {
+      openSlidePicker(deck);
+      return;
+    }
+    if (isCurrentDeck(deck)) {
+      menuOverlay.classList.remove('open');
+      return;
+    }
+    sendCmd('openDeck', { openUrl: deckUrlWith(deck) });
+    menuOverlay.classList.remove('open');
+  }
+
+  function deckUrlWith(deck, start) {
+    let u = deck.url + '?session=' + code;
+    if (typeof start === 'number') u += '&start=' + start;
+    return u;
+  }
+
+  // Pick a slide of a deck:
+  //   - If it's the current deck → send `goto` (jumps in place, no reload)
+  //   - Otherwise → send `openDeck` with ?start=N (reloads to that slide)
+  function pickSlideOfDeck(deck, slideIndex) {
+    if (isCurrentDeck(deck)) {
+      sendCmd('goto', { toIndex: slideIndex, toStage: 0 });
+    } else {
+      sendCmd('openDeck', { openUrl: deckUrlWith(deck, slideIndex) });
+    }
+    slidePickerSheet.classList.remove('open');
+    menuOverlay.classList.remove('open');
+  }
+
+  // ---------- Slide picker (for pitch deck) ----------
+  function openSlidePicker(deck) {
+    const here = isCurrentDeck(deck);
+    slidePickerTitle.textContent = (here ? 'Jump in ' : 'Open ') + deck.label;
+    slidePickerList.innerHTML = '';
+
+    // "Start from beginning" / "Go to the cover"
+    const beg = document.createElement('button');
+    beg.type = 'button';
+    beg.className = 'jump-item';
+    beg.innerHTML = `<span class="ji-num">▶</span><span class="ji-title">${here ? 'Go to the cover' : 'Start from beginning'}</span>`;
+    beg.addEventListener('click', () => pickSlideOfDeck(deck, 0));
+    slidePickerList.appendChild(beg);
+
+    const currentIdx = (here && typeof lastData.currentSlide === 'number') ? lastData.currentSlide : -1;
+    deck.titles.forEach((t, i) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'jump-item' + (i === currentIdx ? ' current' : '');
+      const num = String(i + 1).padStart(2, '0');
+      item.innerHTML = `
+        <span class="ji-num">${num}</span>
+        <span class="ji-title">${t}</span>
+        ${i === currentIdx ? '<span class="ji-mark">●</span>' : ''}
+      `;
+      item.addEventListener('click', () => pickSlideOfDeck(deck, i));
+      slidePickerList.appendChild(item);
+    });
+
+    slidePickerSheet.classList.add('open');
+  }
+
+  // ---------- Render jumper for the active deck ----------
+  function renderJumpList(data) {
+    const titles = (data && data.titles) || [];
+    const currentIdx = (data && typeof data.currentSlide === 'number') ? data.currentSlide : -1;
+
+    jumpHeader.textContent = data && data.kind === 'financials'
+      ? 'Jump to section'
+      : data && data.kind === 'pitch-deck'
+      ? 'Jump to slide'
+      : 'Jump to scene';
+
+    jumpList.innerHTML = '';
+    if (!titles.length) {
+      const empty = document.createElement('div');
+      empty.style.color = 'var(--muted)';
+      empty.style.fontSize = '13px';
+      empty.style.padding = '8px 4px';
+      empty.textContent = 'Waiting for the laptop to load a deck…';
+      jumpList.appendChild(empty);
+      return;
+    }
+    titles.forEach((t, i) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'jump-item' + (i === currentIdx ? ' current' : '');
+      const num = String(i + 1).padStart(2, '0');
+      item.innerHTML = `
+        <span class="ji-num">${num}</span>
+        <span class="ji-title">${t}</span>
+        ${i === currentIdx ? '<span class="ji-mark">●</span>' : ''}
+      `;
+      item.addEventListener('click', () => {
+        sendCmd('goto', { toIndex: i, toStage: 0 });
+        menuOverlay.classList.remove('open');
+      });
+      jumpList.appendChild(item);
+    });
+  }
+
+  function renderAll() {
+    renderDeckGrid();
+    renderJumpList(lastData);
+  }
+
+  // ---------- Subscribe to state ----------
   ref.onSnapshot((snap) => {
     const d = snap.data();
-    if (!d) { nowTitleEl.textContent = 'Waiting for laptop…'; return; }
-
+    if (!d) {
+      nowTitleEl.textContent = 'Waiting for laptop…';
+      deckTagEl.textContent = 'DECK · …';
+      return;
+    }
+    lastData = d;
     statusDot.classList.remove('error');
     statusDot.classList.add('live');
 
-    const total = d.totalScenes || 12;
-    const sIdx  = d.sceneIdx ?? 0;
-    const stIdx = d.stageIdx ?? 0;
-    const stCnt = d.currentSceneStages || 1;
+    const total = d.totalSlides || (d.titles && d.titles.length) || 1;
+    const sIdx  = (typeof d.currentSlide === 'number') ? d.currentSlide : 0;
+    const stIdx = d.currentStage || 0;
+    const stCnt = d.currentSlideStages || 1;
 
-    nowTitleEl.textContent = d.lastTitle || `Scene ${sIdx + 1}`;
-    sceneMetaEl.textContent = `Scene ${sIdx + 1}/${total}`;
+    const kindLabel =
+      d.kind === 'pitch-deck' ? 'Seed-fund pitch'
+      : d.kind === 'financials' ? 'Financials'
+      : d.kind === 'elevator' ? 'Elevator pitch'
+      : (d.kind || 'Deck');
+    deckTagEl.textContent = 'DECK · ' + kindLabel.toUpperCase();
 
-    // Stage dots
+    nowTitleEl.textContent = d.currentTitle || `Item ${sIdx + 1}`;
+    const itemLabel = d.kind === 'pitch-deck' ? 'Slide'
+                     : d.kind === 'financials' ? 'Section'
+                     : 'Scene';
+    sceneMetaEl.textContent = `${itemLabel} ${sIdx + 1}/${total}`;
+
+    // Stage dots only meaningful for elevator (multi-stage scenes)
     stageDotsEl.innerHTML = '';
-    for (let i = 0; i < stCnt; i++) {
-      const dot = document.createElement('span');
-      dot.className = 'sd' + (i <= stIdx ? ' on' : '');
-      stageDotsEl.appendChild(dot);
+    if (d.kind === 'elevator' && stCnt > 1) {
+      for (let i = 0; i < stCnt; i++) {
+        const dot = document.createElement('span');
+        dot.className = 'sd' + (i <= stIdx ? ' on' : '');
+        stageDotsEl.appendChild(dot);
+      }
     }
 
-    // Next title — within scene, or first stage of next scene
-    if (stIdx < stCnt - 1) {
-      nextTitleEl.textContent = `${d.lastTitle || 'Scene'} — stage ${stIdx + 2}`;
+    // Next title
+    if (d.kind === 'elevator' && stIdx < stCnt - 1) {
+      nextTitleEl.textContent = `${d.currentTitle || 'Scene'} — stage ${stIdx + 2}`;
       nextTitleEl.classList.remove('end');
     } else if (sIdx + 1 < total) {
-      nextTitleEl.textContent = d.nextTitle || `Scene ${sIdx + 2}`;
+      nextTitleEl.textContent = d.nextTitle || `Item ${sIdx + 2}`;
       nextTitleEl.classList.remove('end');
     } else {
       nextTitleEl.textContent = 'End of deck';
       nextTitleEl.classList.add('end');
     }
+
+    renderAll();
   }, (err) => {
-    statusDot.classList.remove('live');
-    statusDot.classList.add('error');
+    statusDot.classList.remove('live'); statusDot.classList.add('error');
     nowTitleEl.textContent = 'Sync error';
     console.error(err);
   });
 
-  // Prevent the page from scrolling on iOS rubber-band
+  // Initial render (before any data)
+  renderAll();
+
   document.addEventListener('touchmove', (e) => {
     if (e.scale !== 1) e.preventDefault();
   }, { passive: false });

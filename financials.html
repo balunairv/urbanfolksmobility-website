@@ -1965,5 +1965,85 @@ if (document.readyState === 'loading') {
   init();
 }
 </script>
+
+<!-- ============ Phone-remote integration ============ -->
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js" defer></script>
+<script src="remote-control.js" defer></script>
+<script defer>
+(function () {
+  // Sections defined on the page, in document order. The IDs match the
+  // existing <section id="..."> blocks in the body.
+  const SECTIONS = [
+    { id: 'overview',    title: 'Overview' },
+    { id: 'revenue',     title: 'Revenue' },
+    { id: 'expenses',    title: 'Expenses' },
+    { id: 'pnl',         title: 'P&L' },
+    { id: 'unit',        title: 'Unit economics' },
+    { id: 'market',      title: 'Market' },
+    { id: 'assumptions', title: 'Assumptions' },
+  ];
+
+  function getCurrentIndex() {
+    const scrollY = window.scrollY + window.innerHeight * 0.3;
+    let best = 0;
+    for (let i = 0; i < SECTIONS.length; i++) {
+      const el = document.getElementById(SECTIONS[i].id);
+      if (el && el.offsetTop <= scrollY) best = i;
+    }
+    return best;
+  }
+
+  function scrollTo(i) {
+    const sec = SECTIONS[Math.max(0, Math.min(SECTIONS.length - 1, i))];
+    const el = sec && document.getElementById(sec.id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Fire after the scroll settles so the remote sees the new index.
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('deck:nav'));
+    }, 600);
+  }
+
+  function tryRegister(tries) {
+    if (!window.RemoteDeck) {
+      if (tries > 0) return setTimeout(() => tryRegister(tries - 1), 100);
+      return;
+    }
+    window.RemoteDeck.register({
+      kind: 'financials',
+      titles: SECTIONS.map(s => s.title),
+      totalSlides: SECTIONS.length,
+      getCurrentIndex,
+      next: () => scrollTo(getCurrentIndex() + 1),
+      prev: () => scrollTo(getCurrentIndex() - 1),
+      gotoIndex: (i) => scrollTo(i),
+    });
+    window.RemoteDeck.autoConnect();
+
+    const startParam = new URLSearchParams(location.search).get('start');
+    if (startParam != null) {
+      const start = parseInt(startParam, 10);
+      if (!isNaN(start)) scrollTo(start);
+    }
+
+    // Keep the phone in sync as the user scrolls manually too.
+    let lastIdx = getCurrentIndex();
+    let scrollTimer = null;
+    window.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const idx = getCurrentIndex();
+        if (idx !== lastIdx) {
+          lastIdx = idx;
+          window.dispatchEvent(new CustomEvent('deck:nav'));
+        }
+      }, 150);
+    }, { passive: true });
+  }
+  tryRegister(50);
+})();
+</script>
 </body>
 </html>

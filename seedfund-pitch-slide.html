@@ -1706,6 +1706,8 @@ function showSlide(n) {
   });
   prevBtn.disabled = current === 1;
   nextBtn.disabled = current === TOTAL;
+  // Broadcast for the phone-remote layer.
+  window.dispatchEvent(new CustomEvent('deck:nav', { detail: { current } }));
 }
 function goTo(n) { showSlide(n); }
 function next()  { showSlide(current + 1); }
@@ -1887,6 +1889,57 @@ function init() {
 }
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
+</script>
+
+<!-- ============ Phone-remote integration ============ -->
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js" defer></script>
+<script src="remote-control.js" defer></script>
+<script defer>
+(function () {
+  // Slide titles in the same order as the <section class="slide" data-slide="N"> blocks.
+  const SLIDE_TITLES = [
+    'Cover',                  // 1
+    'The problem',            // 2
+    'How it works',           // 3
+    'Why this matters',       // 4
+    'Business model',         // 5
+    'Market opportunity',     // 6
+    'Go-to-market',           // 7
+    'Current traction',       // 8
+    'Competitive landscape',  // 9
+    'Financials',             // 10
+    'Exit options',           // 11
+  ];
+
+  function tryRegister(tries) {
+    if (!window.RemoteDeck || typeof goTo !== 'function') {
+      if (tries > 0) return setTimeout(() => tryRegister(tries - 1), 100);
+      return;
+    }
+    window.RemoteDeck.register({
+      kind: 'pitch-deck',
+      titles: SLIDE_TITLES,
+      totalSlides: SLIDE_TITLES.length,
+      getCurrentIndex: () => current - 1, // RemoteDeck uses 0-based
+      next:      () => next(),
+      prev:      () => prev(),
+      gotoIndex: (i) => goTo(i + 1),
+    });
+
+    // Connect (silently) if URL has a session.
+    window.RemoteDeck.autoConnect();
+
+    // Honour ?start=N (0-based, matches RemoteDeck).
+    const startParam = new URLSearchParams(location.search).get('start');
+    if (startParam != null) {
+      const start = parseInt(startParam, 10);
+      if (!isNaN(start)) goTo(Math.max(1, Math.min(SLIDE_TITLES.length, start + 1)));
+    }
+  }
+  tryRegister(50);
+})();
 </script>
 </body>
 </html>
