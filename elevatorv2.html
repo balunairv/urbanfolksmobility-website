@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Remote-control deps (loaded lazily — see boot script at bottom of file) -->
+<script src="firebase-config.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { width: 100%; height: 100%; overflow: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -78,6 +81,7 @@
   .scene.s-solution  { background: linear-gradient(180deg, #ecfff5 0%, #f7f7f5 100%); }
   .scene.s-traction  { background: var(--bg); }
   .scene.s-close     { background: linear-gradient(135deg, #6E13EF 0%, #1a0838 100%); color: #fff; }
+  .scene.s-cover     { background: radial-gradient(ellipse at 70% 30%, #f5edff 0%, #f7f7f5 60%); }
 
   /* Animated reveals */
   [data-show] {
@@ -552,6 +556,71 @@
   .close-links a .arrow { opacity: .55; margin-left: 6px; transition: transform .2s ease; display: inline-block; }
   .close-links a:hover .arrow { transform: translateX(2px); opacity: 1; }
 
+  /* Scene 0 — cover */
+  .cover-wrap {
+    padding: 0 140px; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; gap: 32px;
+    position: relative;
+  }
+  .cover-mark {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px; letter-spacing: .24em; color: var(--muted);
+    text-transform: uppercase;
+  }
+  .cover-mark .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 22px rgba(110,19,239,.35);
+  }
+  .cover-title {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 200px; letter-spacing: -0.04em; line-height: .94;
+    color: var(--ink);
+  }
+  .cover-title em { color: var(--accent); font-style: italic; font-weight: 500; }
+  .cover-legal {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 17px; letter-spacing: .14em; color: var(--muted);
+    text-transform: uppercase;
+  }
+  .cover-rule {
+    width: 120px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 8px 0;
+  }
+  .cover-contact {
+    display: flex; flex-direction: row;
+    align-items: center; justify-content: center;
+    gap: 28px;
+    margin-top: 18px;
+    flex-wrap: nowrap;
+  }
+  .cover-contact .cc-item {
+    display: inline-flex; align-items: center; gap: 14px;
+    color: var(--ink-2);
+  }
+  .cover-contact .cc-icon {
+    width: 30px; height: 30px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .cover-contact .cc-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+    text-decoration: none;
+  }
+  .cover-contact .cc-sep {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--line);
+    flex-shrink: 0;
+  }
+
   /* Decoration: stars/sparkles */
   .sparkle { position: absolute; width: 4px; height: 4px; background: rgba(255,255,255,.5); border-radius: 50%; }
 
@@ -782,6 +851,86 @@
   .char-portrait-img.por-rithika   { background-position: 100% 18%; }
   .char-portrait-img.por-conductor { background-position: 100% 22%; }
 
+  /* ---------- Phone-remote pairing overlay ---------- */
+  .pair-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: radial-gradient(ellipse at 70% 30%, #2a0d5e 0%, #0a0322 70%);
+    color: #fff;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 48px 32px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .5s ease;
+  }
+  .pair-overlay.show { opacity: 1; pointer-events: auto; }
+  .pair-overlay .pair-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: .24em; color: rgba(201,168,255,.7);
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .pair-overlay .pair-title {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 56px; letter-spacing: -0.02em; line-height: 1.1;
+    text-align: center; color: #fff;
+    max-width: 720px;
+  }
+  .pair-overlay .pair-title em { color: #c9a8ff; font-style: italic; }
+  .pair-overlay .pair-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 120px; letter-spacing: .14em;
+    color: #fff; margin: 30px 0 12px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 20px; padding: 18px 38px;
+  }
+  .pair-overlay .pair-qr {
+    width: 240px; height: 240px;
+    background: #fff; border-radius: 16px; padding: 14px;
+    margin-top: 22px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pair-overlay .pair-qr img,
+  .pair-overlay .pair-qr canvas { width: 100%; height: 100%; display: block; }
+  .pair-overlay .pair-url {
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    color: rgba(255,255,255,.7); letter-spacing: .04em;
+    word-break: break-all; max-width: 520px; text-align: center;
+  }
+  .pair-overlay .pair-wait {
+    margin-top: 28px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .pair-overlay .pair-wait::before {
+    content: ''; width: 10px; height: 10px; border-radius: 50%;
+    background: #c9a8ff; box-shadow: 0 0 14px #c9a8ff;
+    animation: pair-pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pair-pulse {
+    0%, 100% { opacity: .4; transform: scale(.85); }
+    50%      { opacity: 1;  transform: scale(1.05); }
+  }
+  .pair-overlay .pair-skip {
+    margin-top: 36px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    background: transparent; border: 1px solid rgba(255,255,255,.2);
+    padding: 12px 22px; border-radius: 999px; cursor: pointer;
+  }
+  .pair-overlay .pair-skip:hover {
+    color: #fff; border-color: rgba(255,255,255,.5);
+  }
+  .pair-overlay .pair-error {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: #ffb3b3; letter-spacing: .04em;
+    max-width: 540px; text-align: center;
+  }
+
   /* ---------- Mobile gate ---------- */
   .mobile-notice { display: none; }
   @media (max-width: 900px), (orientation: portrait) and (max-width: 1100px) {
@@ -871,8 +1020,53 @@
     <div class="hud-hint" id="hint">Click anywhere · or press →</div>
     <div class="hud-progress"><div class="bar" id="progress"></div></div>
 
+    <!-- ============ SCENE 0 — COVER ============ -->
+    <section class="scene s-cover" data-scene="0" data-stages="1">
+      <div class="cover-wrap">
+        <h1 class="cover-title" data-show data-stage="0" data-delay="120">
+          <em>Urbanfolks</em><br/>Mobility.
+        </h1>
+
+        <div class="cover-rule" data-show data-stage="0" data-anim="fade" data-delay="320"></div>
+
+        <div class="cover-legal" data-show data-stage="0" data-anim="fade" data-delay="400">
+          Urbanfolks Mobility Pvt. Ltd.
+        </div>
+
+        <div class="cover-contact" data-show data-stage="0" data-anim="fade" data-delay="500">
+          <div class="cc-item">
+            <svg class="cc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            <span class="cc-text">+91 90747 23247</span>
+          </div>
+
+          <span class="cc-sep" aria-hidden="true"></span>
+
+          <div class="cc-item">
+            <svg class="cc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2.5" y="4.5" width="19" height="15" rx="2"/>
+              <path d="M3 6l9 7 9-7"/>
+            </svg>
+            <a class="cc-text" href="mailto:contact@urbanfolksmobility.in" onclick="event.stopPropagation();">contact@urbanfolksmobility.in</a>
+          </div>
+
+          <span class="cc-sep" aria-hidden="true"></span>
+
+          <div class="cc-item">
+            <svg class="cc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18"/>
+              <path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18z"/>
+            </svg>
+            <a class="cc-text" href="https://urbanfolksmobility.in" target="_blank" rel="noopener" onclick="event.stopPropagation();">urbanfolksmobility.in</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ SCENE 1 — INTRO ============ -->
-    <section class="scene s-intro" data-scene="0" data-stages="2">
+    <section class="scene s-intro" data-scene="1" data-stages="2">
       <div class="intro-wrap">
         <div class="intro-text col">
           <div class="eyebrow" data-show data-stage="0" data-anim="fade">A morning in Kochi</div>
@@ -1353,6 +1547,23 @@
   const progress = document.getElementById('progress');
   const hint = document.getElementById('hint');
 
+  // Human-readable scene titles (used by the phone remote's "Next: …" strip).
+  // Keep in lockstep with the order of <section class="scene"> blocks above.
+  const SCENE_TITLES = [
+    'Cover',
+    'Meet Rithika',
+    'Tuesday morning',
+    'On Bus 45',
+    'Stranded',
+    'Office',
+    'Reflection',
+    "That's the problem",
+    'Market',
+    'Solution',
+    'Traction',
+    'Close',
+  ];
+
   let sceneIdx = 0;
   let stageIdx = 0;
 
@@ -1402,6 +1613,14 @@
     } else {
       hint.textContent = 'Click anywhere · or press →';
     }
+    emitNav();
+  }
+
+  // Broadcast nav state for the remote-control layer.
+  function emitNav() {
+    window.dispatchEvent(new CustomEvent('deck:nav', {
+      detail: { sceneIdx, stageIdx },
+    }));
   }
 
   function next() {
@@ -1415,6 +1634,7 @@
       for (let i = 0; i < sceneIdx; i++) done += totalStages(scenes[i]);
       done += stageIdx + 1;
       progress.style.width = Math.min(100, (done / total) * 100) + '%';
+      emitNav();
     } else if (sceneIdx < scenes.length - 1) {
       setActive(sceneIdx + 1, 0);
     }
@@ -1426,6 +1646,7 @@
       // hard reset and re-apply to allow reverse
       scenes[sceneIdx].querySelectorAll('[data-show]').forEach(el => el.classList.remove('in'));
       applyStage(scenes[sceneIdx], stageIdx);
+      emitNav();
     } else if (sceneIdx > 0) {
       const newIdx = sceneIdx - 1;
       setActive(newIdx, totalStages(scenes[newIdx]) - 1);
@@ -1443,6 +1664,168 @@
     else if (e.key === 'Home') { setActive(0, 0); }
     else if (e.key === 'End') { setActive(scenes.length - 1, totalStages(scenes[scenes.length - 1]) - 1); }
   });
+
+  // Expose deck API for the remote-control layer.
+  // setActive / next / prev already fire 'deck:nav' on window after each call.
+  window.deck = {
+    next, prev, setActive,
+    get sceneIdx() { return sceneIdx; },
+    get stageIdx() { return stageIdx; },
+    totalScenes: scenes.length,
+    stageCount: i => totalStages(scenes[i]),
+    titles: SCENE_TITLES,
+  };
 </script>
+
+<!-- ============ Phone-remote pairing overlay ============ -->
+<div class="pair-overlay" id="pairOverlay" role="dialog" aria-modal="true">
+  <div class="pair-eyebrow">allrides · phone remote</div>
+  <div class="pair-title">
+    Scan to control this deck<br/>from your <em>phone.</em>
+  </div>
+  <div class="pair-code" id="pairCode">····</div>
+  <div class="pair-qr" id="pairQr"><div style="color:#888;font-size:12px;">QR…</div></div>
+  <div class="pair-url" id="pairUrl"></div>
+  <div class="pair-wait" id="pairWait">Waiting for phone…</div>
+  <div class="pair-error" id="pairError" style="display:none;"></div>
+  <button class="pair-skip" id="pairSkip" type="button">Skip — use keyboard</button>
+</div>
+
+<!-- Firestore SDK + QRCode generator (loaded async; deck still works without them) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js" defer></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js" defer></script>
+
+<script defer>
+(function () {
+  // ------------------------------------------------------------------
+  // Remote-control layer.
+  //   - Generates a 4-char session code (or reuses ?session= in URL)
+  //   - Subscribes to Firestore  sessions/<code>
+  //   - On `cmd` change, drives window.deck.{next,prev,setActive}
+  //   - Mirrors local nav state back to the doc for the phone's UI
+  // ------------------------------------------------------------------
+
+  const overlay  = document.getElementById('pairOverlay');
+  const codeEl   = document.getElementById('pairCode');
+  const qrEl     = document.getElementById('pairQr');
+  const urlEl    = document.getElementById('pairUrl');
+  const waitEl   = document.getElementById('pairWait');
+  const errEl    = document.getElementById('pairError');
+  const skipBtn  = document.getElementById('pairSkip');
+
+  skipBtn.addEventListener('click', () => overlay.classList.remove('show'));
+
+  function showError(msg) {
+    errEl.textContent = msg;
+    errEl.style.display = 'block';
+    waitEl.style.display = 'none';
+  }
+
+  // No config = no remote. Deck works fine standalone.
+  const cfg = window.FIREBASE_CONFIG;
+  if (!cfg || cfg.apiKey === 'REPLACE_ME') {
+    // Silent: assume user hasn't set up remote yet. No overlay shown.
+    return;
+  }
+
+  // Wait for the deferred Firebase SDK scripts to actually load.
+  function whenReady(check, then, tries = 50) {
+    if (check()) return then();
+    if (tries <= 0) return showError('Firebase SDK failed to load');
+    setTimeout(() => whenReady(check, then, tries - 1), 100);
+  }
+
+  whenReady(() => window.firebase && window.firebase.firestore, () => {
+    try {
+      firebase.initializeApp(cfg);
+    } catch (e) { /* already initialised */ }
+    const db = firebase.firestore();
+
+    // Session code: prefer URL param, else generate.
+    const url = new URL(location.href);
+    let code = url.searchParams.get('session');
+    if (!code) {
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // skip 0/O/1/I
+      code = Array.from({ length: 4 }, () =>
+        alphabet[Math.floor(Math.random() * alphabet.length)]
+      ).join('');
+      url.searchParams.set('session', code);
+      history.replaceState(null, '', url.toString());
+    }
+
+    const baseUrl = (window.REMOTE_BASE_URL && window.REMOTE_BASE_URL.replace(/\/$/, ''))
+      || location.origin + location.pathname.replace(/[^/]+$/, '');
+    const controlUrl = `${baseUrl.replace(/\/$/, '')}/controller.html?session=${code}`;
+
+    codeEl.textContent = code;
+    urlEl.textContent = controlUrl;
+    overlay.classList.add('show');
+
+    // QR
+    whenReady(() => window.QRCode, () => {
+      qrEl.innerHTML = '';
+      QRCode.toCanvas(controlUrl, { width: 240, margin: 1 }, (err, canvas) => {
+        if (err) { qrEl.textContent = 'QR error'; return; }
+        qrEl.appendChild(canvas);
+      });
+    });
+
+    const sessionRef = db.collection('sessions').doc(code);
+
+    // Initialise the session doc with current state.
+    sessionRef.set({
+      sceneIdx: window.deck.sceneIdx,
+      stageIdx: window.deck.stageIdx,
+      lastTitle: window.deck.titles[window.deck.sceneIdx] || '',
+      nextTitle: window.deck.titles[window.deck.sceneIdx + 1] || '',
+      totalScenes: window.deck.totalScenes,
+      currentSceneStages: window.deck.stageCount(window.deck.sceneIdx),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    // Mirror local nav -> Firestore (debounced so rapid arrow-mashing batches).
+    let pendingTimer = null;
+    window.addEventListener('deck:nav', (e) => {
+      const { sceneIdx, stageIdx } = e.detail;
+      clearTimeout(pendingTimer);
+      pendingTimer = setTimeout(() => {
+        sessionRef.set({
+          sceneIdx, stageIdx,
+          lastTitle: window.deck.titles[sceneIdx] || '',
+          nextTitle: window.deck.titles[sceneIdx + 1] || '',
+          currentSceneStages: window.deck.stageCount(sceneIdx),
+        }, { merge: true });
+      }, 80);
+    });
+
+    // Listen for commands FROM the phone. Each command bumps `cmdAt`;
+    // we only act if cmdAt is newer than what we've seen.
+    let lastCmdMs = 0;
+    sessionRef.onSnapshot((snap) => {
+      const data = snap.data();
+      if (!data || !data.cmd || !data.cmdAt) return;
+      const cmdMs = data.cmdAt.toMillis ? data.cmdAt.toMillis() : 0;
+      if (cmdMs <= lastCmdMs) return;
+      lastCmdMs = cmdMs;
+
+      // Phone has connected — drop the overlay.
+      if (overlay.classList.contains('show')) overlay.classList.remove('show');
+
+      const cmd = data.cmd;
+      if (cmd === 'next') window.deck.next();
+      else if (cmd === 'prev') window.deck.prev();
+      else if (cmd === 'home') window.deck.setActive(0, 0);
+      else if (cmd === 'end') {
+        const last = window.deck.totalScenes - 1;
+        window.deck.setActive(last, window.deck.stageCount(last) - 1);
+      } else if (cmd === 'goto' && typeof data.toScene === 'number') {
+        window.deck.setActive(data.toScene, data.toStage || 0);
+      }
+    }, (err) => showError('Sync error: ' + err.message));
+  });
+})();
+</script>
+
 </body>
 </html>

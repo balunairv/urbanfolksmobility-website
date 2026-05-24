@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0322" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<title>allrides · remote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Fraunces:ital,wght@0,500;0,600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%; width: 100%;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none; user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+  :root {
+    --bg: #0a0322;
+    --bg-2: #14062f;
+    --ink: #ffffff;
+    --muted: rgba(255,255,255,.55);
+    --muted-2: rgba(255,255,255,.35);
+    --accent: #c9a8ff;
+    --accent-deep: #6E13EF;
+    --line: rgba(255,255,255,.12);
+    --good: #4ade80;
+    --bad: #ff8a80;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(ellipse at 70% 0%, var(--bg-2) 0%, var(--bg) 60%);
+    color: var(--ink);
+    display: flex; flex-direction: column;
+    height: 100dvh;
+    padding: max(env(safe-area-inset-top), 16px) 16px max(env(safe-area-inset-bottom), 16px);
+  }
+
+  /* ---------- Top strip ---------- */
+  .top {
+    flex: 0 0 auto;
+    padding: 4px 6px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+  }
+  .brand .session { margin-left: auto; color: var(--muted-2); }
+  .brand .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--muted-2); transition: background .3s;
+  }
+  .brand .status-dot.live    { background: var(--good); box-shadow: 0 0 10px var(--good); }
+  .brand .status-dot.error   { background: var(--bad);  box-shadow: 0 0 10px var(--bad); }
+
+  .now-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .now-title {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 38px; line-height: 1.1; letter-spacing: -0.02em;
+    color: #fff; margin-top: 4px;
+  }
+  .now-meta {
+    margin-top: 8px; display: flex; gap: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--muted);
+  }
+  .now-meta .stage-dots { display: inline-flex; gap: 5px; align-items: center; }
+  .now-meta .stage-dots .sd {
+    width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.18);
+  }
+  .now-meta .stage-dots .sd.on { background: var(--accent); }
+
+  .next-block {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(201,168,255,.08);
+    border: 1px solid rgba(201,168,255,.18);
+    border-radius: 14px;
+  }
+  .next-block .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .next-block .val {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 22px; color: #fff; margin-top: 2px;
+    line-height: 1.2;
+  }
+  .next-block .val.end {
+    color: var(--muted); font-style: italic;
+  }
+
+  /* ---------- Big next button ---------- */
+  .next-btn {
+    flex: 1 1 auto;
+    margin: 18px 0 14px;
+    background: linear-gradient(135deg, #6E13EF 0%, #4a0aa8 100%);
+    color: #fff;
+    border: none; border-radius: 24px;
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 64px; letter-spacing: -0.02em;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    box-shadow: 0 12px 40px rgba(110,19,239,.45), 0 2px 6px rgba(0,0,0,.3);
+    cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .08s ease, box-shadow .2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .next-btn:active {
+    transform: scale(.98);
+    box-shadow: 0 6px 20px rgba(110,19,239,.5), 0 1px 3px rgba(0,0,0,.3);
+  }
+  .next-btn .arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 80px; line-height: 1;
+  }
+  .next-btn .lbl-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; letter-spacing: .24em; text-transform: uppercase;
+    color: rgba(255,255,255,.7);
+    font-weight: 500;
+  }
+  .next-btn.flash::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,.18);
+    animation: flash .3s ease-out;
+  }
+  @keyframes flash { from { opacity: 1; } to { opacity: 0; } }
+
+  /* ---------- Bottom row ---------- */
+  .bottom-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    flex: 0 0 auto;
+  }
+  .btn-sub {
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--line);
+    color: #fff;
+    border-radius: 18px;
+    padding: 22px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; letter-spacing: .14em; text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .15s ease, transform .08s ease;
+  }
+  .btn-sub:active { transform: scale(.97); background: rgba(255,255,255,.1); }
+  .btn-sub .arrow { font-size: 18px; }
+  .btn-sub.restart { color: var(--muted); }
+
+  /* ---------- Setup screen ---------- */
+  .setup {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+  }
+  .setup h1 {
+    font-family: 'Fraunces', serif; font-weight: 500;
+    font-size: 36px; line-height: 1.15; color: #fff;
+    margin-bottom: 16px;
+  }
+  .setup h1 em { color: var(--accent); font-style: italic; }
+  .setup p {
+    font-size: 15px; line-height: 1.5; color: var(--muted);
+    max-width: 32ch; margin-bottom: 28px;
+  }
+  .setup .input-row {
+    width: 100%; max-width: 280px;
+    display: flex; gap: 8px;
+  }
+  .setup input {
+    flex: 1; padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--line);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px; letter-spacing: .14em;
+    text-align: center; text-transform: uppercase;
+    outline: none;
+  }
+  .setup input:focus { border-color: var(--accent); }
+  .setup button {
+    background: var(--accent-deep);
+    color: #fff; border: none;
+    border-radius: 14px;
+    padding: 16px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; letter-spacing: .14em; text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .error-msg {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--bad); letter-spacing: .04em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ Setup screen (shown only when no session in URL) ============ -->
+<div class="setup" id="setup" style="display:none;">
+  <h1>Enter the <em>code</em><br/>from your laptop</h1>
+  <p>Open the deck on the laptop — a 4-letter code will appear on screen. Type it below.</p>
+  <div class="input-row">
+    <input id="codeInput" type="text" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="ABCD" />
+    <button id="codeGo" type="button">Go</button>
+  </div>
+  <div class="error-msg" id="setupError"></div>
+</div>
+
+<!-- ============ Remote (shown when a session is paired) ============ -->
+<div id="remote" style="display:none; flex-direction:column; height:100%; width:100%;">
+  <div class="top">
+    <div class="brand">
+      <span class="dot"></span>
+      <span>allrides · remote</span>
+      <span class="status-dot" id="statusDot"></span>
+      <span class="session" id="sessionCode">····</span>
+    </div>
+
+    <div class="now-label">Now</div>
+    <div class="now-title" id="nowTitle">…</div>
+    <div class="now-meta">
+      <span id="sceneMeta">Scene –/–</span>
+      <span class="stage-dots" id="stageDots"></span>
+    </div>
+
+    <div class="next-block">
+      <div class="lbl">Next up</div>
+      <div class="val" id="nextTitle">…</div>
+    </div>
+  </div>
+
+  <button class="next-btn" id="nextBtn" type="button">
+    <span class="arrow">→</span>
+    <span class="lbl-sub">Tap to advance</span>
+  </button>
+
+  <div class="bottom-row">
+    <button class="btn-sub" id="prevBtn" type="button"><span class="arrow">←</span> Back</button>
+    <button class="btn-sub restart" id="restartBtn" type="button">↺ Restart</button>
+  </div>
+</div>
+
+<script src="firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+(function () {
+  const setup     = document.getElementById('setup');
+  const remote    = document.getElementById('remote');
+  const codeInput = document.getElementById('codeInput');
+  const codeGo    = document.getElementById('codeGo');
+  const setupErr  = document.getElementById('setupError');
+
+  const sessionCodeEl = document.getElementById('sessionCode');
+  const statusDot     = document.getElementById('statusDot');
+  const nowTitleEl    = document.getElementById('nowTitle');
+  const sceneMetaEl   = document.getElementById('sceneMeta');
+  const stageDotsEl   = document.getElementById('stageDots');
+  const nextTitleEl   = document.getElementById('nextTitle');
+  const nextBtn       = document.getElementById('nextBtn');
+  const prevBtn       = document.getElementById('prevBtn');
+  const restartBtn    = document.getElementById('restartBtn');
+
+  function showSetup(msg) {
+    setup.style.display = 'flex';
+    remote.style.display = 'none';
+    if (msg) setupErr.textContent = msg;
+    codeInput.focus();
+  }
+
+  function goToCode(code) {
+    const url = new URL(location.href);
+    url.searchParams.set('session', code);
+    location.href = url.toString();
+  }
+  codeGo.addEventListener('click', () => {
+    const c = (codeInput.value || '').trim().toUpperCase();
+    if (c.length !== 4) { setupErr.textContent = 'Code must be 4 characters'; return; }
+    goToCode(c);
+  });
+  codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') codeGo.click(); });
+
+  // Config required.
+  const cfg = window.FIREBASE_CONFIG;
+  if (!cfg || cfg.apiKey === 'REPLACE_ME') {
+    showSetup('Remote not configured. Set firebase-config.js first.');
+    return;
+  }
+
+  const url  = new URL(location.href);
+  const code = (url.searchParams.get('session') || '').toUpperCase();
+  if (!code) { showSetup(); return; }
+
+  // Paired view.
+  setup.style.display  = 'none';
+  remote.style.display = 'flex';
+  sessionCodeEl.textContent = code;
+
+  try { firebase.initializeApp(cfg); } catch (e) { /* already init */ }
+  const db = firebase.firestore();
+  const ref = db.collection('sessions').doc(code);
+
+  function vibrate(ms) {
+    if (navigator.vibrate) navigator.vibrate(ms);
+  }
+
+  function sendCmd(cmd, extra = {}) {
+    vibrate(20);
+    nextBtn.classList.remove('flash'); void nextBtn.offsetWidth; nextBtn.classList.add('flash');
+    ref.set({
+      cmd,
+      cmdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      ...extra,
+    }, { merge: true }).catch(err => {
+      statusDot.classList.remove('live');
+      statusDot.classList.add('error');
+      console.error(err);
+    });
+  }
+
+  nextBtn.addEventListener('click', () => sendCmd('next'));
+  prevBtn.addEventListener('click', () => sendCmd('prev'));
+  restartBtn.addEventListener('click', () => {
+    if (confirm('Restart from the beginning?')) sendCmd('home');
+  });
+
+  // Subscribe to mirror state.
+  ref.onSnapshot((snap) => {
+    const d = snap.data();
+    if (!d) { nowTitleEl.textContent = 'Waiting for laptop…'; return; }
+
+    statusDot.classList.remove('error');
+    statusDot.classList.add('live');
+
+    const total = d.totalScenes || 12;
+    const sIdx  = d.sceneIdx ?? 0;
+    const stIdx = d.stageIdx ?? 0;
+    const stCnt = d.currentSceneStages || 1;
+
+    nowTitleEl.textContent = d.lastTitle || `Scene ${sIdx + 1}`;
+    sceneMetaEl.textContent = `Scene ${sIdx + 1}/${total}`;
+
+    // Stage dots
+    stageDotsEl.innerHTML = '';
+    for (let i = 0; i < stCnt; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'sd' + (i <= stIdx ? ' on' : '');
+      stageDotsEl.appendChild(dot);
+    }
+
+    // Next title — within scene, or first stage of next scene
+    if (stIdx < stCnt - 1) {
+      nextTitleEl.textContent = `${d.lastTitle || 'Scene'} — stage ${stIdx + 2}`;
+      nextTitleEl.classList.remove('end');
+    } else if (sIdx + 1 < total) {
+      nextTitleEl.textContent = d.nextTitle || `Scene ${sIdx + 2}`;
+      nextTitleEl.classList.remove('end');
+    } else {
+      nextTitleEl.textContent = 'End of deck';
+      nextTitleEl.classList.add('end');
+    }
+  }, (err) => {
+    statusDot.classList.remove('live');
+    statusDot.classList.add('error');
+    nowTitleEl.textContent = 'Sync error';
+    console.error(err);
+  });
+
+  // Prevent the page from scrolling on iOS rubber-band
+  document.addEventListener('touchmove', (e) => {
+    if (e.scale !== 1) e.preventDefault();
+  }, { passive: false });
+})();
+</script>
+
+</body>
+</html>
