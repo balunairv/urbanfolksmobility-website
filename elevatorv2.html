@@ -621,6 +621,40 @@
     flex-shrink: 0;
   }
 
+  /* Small "open phone remote" button on the cover scene */
+  .remote-launch {
+    position: absolute;
+    bottom: 56px; right: 56px;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-2);
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+    z-index: 60;
+  }
+  .remote-launch:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-3);
+    background: var(--accent-soft);
+  }
+  .remote-launch svg { width: 28px; height: 28px; display: block; }
+  .remote-launch .tip {
+    position: absolute; right: calc(100% + 12px);
+    top: 50%; transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--muted); white-space: nowrap;
+    background: var(--surface); padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); box-shadow: var(--shadow-1);
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease;
+  }
+  .remote-launch:hover .tip { opacity: 1; }
+
   /* Decoration: stars/sparkles */
   .sparkle { position: absolute; width: 4px; height: 4px; background: rgba(255,255,255,.5); border-radius: 50%; }
 
@@ -1062,6 +1096,19 @@
             <a class="cc-text" href="https://urbanfolksmobility.in" target="_blank" rel="noopener" onclick="event.stopPropagation();">urbanfolksmobility.in</a>
           </div>
         </div>
+
+        <button class="remote-launch" id="remoteLaunch" type="button"
+                onclick="event.stopPropagation(); window.openRemotePairing && window.openRemotePairing();"
+                aria-label="Connect phone remote">
+          <span class="tip">Phone remote</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="6" y="2.5" width="12" height="19" rx="2.5"/>
+            <path d="M10 18.5h4"/>
+            <path d="M2.5 8.5l3-3"/>
+            <path d="M2.5 12.5h3"/>
+            <path d="M2.5 16.5l3 3"/>
+          </svg>
+        </button>
       </div>
     </section>
 
@@ -1700,20 +1747,23 @@
 (function () {
   // ------------------------------------------------------------------
   // Remote-control layer.
+  //   - Lazy: nothing happens until the user clicks the remote button
+  //     on the cover (or the URL already has ?session=).
   //   - Generates a 4-char session code (or reuses ?session= in URL)
   //   - Subscribes to Firestore  sessions/<code>
   //   - On `cmd` change, drives window.deck.{next,prev,setActive}
   //   - Mirrors local nav state back to the doc for the phone's UI
   // ------------------------------------------------------------------
 
-  const overlay  = document.getElementById('pairOverlay');
-  const codeEl   = document.getElementById('pairCode');
-  const qrEl     = document.getElementById('pairQr');
-  const urlEl    = document.getElementById('pairUrl');
-  const waitEl   = document.getElementById('pairWait');
-  const errEl    = document.getElementById('pairError');
-  const skipBtn  = document.getElementById('pairSkip');
+  const overlay = document.getElementById('pairOverlay');
+  const codeEl  = document.getElementById('pairCode');
+  const qrEl    = document.getElementById('pairQr');
+  const urlEl   = document.getElementById('pairUrl');
+  const waitEl  = document.getElementById('pairWait');
+  const errEl   = document.getElementById('pairError');
+  const skipBtn = document.getElementById('pairSkip');
 
+  // Always allow dismissing the overlay (whether or not Firebase is wired).
   skipBtn.addEventListener('click', () => overlay.classList.remove('show'));
 
   function showError(msg) {
@@ -1722,108 +1772,138 @@
     waitEl.style.display = 'none';
   }
 
-  // No config = no remote. Deck works fine standalone.
   const cfg = window.FIREBASE_CONFIG;
-  if (!cfg || cfg.apiKey === 'REPLACE_ME') {
-    // Silent: assume user hasn't set up remote yet. No overlay shown.
-    return;
+  const configured = cfg && cfg.apiKey && cfg.apiKey !== 'REPLACE_ME';
+
+  // If the deck was opened with a session already in the URL (e.g. someone
+  // shared a link), pair immediately on load — that link IS the intent.
+  // Otherwise we wait for the user to click the round remote button.
+  const initialSession = new URL(location.href).searchParams.get('session');
+
+  // Public hook used by the cover-page round button.
+  window.openRemotePairing = function () {
+    if (!configured) {
+      overlay.classList.add('show');
+      showError('Remote not configured — paste your config into firebase-config.js');
+      return;
+    }
+    startRemote(null /* generate fresh code */);
+  };
+
+  if (initialSession && configured) {
+    startRemote(initialSession);
   }
 
-  // Wait for the deferred Firebase SDK scripts to actually load.
+  // ---------- internals ----------
+
+  let started = false;
+
+  function startRemote(forcedCode) {
+    if (started) { overlay.classList.add('show'); return; }
+    started = true;
+
+    overlay.classList.add('show');
+
+    // Wait for the deferred Firebase SDK scripts to actually load.
+    whenReady(() => window.firebase && window.firebase.firestore, () => {
+      try { firebase.initializeApp(cfg); } catch (e) { /* already initialised */ }
+      const db = firebase.firestore();
+
+      // Pick the session code.
+      let code = forcedCode;
+      if (!code) {
+        const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // skip 0/O/1/I
+        code = Array.from({ length: 4 }, () =>
+          alphabet[Math.floor(Math.random() * alphabet.length)]
+        ).join('');
+      }
+      // Reflect in URL so a reload re-pairs to the same session.
+      const url = new URL(location.href);
+      url.searchParams.set('session', code);
+      history.replaceState(null, '', url.toString());
+
+      const controlUrl = buildControllerUrl(code);
+
+      codeEl.textContent = code;
+      urlEl.textContent = controlUrl;
+
+      // QR
+      whenReady(() => window.QRCode, () => {
+        qrEl.innerHTML = '';
+        QRCode.toCanvas(controlUrl, { width: 240, margin: 1 }, (err, canvas) => {
+          if (err) { qrEl.textContent = 'QR error'; return; }
+          qrEl.appendChild(canvas);
+        });
+      });
+
+      const sessionRef = db.collection('sessions').doc(code);
+
+      sessionRef.set({
+        sceneIdx: window.deck.sceneIdx,
+        stageIdx: window.deck.stageIdx,
+        lastTitle: window.deck.titles[window.deck.sceneIdx] || '',
+        nextTitle: window.deck.titles[window.deck.sceneIdx + 1] || '',
+        totalScenes: window.deck.totalScenes,
+        currentSceneStages: window.deck.stageCount(window.deck.sceneIdx),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }, { merge: true });
+
+      // Mirror local nav -> Firestore (debounced).
+      let pendingTimer = null;
+      window.addEventListener('deck:nav', (e) => {
+        const { sceneIdx, stageIdx } = e.detail;
+        clearTimeout(pendingTimer);
+        pendingTimer = setTimeout(() => {
+          sessionRef.set({
+            sceneIdx, stageIdx,
+            lastTitle: window.deck.titles[sceneIdx] || '',
+            nextTitle: window.deck.titles[sceneIdx + 1] || '',
+            currentSceneStages: window.deck.stageCount(sceneIdx),
+          }, { merge: true });
+        }, 80);
+      });
+
+      // Listen for commands from the phone.
+      let lastCmdMs = 0;
+      sessionRef.onSnapshot((snap) => {
+        const data = snap.data();
+        if (!data || !data.cmd || !data.cmdAt) return;
+        const cmdMs = data.cmdAt.toMillis ? data.cmdAt.toMillis() : 0;
+        if (cmdMs <= lastCmdMs) return;
+        lastCmdMs = cmdMs;
+
+        if (overlay.classList.contains('show')) overlay.classList.remove('show');
+
+        const cmd = data.cmd;
+        if (cmd === 'next') window.deck.next();
+        else if (cmd === 'prev') window.deck.prev();
+        else if (cmd === 'home') window.deck.setActive(0, 0);
+        else if (cmd === 'end') {
+          const last = window.deck.totalScenes - 1;
+          window.deck.setActive(last, window.deck.stageCount(last) - 1);
+        } else if (cmd === 'goto' && typeof data.toScene === 'number') {
+          window.deck.setActive(data.toScene, data.toStage || 0);
+        }
+      }, (err) => showError('Sync error: ' + err.message));
+    });
+  }
+
+  // REMOTE_BASE_URL points directly at the controller page (e.g.
+  // "https://urbanfolksmobility.in/controller").  We just append the
+  // session query param.  If REMOTE_BASE_URL is empty, fall back to
+  // sibling controller.html in the same folder as this deck.
+  function buildControllerUrl(code) {
+    const base = (window.REMOTE_BASE_URL || '').trim().replace(/\/$/, '');
+    if (base) return `${base}${base.includes('?') ? '&' : '?'}session=${code}`;
+    const siblingDir = location.origin + location.pathname.replace(/[^/]+$/, '');
+    return `${siblingDir}controller.html?session=${code}`;
+  }
+
   function whenReady(check, then, tries = 50) {
     if (check()) return then();
     if (tries <= 0) return showError('Firebase SDK failed to load');
     setTimeout(() => whenReady(check, then, tries - 1), 100);
   }
-
-  whenReady(() => window.firebase && window.firebase.firestore, () => {
-    try {
-      firebase.initializeApp(cfg);
-    } catch (e) { /* already initialised */ }
-    const db = firebase.firestore();
-
-    // Session code: prefer URL param, else generate.
-    const url = new URL(location.href);
-    let code = url.searchParams.get('session');
-    if (!code) {
-      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // skip 0/O/1/I
-      code = Array.from({ length: 4 }, () =>
-        alphabet[Math.floor(Math.random() * alphabet.length)]
-      ).join('');
-      url.searchParams.set('session', code);
-      history.replaceState(null, '', url.toString());
-    }
-
-    const baseUrl = (window.REMOTE_BASE_URL && window.REMOTE_BASE_URL.replace(/\/$/, ''))
-      || location.origin + location.pathname.replace(/[^/]+$/, '');
-    const controlUrl = `${baseUrl.replace(/\/$/, '')}/controller.html?session=${code}`;
-
-    codeEl.textContent = code;
-    urlEl.textContent = controlUrl;
-    overlay.classList.add('show');
-
-    // QR
-    whenReady(() => window.QRCode, () => {
-      qrEl.innerHTML = '';
-      QRCode.toCanvas(controlUrl, { width: 240, margin: 1 }, (err, canvas) => {
-        if (err) { qrEl.textContent = 'QR error'; return; }
-        qrEl.appendChild(canvas);
-      });
-    });
-
-    const sessionRef = db.collection('sessions').doc(code);
-
-    // Initialise the session doc with current state.
-    sessionRef.set({
-      sceneIdx: window.deck.sceneIdx,
-      stageIdx: window.deck.stageIdx,
-      lastTitle: window.deck.titles[window.deck.sceneIdx] || '',
-      nextTitle: window.deck.titles[window.deck.sceneIdx + 1] || '',
-      totalScenes: window.deck.totalScenes,
-      currentSceneStages: window.deck.stageCount(window.deck.sceneIdx),
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-    }, { merge: true });
-
-    // Mirror local nav -> Firestore (debounced so rapid arrow-mashing batches).
-    let pendingTimer = null;
-    window.addEventListener('deck:nav', (e) => {
-      const { sceneIdx, stageIdx } = e.detail;
-      clearTimeout(pendingTimer);
-      pendingTimer = setTimeout(() => {
-        sessionRef.set({
-          sceneIdx, stageIdx,
-          lastTitle: window.deck.titles[sceneIdx] || '',
-          nextTitle: window.deck.titles[sceneIdx + 1] || '',
-          currentSceneStages: window.deck.stageCount(sceneIdx),
-        }, { merge: true });
-      }, 80);
-    });
-
-    // Listen for commands FROM the phone. Each command bumps `cmdAt`;
-    // we only act if cmdAt is newer than what we've seen.
-    let lastCmdMs = 0;
-    sessionRef.onSnapshot((snap) => {
-      const data = snap.data();
-      if (!data || !data.cmd || !data.cmdAt) return;
-      const cmdMs = data.cmdAt.toMillis ? data.cmdAt.toMillis() : 0;
-      if (cmdMs <= lastCmdMs) return;
-      lastCmdMs = cmdMs;
-
-      // Phone has connected — drop the overlay.
-      if (overlay.classList.contains('show')) overlay.classList.remove('show');
-
-      const cmd = data.cmd;
-      if (cmd === 'next') window.deck.next();
-      else if (cmd === 'prev') window.deck.prev();
-      else if (cmd === 'home') window.deck.setActive(0, 0);
-      else if (cmd === 'end') {
-        const last = window.deck.totalScenes - 1;
-        window.deck.setActive(last, window.deck.stageCount(last) - 1);
-      } else if (cmd === 'goto' && typeof data.toScene === 'number') {
-        window.deck.setActive(data.toScene, data.toStage || 0);
-      }
-    }, (err) => showError('Sync error: ' + err.message));
-  });
 })();
 </script>
 
